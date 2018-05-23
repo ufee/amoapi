@@ -1,6 +1,5 @@
 {
     "name": "ufee/amoapi",
-	"version": "0.7.0",
     "homepage": "https://github.com/ufee",
     "description": "amoCRM API Client (https://www.amocrm.ru/developers/content/platform/abilities/)",
     "type": "library",

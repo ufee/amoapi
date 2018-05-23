@@ -5,14 +5,12 @@ Api клиент для работы с amoCRM
 
 ```
 composer require ufee/amoapi
-
 ```
 
 **Запуск тестов**
 
 ```
 vendor/bin/phpunit vendor/ufee/amoapi
-
 ```
 
 ## Работа с клиентом
@@ -24,7 +22,6 @@ $amo = \Ufee\Amo\Amoapi::setInstance([
 	'login' => 'test@login',
 	'hash' => 'testhash'
 ]);
-
 ```
 
 **Работа со сделками**
@@ -73,7 +70,6 @@ $lead->save();
 $lead = $contact->createLead();
 $lead->name = 'Amoapi v7';
 $lead->save();
-
 ```
 
 **Работа с контактами**
@@ -125,7 +121,6 @@ $contact->save();
 $contact = $lead->createContact();
 $contact->name = 'Amoapi v7';
 $contact->save();
-
 ```
 
 **Работа с компаниями**
@@ -164,7 +159,6 @@ $company = $contact->createCompany();
 $company = $lead->createCompany();
 $company->name = 'Amoapi v7';
 $company->save();
-
 ```
 
 **Работа с задачами**
@@ -206,7 +200,6 @@ $task->text = 'Amoapi v7';
 $task->element_type = 1;
 $task->element_id = 34762725;
 $task->save();
-
 ```
 
 **Работа с примечаниями**
@@ -251,5 +244,4 @@ $note->text = 'Amoapi v7';
 $note->element_type = 2;
 $note->element_id = 34762728;
 $note->save();
-
 ```
