@@ -7,7 +7,7 @@ Api клиент для работы с amoCRM
 composer require ufee/amoapi
 ```
 
-**Запуск тестов**
+## Запуск тестов
 Отредактировать vendor/ufee/amoapi/tests/Config.php
 
 ```
