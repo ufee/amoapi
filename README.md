@@ -8,8 +8,10 @@ composer require ufee/amoapi
 ```
 
 **Запуск тестов**
+Отредактировать vendor/ufee/amoapi/tests/Config.php
 
 ```
+composer require --dev phpunit/phpunit ^5
 vendor/bin/phpunit vendor/ufee/amoapi
 ```
 
