@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="../../../vendor/autoload.php"
+		 colors="true">
+    <testsuites>
+        <testsuite name="Amoapi Test Suite">
+            <directory suffix=".php">./tests/Cases</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
