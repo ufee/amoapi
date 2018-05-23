@@ -8,6 +8,7 @@ composer require ufee/amoapi
 ```
 
 **Запуск тестов**
+
 Отредактировать vendor/ufee/amoapi/tests/Config.php
 
 ```
