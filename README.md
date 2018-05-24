@@ -1,4 +1,4 @@
-## AmoCRM API Client
+## AmoCRM PHP API Client
 Api клиент для работы с amoCRM
 
 ## Установка
@@ -19,10 +19,10 @@ vendor/bin/phpunit vendor/ufee/amoapi
 
 ```
 $amo = \Ufee\Amo\Amoapi::setInstance([
-	'id' => 123,
-	'domain' => 'testdomain',
-	'login' => 'test@login',
-	'hash' => 'testhash'
+    'id' => 123,
+    'domain' => 'testdomain',
+    'login' => 'test@login',
+    'hash' => 'testhash'
 ]);
 ```
 
