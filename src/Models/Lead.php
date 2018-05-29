@@ -60,6 +60,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 				$this->attributes['tags'][]= $tag->name;
 			}			
 		}
+		$this->attributes['company_id'] = null;
 		if (isset($data->company->id)) {
 			$this->attributes['company_id'] = $data->company->id;
 		}
@@ -71,6 +72,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		}
 		$this->attributes['contacts'] = null;
 
+		$this->attributes['main_contact_id'] = null;
 		if (isset($data->main_contact->id)) {
 			$this->attributes['main_contact_id'] = $data->main_contact->id;
 		}

@@ -6,6 +6,11 @@ namespace Ufee\Amo\Services;
 
 class Customers extends \Ufee\Amo\Base\Services\MainEntity
 {
+	protected static 
+		$_require = [
+			'add' => ['name', 'next_date'],
+			'update' => ['id', 'updated_at']
+		];
 	protected
 		$entity_key = 'customers',
 		$entity_model = '\Ufee\Amo\Models\Customer',

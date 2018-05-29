@@ -69,12 +69,10 @@ class Account extends \Ufee\Amo\Base\Models\Model
 			(array)$data->_embedded->custom_fields->companies, 
 			(array)$data->_embedded->custom_fields->contacts, 
 			(array)$data->_embedded->custom_fields->leads, 
+			(array)$data->_embedded->custom_fields->customers, 
 			$this
 		);
 		/*
-		$this->attributes['customFields']->customers = new Collections\CustomFieldCollection(
-			(array)$data->_embedded->custom_fields->customers, $this
-		);
 		$this->attributes['customFields']->catalogs = [];
 		foreach ($data->_embedded->custom_fields->catalogs as $cf_id=>$cfields) {
 			$this->attributes['customFields']->catalogs[$cf_id] = new Collections\CustomFieldCollection(
