@@ -22,15 +22,20 @@ class PhoneField extends EntityField
     /**
      * Set cf value
 	 * @param string $value
-     * @param string $enum_key
+     * @param string|integer $enum_key
      */
     public function setValue($value, $enum_key = 'Other')
     {
-        $enum_key = mb_strtoupper($enum_key);
-        $enum = array_search($enum_key, (array)$this->field->enums);
-         if ($enum === false) {
-            throw new \Exception('Invalid enum: "'.$enum_key.'" for cfield "'.$this->name.'" (enum not found)');
-         }
+		if (is_numeric($enum_key) && isset($this->field->enums->{$enum_key})) {
+			$enum = $enum_key;
+			$enum_key = $this->field->enums->{$enum_key};
+		} else {
+			$enum_key = mb_strtoupper($enum_key);
+			$enum = array_search($enum_key, (array)$this->field->enums);
+		}
+		if ($enum === false) {
+			throw new \Exception('Invalid enum: "'.$enum_key.'" for cfield "'.$this->name.'" (enum not found)');
+		}
         $new_values = [];
         foreach ($this->values as $setted) {
             if ($value == $setted->value) {
