@@ -18,12 +18,23 @@ vendor/bin/phpunit vendor/ufee/amoapi
 ## Работа с клиентом
 
 ```
+Получение объекта для работы с конкретным аккаунтом
 $amo = \Ufee\Amo\Amoapi::setInstance([
 	'id' => 123,
 	'domain' => 'testdomain',
 	'login' => 'test@login',
 	'hash' => 'testhash'
 ]);
+
+Включение логирования заросов (/Logs/m-Y/domain.log)
+$amo->queries->logs(true);
+
+Пользовательская отладка запросов 
+$amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
+	echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
+	print_r($query->post_data);
+	echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
+});
 ```
 
 **Работа со сделками**
@@ -183,6 +194,7 @@ $contacts = $customer->contacts;
 $company = $customer->company;
 $tasks = $customer->tasks;
 $notes = $customer->notes;
+$transactions = $customer->transactions;
 
 Создание покупателей
 $customer = $amo->customers()->create();
@@ -197,6 +209,31 @@ $customer->cf('День рождения')->setValue(date('Y-m-d'));
 $customer->cf('Дата')->setValue(date('Y-m-d'));
 $customer->cf('Переключатель')->disable();
 $customer->save();
+```
+
+**Работа с покупками**
+
+```
+Получение транзакций (покупок)
+$transactions = $amo->transactions;
+$transactions = $customer->transactions;
+
+Добавление транзакций
+$transaction = $amo->transactions()->create();
+$transaction->customer_id = 1234;
+или
+$transaction = $customer->createTransaction();
+$transaction->price = 1500;
+$transaction->save();
+
+Обновление комментариев транзакций покупателя
+$transaction->comment = 'Тест';
+$transaction->save();
+
+Удаление транзакций покупателя
+$amo->transactions()->delete($transactions); // массив моделей или ID 
+$customer->transactions->delete(); // удаление всех покупок покупателя
+$transaction->delete(); // удаление покупки
 ```
 
 **Работа с задачами**

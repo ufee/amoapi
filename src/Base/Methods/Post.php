@@ -25,8 +25,6 @@ class Post extends Method
 		$query->setArgs(
 			array_merge($this->service->api_args, $this->args, $arg)
 		);
-		//echo date('Y-m-d H:i:s').' - Api post query '.$query->getUrl()."\n";
-		//print_r($post_data);
 		$query->execute();
 		return $this->parseResponse(
 			$query

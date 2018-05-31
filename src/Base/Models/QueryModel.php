@@ -134,6 +134,24 @@ class QueryModel
 	}
 
     /**
+     * Get start date
+	 * @return string
+     */
+    public function startDate($format = 'Y-m-d H:i:s')
+    {
+        return date($format, $this->start_time);
+	}
+
+    /**
+     * Get end date
+	 * @return string
+     */
+    public function endDate($format = 'Y-m-d H:i:s')
+    {
+        return date($format, $this->end_time);
+	}
+
+    /**
      * Protect get model fields
 	 * @param string $field
      */

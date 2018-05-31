@@ -41,13 +41,11 @@ class Get extends Method
 		);
 		if ($this->service->canCache()) {
 			if ($cached = $this->service->queries->getCached($query->generateHash(), $this->service->cache_time)) {
-				//echo date('Y-m-d H:i:s').' - Api cached get query '.$query->getUrl()."\n";
 				return $this->parseResponse(
 					$cached->response
 				);
 			}
 		}
-		//echo date('Y-m-d H:i:s').' - Api get query '.$query->getUrl()."\n";
 		$query->execute();
 		return $this->parseResponse(
 			$query

@@ -2,18 +2,17 @@
 /**
  * amoCRM API Service method - update
  */
-namespace Ufee\Amo\Methods\Leads;
+namespace Ufee\Amo\Methods\Transactions;
 
-class LeadsUpdate extends \Ufee\Amo\Base\Methods\Post
+class TransactionsUpdate extends \Ufee\Amo\Base\Methods\Post
 {
 	protected 
-		$url = '/api/v2/leads';
+		$url = '/api/v2/transactions/comment';
 	
     /**
      * Update entitys in CRM
 	 * @param array $raws
 	 * @param array $arg
-	 * @return 
      */
     public function update($raws, $arg = [])
     {

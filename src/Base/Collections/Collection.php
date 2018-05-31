@@ -67,7 +67,8 @@ class Collection implements \IteratorAggregate
      */
     public function push($element)
     {
-		return array_push($this->items, $element);
+		array_push($this->items, $element);
+		return $this;
 	}
 	
     /**

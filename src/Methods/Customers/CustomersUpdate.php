@@ -2,12 +2,12 @@
 /**
  * amoCRM API Service method - update
  */
-namespace Ufee\Amo\Methods\Leads;
+namespace Ufee\Amo\Methods\Customers;
 
-class LeadsUpdate extends \Ufee\Amo\Base\Methods\Post
+class CustomersUpdate extends \Ufee\Amo\Base\Methods\Post
 {
 	protected 
-		$url = '/api/v2/leads';
+		$url = '/api/v2/customers';
 	
     /**
      * Update entitys in CRM

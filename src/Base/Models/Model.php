@@ -50,6 +50,16 @@ class Model
 	}
 
 	/**
+     * Has attr field
+	 * @param string $field
+	 * @return bool
+     */
+    public function hasAttribute($field)
+    {
+		return array_key_exists($field, $this->attributes);
+	}
+
+	/**
      * Saved data trigger
 	 * @param integer $id
 	 * @return void

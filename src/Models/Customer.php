@@ -24,7 +24,8 @@ class Customer extends \Ufee\Amo\Base\Models\ModelWithCF
 			'company',
 			'contacts',
 			'tasks',
-			'notes'
+			'notes',
+			'transactions'
 		],
 		$writable = [
 			'name',
@@ -78,6 +79,40 @@ class Customer extends \Ufee\Amo\Base\Models\ModelWithCF
 		);
 	}
 
+	/**
+     * Create linked transaction model
+     * @return Transaction
+     */
+    public function createTransaction()
+    {
+		$transaction = $this->service->instance->transactions()->create();
+		$transaction->attachCustomer($this);
+		return $transaction;
+	}
+
+	/**
+     * Linked transactions get method
+     * @return TransactionsList
+     */
+    public function transactions()
+    {
+		return $this->service->instance->transactions()->where('customer_id', $this->id);
+	}
+
+    /**
+     * Protect transactions access
+	 * @param mixed $transactions attribute
+	 * @return TransactionsCollection
+     */
+    public function transactions_access($transactions)
+    {
+		if (is_null($this->attributes['transactions'])) {
+			$this->attributes['transactions'] = $this->service->instance->transactions()->where('customer_id', $this->id)->recursiveCall();
+		}
+		return $this->attributes['transactions'];
+	}
+
+
     /**
      * Convert Model to array
      * @return array
@@ -85,7 +120,6 @@ class Customer extends \Ufee\Amo\Base\Models\ModelWithCF
     public function toArray()
     {
 		$fields = parent::toArray();
-		$fields['tags'] = $this->attributes['tags'];
 		return $fields;
     }
 }

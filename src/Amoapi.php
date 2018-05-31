@@ -2,7 +2,7 @@
 /**
  * amoCRM API client
  * @author Vlad Ionov <vlad@f5.com.ru>
- * @version 0.7.0
+ * @version 0.7.2
  */
 namespace Ufee\Amo;
 
@@ -22,6 +22,7 @@ class Amoapi
 			'tasks',
 			'notes',
 			'customers',
+			'transactions',
 			'catalogs',
 			'catalogElements'
 		],
@@ -96,7 +97,7 @@ class Amoapi
 			throw new \Exception('Account not found: '.$account_id);
 		}
 		return self::$_instances[$account_id];
-    }
+	}
 	
     /**
      * Call Service Methods
@@ -136,9 +137,4 @@ class Amoapi
 		}
 		return $service->{$target}();
 	}
-
-    public function __destruct()
-    {
-		//echo "\nMemory used: ".(memory_get_peak_usage(true)/1024/1024)." MiB\n\n";
-    }
 }
