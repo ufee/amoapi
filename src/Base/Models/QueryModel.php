@@ -18,7 +18,8 @@ class QueryModel
 			'execution_time',
 			'sleep_time',
 			'hash',
-			'memory_usage'
+			'memory_usage',
+			'headers'
 		],
 		$hidden = [
 			'instance',
@@ -54,6 +55,7 @@ class QueryModel
      */
 	protected function _boot()
 	{
+		$this->attributes['headers'] = [];
 		$this->attributes['method'] = 'GET';
 		$this->attributes['latency'] = 1;
 		$this->attributes['curl'] = \curl_init();
@@ -109,7 +111,31 @@ class QueryModel
     {
 		$this->attributes['url'] = $url;
 		return $this;
-    }
+	}
+	
+    /**
+     * Set headers
+     * @param string $name
+	 * @param mixed $value
+     */
+    public function setHeader($name, $value)
+    {
+		$this->attributes['headers'][$name] = $value;
+		return $this;
+	}
+
+    /**
+     * Get headers
+     * @return array
+     */
+    public function getHeaders()
+    {
+        $headers = [];
+        foreach ($this->headers as $name=>$value) {
+            $headers[]= $name.': '.$value;
+        }
+		return $headers;
+	}
 
     /**
      * Get url link

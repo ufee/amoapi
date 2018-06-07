@@ -13,6 +13,7 @@ class LimitedList extends Cached
 		$limit_rows_update = 300,
 		$limit_rows = 500,
 		$max_rows = 0,
+		$modified_from = false,
 		$methods = [
 			'list', 'add', 'update'
 		];
@@ -231,6 +232,26 @@ class LimitedList extends Cached
 		return $this;
 	}
 	
+    /**
+     * Set max rows
+	 * @param mixed $val
+	 * @return Service
+     */
+	public function modifiedFrom($val)
+	{
+		if (!is_bool($val) && !is_string($val) && !is_numeric($val)) {
+			throw new \Exception('Modified value must be in: numeric timestamp, date string, bool false');
+		}
+		if ($val === false) {
+			$this->modified_from = $val;
+		} else if (is_numeric($val)) {
+			$this->modified_from = $val;
+		} else if (is_string($val)) {
+			$this->modified_from = strtotime(date($val));
+		}
+		return $this;
+	}
+
     /**
      * Get model list
 	 * @return Collection

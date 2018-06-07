@@ -8,7 +8,8 @@ use Ufee\Amo\Amoapi;
 class Cached extends Service
 {
 	protected
-		$cache_time = false;
+		$cache_time = false,
+		$modified_from = false;
 	
     /**
      * Can cache queries

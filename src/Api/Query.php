@@ -42,6 +42,7 @@ class Query extends QueryModel
      */
     private function get()
     {
+        curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
         curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
         return curl_exec($this->curl);
     }

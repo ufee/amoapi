@@ -39,6 +39,13 @@ class Get extends Method
 		$query->setArgs(
 			array_merge($this->service->api_args, $this->args, $arg)
 		);
+		if ($this->service->modified_from) {
+			$d = \DateTime::createFromFormat('U', $this->service->modified_from, new \DateTimeZone($this->service->instance->getAuth('timezone')));
+			$d->setTimezone(new \DateTimeZone("UTC"));
+			$query->setHeader(
+				'If-Modified-Since', $d->format('D, d M Y H:i:s T')
+			);
+		}
 		if ($this->service->canCache()) {
 			if ($cached = $this->service->queries->getCached($query->generateHash(), $this->service->cache_time)) {
 				return $this->parseResponse(
@@ -47,6 +54,10 @@ class Get extends Method
 			}
 		}
 		$query->execute();
+		if ($query->response->getCode() == 429) {
+			sleep(1);
+			$query->execute();
+		}
 		return $this->parseResponse(
 			$query
 		);

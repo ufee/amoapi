@@ -22,6 +22,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         if ($this->_logs) {
             Api\Logger::getInstance($query->instance->getAuth('domain').'.log')->log(
                 '['.$query->method.'] '.$query->url.' -> '.$query->getUrl(),
+                $query->headers,
                 $query->post_data,
                 'Start: '.$query->startDate('H:i:s').' ('.$query->start_time.')',
                 'End:   '.$query->endDate('H:i:s').' ('.$query->end_time.')',

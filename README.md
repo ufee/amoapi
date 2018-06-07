@@ -23,7 +23,9 @@ $amo = \Ufee\Amo\Amoapi::setInstance([
 	'id' => 123,
 	'domain' => 'testdomain',
 	'login' => 'test@login',
-	'hash' => 'testhash'
+	'hash' => 'testhash',
+	'zone' => 'com', // default: ru
+	'timezone' => 'Europe/London', // default: Europe/Moscow
 ]);
 
 Включение логирования заросов (/Logs/m-Y/domain.log)
@@ -32,6 +34,7 @@ $amo->queries->logs(true);
 Пользовательская отладка запросов 
 $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
 	echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
+	print_r($query->headers);
 	print_r($query->post_data);
 	echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
 });
@@ -44,6 +47,13 @@ $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
 $leads = $amo->leads;
 $leads = $amo->leads()->recursiveCall();
 $leads = $amo->leads()->call(); // первые 500
+
+Получение по дате последнего изменения
+$leads = $amo->leads()
+             ->modifiedFrom(string date 'Y-m-5 09:20:00') // по дате, с 5 числа текущего месяца, с 9:20 утра
+			 ->modifiedFrom(timestamp 1528188143) // или по timestamp
+             ->maxRows(1000)
+             ->list();
 
 Получение по ID
 $lead = $amo->leads()->find($id); // array|integer
