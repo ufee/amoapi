@@ -51,7 +51,7 @@ $leads = $amo->leads()->call(); // первые 500
 Получение по дате последнего изменения
 $leads = $amo->leads()
              ->modifiedFrom(string date 'Y-m-5 09:20:00') // по дате, с 5 числа текущего месяца, с 9:20 утра
-			 ->modifiedFrom(timestamp 1528188143) // или по timestamp
+             ->modifiedFrom(timestamp 1528188143) // или по timestamp
              ->maxRows(1000)
              ->list();
 
