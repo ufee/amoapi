@@ -54,9 +54,6 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
     {
 		parent::_boot($data);
 
-		if (isset($data->pipeline->id)) {
-			$this->attributes['pipeline_id'] = $data->pipeline->id;
-		}
 		$this->attributes['tags'] = [];
 		if (isset($data->tags)) {
 			foreach ($data->tags as $tag) {

@@ -19,12 +19,14 @@ class Notes extends \Ufee\Amo\Base\Services\LimitedList
 
     /**
      * Get notes by type
-	 * @param integer $id
+	 * @param integer $note_type 4,...
+	 * @param string $element_type - contact/lead/company/task
 	 * @return Collection
      */
-	public function type($id)
+	public function type($note_type, $element_type = 'all')
 	{
-		return $this->list->where('type', $id)
+		return $this->list->where('note_type', $note_type)
+						  ->where('type', $element_type)
 						  ->recursiveCall();
 	}
 
@@ -34,21 +36,21 @@ class Notes extends \Ufee\Amo\Base\Services\LimitedList
      */
 	public function notes()
 	{
-		return $this->list->where('type', 4)
+		return $this->list->where('type', 'all')
 					->recursiveCall();
 	}
 
     /**
      * Get models by id
 	 * @param integer|array $id
-	 * @param integer $type note type
+	 * @param string $element_type - contact/lead/company/task
 	 * @return Model|Collection
      */
-	public function find($id, $type = 4)
+	public function find($id, $element_type = 'all')
 	{
 		$result = $this->list->where('limit_rows', is_array($id) ? count($id) : 1)
 							 ->where('limit_offset', 0)
-							 ->where('type', $type)
+							 ->where('type', $element_type)
 							 ->where('id', $id)
 							 ->call();
 		if (is_array($id)) {

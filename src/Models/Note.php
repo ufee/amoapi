@@ -22,7 +22,7 @@ class Note extends \Ufee\Amo\Base\Models\ApiModel
 			'text',
 			'responsible_user_id',
 			'updated_at',
-			'is_completed',
+			'created_at',
 			'created_by',
 			'params'
 		];
@@ -35,16 +35,6 @@ class Note extends \Ufee\Amo\Base\Models\ApiModel
     protected function _boot($data = [])
     {
 		parent::_boot($data);
-	}
-	
-    /**
-     * Get linked element
-	 * @param bool $force
-     * @return Model|null
-     */
-    public function getElement($force = false)
-    {
-		
 	}
 
     /**
