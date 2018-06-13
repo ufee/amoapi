@@ -292,8 +292,8 @@ $task->save();
 ```
 Получение всех примечаний
 $notes = $amo->notes;
-$notes = $amo->notes()->recursiveCall();
-$notes = $amo->notes()->call(); // первые 500
+$notes = $amo->notes()->where('type', 'contact')->recursiveCall();
+$notes = $amo->notes()->where('type', 'lead')->call(); // первые 500
 
 Получение по ID
 $note = $amo->notes()->find($id); // array|integer

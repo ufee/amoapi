@@ -280,4 +280,22 @@ class LimitedList extends Cached
 		}
 		return $model;
 	}
+
+    /**
+     * Get model limited list
+	 * @return Collection
+     */
+	public function call()
+	{
+		return $this->list->call();
+	}
+
+    /**
+     * Get model unlimited list
+	 * @return Collection
+     */
+	public function recursiveCall()
+	{
+		return $this->list->recursiveCall();
+	}
 }
