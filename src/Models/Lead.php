@@ -54,6 +54,9 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
     {
 		parent::_boot($data);
 
+		if (isset($data->pipeline->id)) {
+			$this->attributes['pipeline_id'] = $data->pipeline->id;
+		}
 		$this->attributes['tags'] = [];
 		if (isset($data->tags)) {
 			foreach ($data->tags as $tag) {
@@ -120,10 +123,6 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
     public function toArray()
     {
 		$fields = parent::toArray();
-		$fields['pipeline_id'] = null;
-		if (isset($this->attributes['pipeline']->id)) {
-			$fields['pipeline_id'] =  $this->attributes['pipeline']->id;
-		}
 		$fields['tags'] = $this->attributes['tags'];
 		return $fields;
     }
