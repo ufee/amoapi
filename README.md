@@ -16,9 +16,8 @@ vendor/bin/phpunit vendor/ufee/amoapi
 ```
 
 ## Работа с клиентом
-
-```
 Получение объекта для работы с конкретным аккаунтом
+```php
 $amo = \Ufee\Amo\Amoapi::setInstance([
 	'id' => 123,
 	'domain' => 'testdomain',
@@ -27,11 +26,13 @@ $amo = \Ufee\Amo\Amoapi::setInstance([
 	'zone' => 'com', // default: ru
 	'timezone' => 'Europe/London', // default: Europe/Moscow
 ]);
-
+```
 Включение логирования заросов (/Logs/m-Y/domain.log)
+```php
 $amo->queries->logs(true);
-
+```
 Пользовательская отладка запросов 
+```php
 $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
 	echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
 	print_r($query->headers);
@@ -41,39 +42,45 @@ $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
 ```
 
 **Работа со сделками**
-
-```
 Получение всех сделок
+```php
 $leads = $amo->leads;
 $leads = $amo->leads()->recursiveCall();
 $leads = $amo->leads()->call(); // первые 500
-
+```
 Получение по дате последнего изменения
+```php
 $leads = $amo->leads()
              ->modifiedFrom(string date 'Y-m-5 09:20:00') // по дате, с 5 числа текущего месяца, с 9:20 утра
              ->modifiedFrom(timestamp 1528188143) // или по timestamp
              ->maxRows(1000)
              ->list();
-
+```
 Получение по ID
+```php
 $lead = $amo->leads()->find($id); // array|integer
-
+```
 Получение сделок с дополнительным условием
+```php
 $lead = $amo->leads()->where('key', $val)->recursiveCall();
-
+```
 Связанные сущности по сделке 
+```php
 $contact = $lead->contact;
 $contacts = $lead->contacts;
 $company = $lead->company;
 $tasks = $lead->tasks;
 $notes = $lead->notes;
-
+```
 Создание сделок
-$lead1 = $amo->leads()->create();
-$lead1->name = 'Amoapi v7 - 1';
-$lead2 = $amo->leads()->create();
-$lead2->name = 'Amoapi v7 - 2';
-$amo->leads()->add([$lead1, $lead2]);
+```php
+$leads = [
+    $amo->leads()->create(),
+    $amo->leads()->create()
+];
+$leads[0]->name = 'Amoapi v7 - 1';
+$leads[1]->name = 'Amoapi v7 - 2';
+$amo->leads()->add($leads);
 
 $lead = $amo->leads()->create();
 $lead->name = 'Amoapi v7';
@@ -88,8 +95,9 @@ $lead->cf('День рождения')->setValue(date('Y-m-d'));
 $lead->cf('Дата')->setValue(date('Y-m-d'));
 $lead->cf('Переключатель')->disable();
 $lead->save();
-
+```
 Создание сделки из контакта
+```php
 $lead = $contact->createLead();
 $lead->name = 'Amoapi v7';
 $lead->save();
@@ -116,11 +124,13 @@ $tasks = $lead->tasks;
 $notes = $lead->notes;
 
 Создание контактов
-$contact1 = $amo->contacts()->create();
-$contact1->name = 'Amoapi v7 - 1';
-$contact2 = $amo->contacts()->create();
-$contact2->name = 'Amoapi v7 - 2';
-$amo->contacts()->add([$contact1, $contact2]);
+$contacts = [
+    $amo->contacts()->create(),
+    $amo->contacts()->create()
+];
+$contacts[0]->name = 'Amoapi v7 - 1';
+$contacts[1]->name = 'Amoapi v7 - 2';
+$amo->contacts()->add($contacts);
 
 $contact = $amo->contacts()->create();
 $contact->name = 'Amoapi v7';
@@ -167,11 +177,13 @@ $tasks = $lead->tasks;
 $notes = $lead->notes;
 
 Создание компаний
-$company1 = $amo->companies()->create();
-$company1->name = 'Amoapi v7 - 1';
-$company2 = $amo->companies()->create();
-$company2->name = 'Amoapi v7 - 2';
-$amo->companies()->add([$company1, $company2]);
+$companys = [
+    $amo->companies()->create(),
+    $amo->companies()->create()
+];
+$companys[0]->name = 'Amoapi v7 - 1';
+$companys[1]->name = 'Amoapi v7 - 2';
+$amo->companies()->add($companys);
 
 $company = $amo->companies()->create();
 $company->name = 'Amoapi v7';
@@ -261,15 +273,17 @@ $task = $amo->tasks()->find($id); // array|integer
 $tasks = $amo->tasks()->where('key', $val)->recursiveCall();
 
 Создание задач
-$task1 = $amo->tasks()->create();
-$task1->text = 'Amoapi v7 - 1';
-$task1->element_type = 3;
-$task1->element_id = 34762721;
-$task2 = $amo->tasks()->create();
-$task2->text = 'Amoapi v7 - 2';
-$task2->element_type = 2;
-$task2->element_id = 34762720;
-$amo->tasks()->add([$task1, $task2]);
+$tasks = [
+    $amo->tasks()->create(),
+    $amo->tasks()->create()
+];
+$tasks[0]->text = 'Amoapi v7 - 1';
+$tasks[0]->element_type = 3;
+$tasks[0]->element_id = 34762721;
+$tasks[1]->text = 'Amoapi v7 - 2';
+$tasks[1]->element_type = 2;
+$tasks[1]->element_id = 34762720;
+$amo->tasks()->add($tasks);
 
 $task = $amo->tasks()->create();
 $task->text = 'Amoapi v7';
@@ -289,7 +303,7 @@ $task->save();
 
 **Работа с примечаниями**
 
-```
+```php
 Получение всех примечаний
 $notes = $amo->notes;
 $notes = $amo->notes()->where('type', 'contact')->recursiveCall();
@@ -302,17 +316,19 @@ $note = $amo->notes()->find($id); // array|integer
 $notes = $amo->notes()->where('key', $val)->recursiveCall();
 
 Создание примечаний
-$note1 = $amo->notes()->create();
-$note1->note_type = 4;
-$note1->text = 'Amoapi v7 - 1';
-$note1->element_type = 3;
-$note1->element_id = 34762721;
-$note2 = $amo->notes()->create();
-$note2->note_type = 4;
-$note2->text = 'Amoapi v7 - 2';
-$note2->element_type = 2;
-$note2->element_id = 34762720;
-$amo->notes()->add([$note1, $note2]);
+$notes = [
+    $amo->notes()->create(), 
+    $amo->notes()->create()
+];
+$notes[0]->note_type = 4;
+$notes[0]->text = 'Amoapi v7 - 1';
+$notes[0]->element_type = 3;
+$notes[0]->element_id = 34762721;
+$notes[1]->note_type = 4;
+$notes[1]->text = 'Amoapi v7 - 2';
+$notes[1]->element_type = 2;
+$notes[1]->element_id = 34762720;
+$amo->notes()->add($notes);
 
 $note = $amo->notes()->create();
 $note->note_type = 4;
