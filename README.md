@@ -24,7 +24,7 @@ $amo = \Ufee\Amo\Amoapi::setInstance([
 	'login' => 'test@login',
 	'hash' => 'testhash',
 	'zone' => 'com', // default: ru
-	'timezone' => 'Europe/London', // default: Europe/Moscow
+	'timezone' => 'Europe/London' // default: Europe/Moscow
 ]);
 ```
 Включение логирования заросов (/Logs/m-Y/domain.log)
@@ -41,7 +41,7 @@ $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
 });
 ```
 
-**Работа со сделками**
+## Работа со сделками
 Получение всех сделок
 ```php
 $leads = $amo->leads;
@@ -51,8 +51,8 @@ $leads = $amo->leads()->call(); // первые 500
 Получение по дате последнего изменения
 ```php
 $leads = $amo->leads()
-             ->modifiedFrom(string date 'Y-m-5 09:20:00') // по дате, с 5 числа текущего месяца, с 9:20 утра
-             ->modifiedFrom(timestamp 1528188143) // или по timestamp
+             ->modifiedFrom('Y-m-5 09:20:00') // по дате, с 5 числа текущего месяца, с 9:20 утра
+             ->modifiedFrom(1528188143) // или по timestamp
              ->maxRows(1000)
              ->list();
 ```
@@ -103,27 +103,30 @@ $lead->name = 'Amoapi v7';
 $lead->save();
 ```
 
-**Работа с контактами**
-
-```
+## Работа с контактами
 Получение всех контактов
+```php
 $contacts = $amo->contacts;
 $contacts = $amo->contacts()->recursiveCall();
 $contacts = $amo->contacts()->call(); // первые 500
-
+```
 Получение по ID
+```php
 $contact = $amo->contacts()->find($id); // array|integer
-
+```
 Получение контактов с дополнительным условием
+```php
 $contacts = $amo->contacts()->where('key', $val)->recursiveCall();
-
+```
 Связанные сущности по контакту
+```php
 $leads = $contact->leads;
 $company = $contact->company;
 $tasks = $lead->tasks;
 $notes = $lead->notes;
-
+```
 Создание контактов
+```php
 $contacts = [
     $amo->contacts()->create(),
     $amo->contacts()->create()
@@ -149,34 +152,38 @@ $contact->cf('Юр. лицо')->setType(1);
 $contact->cf('Юр. лицо')->setInn(123);
 $contact->cf('Юр. лицо')->setKpp(456);
 $contact->save();
-
+```
 Создание контакта из сделки
+```php
 $contact = $lead->createContact();
 $contact->name = 'Amoapi v7';
 $contact->save();
 ```
 
-**Работа с компаниями**
-
-```
+## Работа с компаниями
 Получение всех компаний
+```php
 $companies = $amo->companies;
 $companies = $amo->companies()->recursiveCall();
 $companies = $amo->companies()->call(); // первые 500
-
+```
 Получение по ID
+```php
 $company = $amo->companies()->find($id); // array|integer
-
+```
 Получение компаний с дополнительным условием
+```php
 $companies = $amo->companies()->where('key', $val)->recursiveCall();
-
+```
 Связанные сущности по компании
+```php
 $leads = $company->leads;
 $contacts = $company->contacts;
 $tasks = $lead->tasks;
 $notes = $lead->notes;
-
+```
 Создание компаний
+```php
 $companys = [
     $amo->companies()->create(),
     $amo->companies()->create()
@@ -188,37 +195,41 @@ $amo->companies()->add($companys);
 $company = $amo->companies()->create();
 $company->name = 'Amoapi v7';
 $company->save();
-
+```
 Создание компании из контакта или сделки
+```php
 $company = $contact->createCompany();
 $company = $lead->createCompany();
 $company->name = 'Amoapi v7';
 $company->save();
 ```
 
-**Работа с покупателями**
-
-```
+## Работа с покупателями
 Получение всех покупателей
+```php
 $customers = $amo->customers;
 $customers = $amo->customers()->recursiveCall();
 $customers = $amo->customers()->call(); // первые 500
-
+```
 Получение по ID
+```php
 $customer = $amo->customers()->find($id); // array|integer
-
+```
 Получение покупателей с дополнительным условием
+```php
 $customer = $amo->customers()->where('key', $val)->recursiveCall();
-
+```
 Связанные сущности по сделке 
+```php
 $contact = $customer->contact;
 $contacts = $customer->contacts;
 $company = $customer->company;
 $tasks = $customer->tasks;
 $notes = $customer->notes;
 $transactions = $customer->transactions;
-
+```
 Создание покупателей
+```php
 $customer = $amo->customers()->create();
 $customer->name = 'Amoapi v7';
 $customer->next_date = time();
@@ -233,46 +244,52 @@ $customer->cf('Переключатель')->disable();
 $customer->save();
 ```
 
-**Работа с покупками**
-
-```
+## Работа с покупками
 Получение транзакций (покупок)
+```php
 $transactions = $amo->transactions;
 $transactions = $customer->transactions;
-
+```
 Добавление транзакций
+```php
 $transaction = $amo->transactions()->create();
 $transaction->customer_id = 1234;
+```
 или
+```php
 $transaction = $customer->createTransaction();
 $transaction->price = 1500;
 $transaction->save();
-
+```
 Обновление комментариев транзакций покупателя
+```php
 $transaction->comment = 'Тест';
 $transaction->save();
-
+```
 Удаление транзакций покупателя
-$amo->transactions()->delete($transactions); // массив моделей или ID 
+```php
+$amo->transactions()->delete($transactions); // array|integer
 $customer->transactions->delete(); // удаление всех покупок покупателя
 $transaction->delete(); // удаление покупки
 ```
 
-**Работа с задачами**
-
-```
+## Работа с задачами
 Получение всех задач
+```php
 $tasks = $amo->tasks;
 $tasks = $amo->tasks()->recursiveCall();
 $tasks = $amo->tasks()->call(); // первые 500
-
+```
 Получение по ID
+```php
 $task = $amo->tasks()->find($id); // array|integer
-
+```
 Получение задач с дополнительным условием
+```php
 $tasks = $amo->tasks()->where('key', $val)->recursiveCall();
-
+```
 Создание задач
+```php
 $tasks = [
     $amo->tasks()->create(),
     $amo->tasks()->create()
@@ -290,8 +307,9 @@ $task->text = 'Amoapi v7';
 $task->element_type = 1;
 $task->element_id = 34762725;
 $task->save();
-
+```
 Создание задачи из контакта, сделки или компании
+```php
 $task = $contact->createTask($type = 1);
 $task = $lead->createTask($type = 1);
 $task = $company->createTask($type = 1);
@@ -301,21 +319,23 @@ $task->element_id = 34762725;
 $task->save();
 ```
 
-**Работа с примечаниями**
-
-```php
+## Работа с примечаниями
 Получение всех примечаний
+```php
 $notes = $amo->notes;
 $notes = $amo->notes()->where('type', 'contact')->recursiveCall();
 $notes = $amo->notes()->where('type', 'lead')->call(); // первые 500
-
+```
 Получение по ID
+```php
 $note = $amo->notes()->find($id); // array|integer
-
+```
 Получение примечаний с дополнительным условием
+```php
 $notes = $amo->notes()->where('key', $val)->recursiveCall();
-
+```
 Создание примечаний
+```php
 $notes = [
     $amo->notes()->create(), 
     $amo->notes()->create()
@@ -336,8 +356,9 @@ $note->text = 'Amoapi v7';
 $note->element_type = 1;
 $note->element_id = 34762725;
 $note->save();
-
+```
 Создание примечания из контакта, сделки или компании
+```php
 $note = $contact->createNote($type = 4);
 $note = $lead->createNote($type = 4);
 $note = $company->createNote($type = 4);
