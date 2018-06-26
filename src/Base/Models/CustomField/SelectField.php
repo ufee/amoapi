@@ -20,7 +20,7 @@ class SelectField extends EntityField
 
     /**
      * Set cf value
-	 * @param string $key
+	 * @param string $value
      */
     public function setValue($value)
     {

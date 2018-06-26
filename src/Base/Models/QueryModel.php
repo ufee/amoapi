@@ -191,7 +191,7 @@ class QueryModel
 	
     /**
      * Protect set model fields
-	 * @param string $property
+	 * @param string $field
 	 * @param string $value
      */
 	public function __set($field, $value)

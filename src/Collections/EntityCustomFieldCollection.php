@@ -22,7 +22,7 @@ class EntityCustomFieldCollection
 
     /**
      * Call Collection Methods
-	 * @param string $service_name
+	 * @param string $method
      * @param array $args
      */
 	public function __call($method, $args)

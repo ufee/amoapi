@@ -6,20 +6,21 @@ namespace Ufee\Amo\Api;
 
 class Logger
 {
-	private $path = '/logs/',
-			$options = [
-				'name' => '',
-				'chunk' => 'm-Y',
-				'date_format' => "d.m.Y H:i:s \r\n-------------------\r\n",
-			];
-	private static
+	protected
+		$path = '/logs/',
+		$options = [
+			'name' => '',
+			'chunk' => 'm-Y',
+			'date_format' => "d.m.Y H:i:s \r\n-------------------\r\n",
+		];
+	protected static
 			$_instances = [];
 
 			
     /**
      * Constructor
      */
-	private function __construct($name)
+	protected function __construct($name)
     {
 		if (!is_string($name) && !is_array($name)) {
 			throw new \Exception('Logger filename must be string or array');

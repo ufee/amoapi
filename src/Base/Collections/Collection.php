@@ -287,7 +287,7 @@ class Collection implements \IteratorAggregate
 	
     /**
      * Has elements value - one array
-	 * @param mixed $val items element value
+	 * @param array $vals element values
 	 * @return mixed
      */
     protected function _containsArr($vals)
@@ -302,7 +302,8 @@ class Collection implements \IteratorAggregate
 	
     /**
      * Has elements value - objects
-	 * @param mixed $val items element value
+	 * @param mixed $key element key
+	 * @param mixed $val element value
 	 * @return mixed
      */
     protected function _containsObj($key, $val)
@@ -459,7 +460,7 @@ class Collection implements \IteratorAggregate
 	
     /**
      * Has iset keys
-	 * @param mixed $key items element key
+	 * @param mixed $keys items element key
 	 * @return mixed
      */
     public function has($keys)

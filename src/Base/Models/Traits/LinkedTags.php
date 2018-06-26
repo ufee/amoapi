@@ -13,8 +13,8 @@ trait LinkedTags
      */
     public function attachTags(Array $tags)
     {
-		foreach ($leads as $lead) {
-			$this->attachTag($lead);
+		foreach ($tags as $tag) {
+			$this->attachTag($tag);
 		}
 		return $this;
 	}

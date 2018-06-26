@@ -3,7 +3,7 @@
  * amoCRM Companies Custom field Collection class
  */
 namespace Ufee\Amo\Collections;
-
+use Ufee\Amo\Models\CustomField;
 class CompaniesCustomFieldCollection extends CustomFieldCollection
 {
     const SYS_FIELD_CLASSES = [
@@ -16,10 +16,10 @@ class CompaniesCustomFieldCollection extends CustomFieldCollection
     
     /**
      * Get cf classname
-	 * @param integer $type_id
+	 * @param CustomField $cfield
 	 * @return string
      */
-    public function getClassFrom(\Ufee\Amo\Models\CustomField $cfield)
+    public function getClassFrom(CustomField $cfield)
     {
         if ($cfield->isSystem() && array_key_exists($cfield->name, self::SYS_FIELD_CLASSES)) {
             return self::SYS_FIELD_CLASSES[$cfield->name];

@@ -40,10 +40,10 @@ class CustomFieldCollection extends CollectionWrapper
 
     /**
      * Get cf classname
-	 * @param integer $type_id
+	 * @param CustomField $cfield
 	 * @return string
      */
-    public function getClassFrom(\Ufee\Amo\Models\CustomField $cfield)
+    public function getClassFrom(CustomField $cfield)
     {
         if (!array_key_exists($cfield->field_type, self::FIELD_CLASSES)) {
             throw new \Exception('Unregistered custom field class for type: '.$cfield->field_type);

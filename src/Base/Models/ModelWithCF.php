@@ -94,7 +94,6 @@ class ModelWithCF extends ApiModel
 
 	/**
      * Saved data trigger
-	 * @param integer $id
 	 * @return void
      */
     public function saved()

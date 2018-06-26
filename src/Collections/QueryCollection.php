@@ -47,7 +47,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 	public function getCached($hash, $cache_time = false)
 	{
         if ($cache_time === false) {
-           return false;
+           return null;
         }        
         $queries = $this->find('hash', $hash)->filter(function($query) use($cache_time) {
             return $cache_time === 0 || microtime(1)-$query->end_time <= $cache_time;
