@@ -8,8 +8,7 @@ class Response
 {
 	private
 		$query,
-		$data,
-		$resource;
+		$data;
 		
     /**
      * Constructor

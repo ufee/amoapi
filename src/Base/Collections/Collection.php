@@ -347,7 +347,7 @@ class Collection implements \IteratorAggregate
 	
     /**
      * Get elements by value - one array
-	 * @param mixed $val items element value
+	 * @param array $vals items element value
 	 * @return mixed
      */
     protected function _findArr($vals)

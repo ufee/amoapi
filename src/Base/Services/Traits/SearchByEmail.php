@@ -13,16 +13,16 @@ trait SearchByEmail
      */
 	public function searchByEmail($email)
 	{
-		function clear($email) {
+		function clearEmail($email) {
 			return mb_strtoupper(trim($email));
 		}
 		$field_name = 'Email';
-		$query = clear($email);
+		$query = clearEmail($email);
 		$results = $this->list->where('query', $query)->recursiveCall();	
 		
 		return $results->filter(function($model) use($query, $field_name) {
 			foreach ($model->cf($field_name)->getValues() as $value) {
-				if ($query === clear($value)) {
+				if ($query === clearEmail($value)) {
 					return true;
 				}
 			}

@@ -26,7 +26,7 @@ class PipelineStatus extends \Ufee\Amo\Base\Models\Model
     /**
      * Constructor
 	 * @param array $data
-	 * @param Account $account
+	 * @param Pipeline $pipeline
      */
     public function __construct($data, \Ufee\Amo\Models\Pipeline &$pipeline)
     {
