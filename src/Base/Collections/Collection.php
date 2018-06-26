@@ -15,15 +15,12 @@ class Collection implements \IteratorAggregate
      */
     public function __construct(Array $elements = [])
     {
-        if (!is_array($elements)) {
-			throw new \Exception('Invalid argument array');
-		}
         $this->items = $elements;
 	}
 	
     /**
      * Collection iterator
-	 * @return ArrayIterator
+	 * @return \ArrayIterator
      */
 	public function getIterator()
 	{
@@ -63,7 +60,7 @@ class Collection implements \IteratorAggregate
     /**
      * Push new elements
 	 * @param mixed $element
-	 * @return Colection
+	 * @return Collection
      */
     public function push($element)
     {
@@ -74,7 +71,7 @@ class Collection implements \IteratorAggregate
     /**
      * Merge collections
 	 * @param Collection $collection
-	 * @return Colection
+	 * @return Collection
      */
     public function merge(Collection &$collection)
     {
@@ -86,7 +83,7 @@ class Collection implements \IteratorAggregate
      * Chunk collection
 	 * @param integer $size
 	 * @param bool $preserve_keys
-	 * @return Colection
+	 * @return Collection
      */
     public function chunk($size, $preserve_keys = false)
     {
@@ -210,7 +207,7 @@ class Collection implements \IteratorAggregate
     /**
      * Join elements
 	 * @param string $delimiter
-	 * @return array
+	 * @return string
      */
     public function join($delimiter = '')
     {
@@ -220,7 +217,7 @@ class Collection implements \IteratorAggregate
     /**
      * Sum elements
 	 * @param string $key
-	 * @return array
+	 * @return integer|double
      */
     public function sum($key = null)
     {
@@ -242,7 +239,7 @@ class Collection implements \IteratorAggregate
 	
     /**
      * Filter elements
-	 * @param function $callback ($item, $key)
+	 * @param callable $callback ($item, $key)
 	 * @return array
      */
     public function filter($callback)
@@ -257,7 +254,7 @@ class Collection implements \IteratorAggregate
 	
     /**
      * Map elements
-	 * @param function $callback ($item, $key)
+	 * @param callable $callback ($item, $key)
 	 * @return array
      */
     public function map($callback)

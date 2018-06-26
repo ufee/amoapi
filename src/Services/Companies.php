@@ -3,9 +3,12 @@
  * amoCRM API client Companies service
  */
 namespace Ufee\Amo\Services;
+use Ufee\Amo\Base\Services\Traits;
 
 class Companies extends \Ufee\Amo\Base\Services\MainEntity
 {
+	use Traits\SearchByName, Traits\SearchByPhone, Traits\SearchByEmail;
+
 	protected static 
 		$_require = [
 			'add' => ['name'],
@@ -16,17 +19,6 @@ class Companies extends \Ufee\Amo\Base\Services\MainEntity
 		$entity_model = '\Ufee\Amo\Models\Company',
 		$entity_collection = '\Ufee\Amo\Collections\CompanyCollection',
 		$cache_time = false;
-	
-    /**
-     * Get companies by term
-	 * @param string $query
-	 * @return Collection
-     */
-	public function search($query)
-	{
-		return $this->list->where('query', $query)
-						  ->recursiveCall();
-	}
 	
     /**
      * Get full

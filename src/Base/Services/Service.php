@@ -28,7 +28,16 @@ class Service
     {
         $this->account_id = $account_id;
 		$this->_boot();
-    }
+	}
+	
+    /**
+     * Service on load
+	 * @return void
+     */
+	protected function _boot()
+	{
+		
+	}
 
     /**
      * Set service instance

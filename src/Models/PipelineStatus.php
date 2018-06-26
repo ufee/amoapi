@@ -131,6 +131,24 @@ class PipelineStatus extends \Ufee\Amo\Base\Models\Model
 	}
 
 	/**
+     * Has status success
+     * @return bool
+     */
+    public function hasSuccess()
+    {
+		return $this->id == 142;
+	}
+
+	/**
+     * Has status missed
+     * @return bool
+     */
+    public function hasMissed()
+    {
+		return $this->id == 143;
+	}
+
+	/**
      * Has status last
      * @return bool
      */
@@ -170,7 +188,7 @@ class PipelineStatus extends \Ufee\Amo\Base\Models\Model
 		if (is_null($this->attributes['prevs'])) {
 			$current = $this;
 			$this->attributes['prevs'] = $this->pipeline->statuses->find(function($status) use($current) {
-				return !$status->hasClosed() && $status->hasBeforeFrom($current);
+				return !$status->hasMissed() && $status->hasBeforeFrom($current);
 			});	
 		}
 		return $this->attributes['prevs'];	
@@ -185,8 +203,8 @@ class PipelineStatus extends \Ufee\Amo\Base\Models\Model
 		if (is_null($this->attributes['nexts'])) {
 			$current = $this;
 			$this->attributes['nexts'] = $this->pipeline->statuses->find(function($status) use($current) {
-				return !$status->hasClosed() && $status->hasAfterFrom($current);
-			});	
+				return !$status->hasMissed() && $status->hasAfterFrom($current);
+			});
 		}
 		return $this->attributes['nexts'];	
 	}
