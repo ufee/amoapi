@@ -7,7 +7,7 @@ use Ufee\Amo\Base\Models\Traits;
 
 class Customer extends \Ufee\Amo\Base\Models\ModelWithCF
 {
-	use Traits\LinkedContacts, Traits\MainContact, Traits\LinkedCompany, Traits\LinkedTasks, Traits\LinkedNotes, Traits\EntityDetector;
+	use Traits\LinkedContacts, Traits\MainContact, Traits\LinkedCompany, Traits\LinkedTasks, Traits\LinkedNotes, Traits\EntityDetector, Traits\LinkedTags;
 
 	protected static 
 		$cf_category = 'customers',

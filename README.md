@@ -40,7 +40,14 @@ $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
 	echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
 });
 ```
-
+## Поиск сущностей
+Поиск по дополнительному полю
+```php
+$leads = $amo->leads()->searchByCustomField('Москва', 'Город');
+$companies = $amo->companies()->searchByName('ООО Шарики за Ролики');
+$contacts = $amo->contacts()->searchByEmail('Test@Mail.Ru');
+$contacts = $amo->contacts()->searchByPhone('89271002030');
+```
 ## Работа со сделками
 Получение всех сделок
 ```php
@@ -84,6 +91,7 @@ $amo->leads()->add($leads);
 
 $lead = $amo->leads()->create();
 $lead->name = 'Amoapi v7';
+$lead->attachTag('Amoapi');
 $lead->pipeline_id = $amo->account->pipelines->main();
 $lead->status_id = $lead->pipeline->statuses->first();
 $lead->responsible_user_id = $amo->account->currentUser->id;
@@ -137,6 +145,7 @@ $amo->contacts()->add($contacts);
 
 $contact = $amo->contacts()->create();
 $contact->name = 'Amoapi v7';
+$contact->attachTags(['Amoapi', 'Test']);
 $contact->cf('Телефон')->setValue('987654321', 'Home');
 $contact->cf('Телефон')->setValue('123456789');
 $contact->cf('Email')->setValue('best@list.ru');
