@@ -30,16 +30,16 @@ trait SearchByPhone
      */
 	protected function searchBy_ru_mob($phone)
 	{
-		function clearPhone($phone) {
+		$clearPhone = function($phone) {
 			return substr(preg_replace('#[^0-9]+#Uis', '', $phone), -10);
-		}
-		$field_name = $this->instance->getAuth('zone') == 'ru' ? 'Телефон' : 'Phone';
-		$query = clearPhone($phone);
+		};
+		$field_name = $this->instance->getAuth('lang') == 'ru' ? 'Телефон' : 'Phone';
+		$query = $clearPhone($phone);
 		$results = $this->list->where('query', $query)->recursiveCall();	
 		
-		return $results->filter(function($model) use($query, $field_name) {
+		return $results->filter(function($model) use($query, $field_name, $clearPhone) {
 			foreach ($model->cf($field_name)->getValues() as $value) {
-				if ($query === clearPhone($value)) {
+				if ($query === $clearPhone($value)) {
 					return true;
 				}
 			}

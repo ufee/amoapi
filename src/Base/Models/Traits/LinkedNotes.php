@@ -7,7 +7,7 @@ namespace Ufee\Amo\Base\Models\Traits;
 trait LinkedNotes
 {
 	/**
-     * Get linked note model
+     * Create linked note model
      * @return Note
      */
     public function createNote($type = 4)

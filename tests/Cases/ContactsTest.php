@@ -18,23 +18,16 @@ class ContactsTest extends \Tests\TestCase
 			Services\Contacts::class, $this->amo->contacts()
 		);
     }
-	
-    public function testCreateOneContact()
-    {
-		$model = $this->amo->contacts()->create();
-		$model->name = 'Test CreateOneContact '.time();
-		$has_created = $model->save();
 
-		Assert::assertTrue(
-			($has_created && is_numeric($model->id))
-		);
-    }
-	
     public function testUpdateContactName()
     {
 		$model = $this->amo->contacts()->create();
 		$model->name = 'Test UpdateContact '.time();
-		$model->save();
+		$has_created = $model->save();
+		
+		Assert::assertTrue(
+			($has_created && is_numeric($model->id))
+		);
 		
 		$model->name = 'Test UpdateContact NEW';
 		$model->save();
@@ -56,7 +49,7 @@ class ContactsTest extends \Tests\TestCase
 		$has_created = $this->amo->contacts()->add($create_models);
 		
 		Assert::assertTrue(
-			($has_created && is_numeric($create_models[0]->id) && is_numeric($create_models[0]->id))
+			($has_created && is_numeric($create_models[0]->id) && is_numeric($create_models[1]->id))
 		);
     }
 }

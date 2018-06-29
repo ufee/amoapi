@@ -77,22 +77,28 @@ class Get extends Method
 		if ($query->response->getCode() == 204) {
 			return $collection;
 		}
-		if (!$json = $query->response->parseJson()) {
+		if (!$response = $query->response->parseJson()) {
 			throw new \Exception('Invalid API response (non JSON), code: '.$query->response->getCode());
 		}
-		if (!isset($json->_embedded->items)) {
-			if (isset($json->error)) {
-				throw new \Exception('API response error (code: '.$query->response->getCode().') '.$json->error);
-			}
-			if (isset($json->title) && isset($json->detail)) {
-				throw new \Exception('API response error (code: '.$query->response->getCode().'), '.$json->detail);
-			}
-			throw new \Exception('Invalid API response ('.$this->service->entity_key.': items not found), code: '.$query->response->getCode());
+		if (!empty($response->_embedded->errors)) {
+			throw new \Exception('API response errors: '.json_encode($response->_embedded->errors, JSON_UNESCAPED_UNICODE));
 		}
-		foreach ($json->_embedded->items as $raw) {
-			$collection->push(
-				new $model_class($raw, $this->service, $query)
-			);
+		if (!isset($response->_embedded->items)) {
+			if (isset($response->error)) {
+				throw new \Exception('API response error (code: '.$query->response->getCode().') '.$response->error);
+			}
+			if (isset($response->title) && isset($response->detail)) {
+				throw new \Exception('API response error (code: '.$query->response->getCode().'), '.$response->detail);
+			}
+			if (!in_array($query->response->getCode(), [200, 204])) {
+				throw new \Exception('Invalid API response ('.$this->service->entity_key.': items not found), code: '.$query->response->getCode());
+			}
+		} else {
+			foreach ($response->_embedded->items as $raw) {
+				$collection->push(
+					new $model_class($raw, $this->service, $query)
+				);
+			}
 		}
 		return $collection;
 	}

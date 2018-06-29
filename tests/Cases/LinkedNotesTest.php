@@ -19,24 +19,6 @@ class LinkedNotesTest extends \Tests\TestCase
 		);
     }
 	
-    public function testCreateOneLeadNote()
-    {
-		$lead = $this->amo->leads()->create();
-		$lead->name = 'Test CreateOneLeadNote '.time();
-		$lead->save();
-		
-		$note = $this->amo->notes()->create();
-		$note->note_type = 4;
-		$note->text = 'Test CreateOneLeadNote '.time();
-		$note->element_type = 2;
-		$note->element_id = $lead->id;
-		$has_created = $note->save();
-
-		Assert::assertTrue(
-			($has_created && is_numeric($note->id))
-		);
-    }
-	
     public function testUpdateLeadNote()
     {
 		$lead = $this->amo->leads()->create();
@@ -47,7 +29,11 @@ class LinkedNotesTest extends \Tests\TestCase
 		$note->text = 'Test UpdateLeadNote '.time();
 		$note->element_type = 2;
 		$note->element_id = $lead->id;
-		$note->save();
+		$has_created = $note->save();
+		
+		Assert::assertTrue(
+			($has_created && is_numeric($note->id))
+		);
 		
 		$note->text = 'Test UpdateLeadNote NEW';
 		$note->save();
@@ -73,7 +59,7 @@ class LinkedNotesTest extends \Tests\TestCase
 		$has_created = $this->amo->notes()->add($create_notes);
 		
 		Assert::assertTrue(
-			($has_created && is_numeric($create_notes[0]->id) && is_numeric($create_notes[0]->id))
+			($has_created && is_numeric($create_notes[0]->id) && is_numeric($create_notes[1]->id))
 		);
     }
 }

@@ -112,6 +112,14 @@ class Customer extends \Ufee\Amo\Base\Models\ModelWithCF
 		return $this->attributes['transactions'];
 	}
 
+    /**
+     * Delete model
+     * @return array
+     */
+    public function delete()
+    {
+		return $this->service->delete($this);
+    }
 
     /**
      * Convert Model to array

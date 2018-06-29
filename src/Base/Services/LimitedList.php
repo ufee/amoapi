@@ -3,10 +3,13 @@
  * amoCRM API client Base service
  */
 namespace Ufee\Amo\Base\Services;
-use Ufee\Amo\Base\Collections\Collection;
+use Ufee\Amo\Base\Models\Traits,
+	Ufee\Amo\Base\Collections\Collection;
 
 class LimitedList extends Cached
 {
+	use Traits\EntityDetector;
+	
 	protected
 		$entity_collection = '\Ufee\Amo\Base\Collections\ApiModelCollection',
 		$limit_rows_add = 300,
@@ -198,6 +201,31 @@ class LimitedList extends Cached
 			$raws[]= array_merge($raw, $model->getChangedRawApiData());
 		}
 		return $this->update->update($raws);
+	}
+
+    /**
+     * Delete models
+	 * @param mixed $models
+     */
+	public function delete($models)
+	{
+		if (!is_array($models)) {
+			$models = [$models];
+		}
+		$ids = [];
+		foreach ($models as $model) {
+			if ($trans_id = $this->getIdFrom($model)) {
+				$ids[]= $trans_id;
+			}
+		}
+		if (count($ids) == 0) {
+			return null;
+		}
+		$deleted = $this->delete->delete($ids);
+		if ($deleted->count() === count($ids)) {
+			return true;
+		}
+		return false;
 	}
 	
     /**

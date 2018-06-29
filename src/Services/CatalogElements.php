@@ -6,11 +6,19 @@ namespace Ufee\Amo\Services;
 
 class CatalogElements extends \Ufee\Amo\Base\Services\LimitedList
 {
+	protected static 
+		$_require = [
+			'add' => ['catalog_id', 'name'],
+			'update' => ['id', 'name', 'catalog_id', 'updated_at']
+		];
 	protected
 		$entity_key = 'catalog_elements',
 		$entity_model = '\Ufee\Amo\Models\CatalogElement',
 		$entity_collection = '\Ufee\Amo\Collections\CatalogElementCollection',
-		$cache_time = false;
+		$cache_time = false,
+		$methods = [
+			'list', 'add', 'update', 'delete'
+		];
 		
     /**
      * Get full

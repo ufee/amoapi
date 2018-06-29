@@ -18,25 +18,7 @@ class LinkedTasksTest extends \Tests\TestCase
 			Services\Tasks::class, $this->amo->tasks()
 		);
     }
-	
-    public function testCreateOneLeadTask()
-    {
-		$lead = $this->amo->leads()->create();
-		$lead->name = 'Test CreateOneLeadTask '.time();
-		$lead->save();
-		
-		$task = $this->amo->tasks()->create();
-		$task->task_type = 1;
-		$task->text = 'Test CreateOneLeadTask '.time();
-		$task->element_type = 2;
-		$task->element_id = $lead->id;
-		$has_created = $task->save();
 
-		Assert::assertTrue(
-			($has_created && is_numeric($task->id))
-		);
-    }
-	
     public function testUpdateLeadTask()
     {
 		$lead = $this->amo->leads()->create();
@@ -47,7 +29,11 @@ class LinkedTasksTest extends \Tests\TestCase
 		$task->text = 'Test UpdateLeadTask '.time();
 		$task->element_type = 2;
 		$task->element_id = $lead->id;
-		$task->save();
+		$has_created = $task->save();
+		
+		Assert::assertTrue(
+			($has_created && is_numeric($task->id))
+		);
 		
 		$task->text = 'Test UpdateLeadTask NEW';
 		$task->save();
@@ -73,7 +59,7 @@ class LinkedTasksTest extends \Tests\TestCase
 		$has_created = $this->amo->tasks()->add($create_tasks);
 		
 		Assert::assertTrue(
-			($has_created && is_numeric($create_tasks[0]->id) && is_numeric($create_tasks[0]->id))
+			($has_created && is_numeric($create_tasks[0]->id) && is_numeric($create_tasks[1]->id))
 		);
     }
 }

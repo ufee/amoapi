@@ -77,14 +77,6 @@ class Company extends \Ufee\Amo\Base\Models\ModelWithCF
     public function toArray()
     {
 		$fields = parent::toArray();
-		$fields['contacts_id'] = [];
-		if (isset($this->attributes['contacts']->id)) {
-			$fields['contacts_id'] = $this->contacts->id;
-		}
-		$fields['leads_id'] = [];
-		if (isset($this->attributes['leads']->id)) {
-			$fields['leads_id'] = $this->leads->id;
-		}
 		$fields['tags'] = $this->attributes['tags'];
 		return $fields;
     }

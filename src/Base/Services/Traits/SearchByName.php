@@ -13,14 +13,14 @@ trait SearchByName
      */
 	public function searchByName($name)
 	{
-		function clearName($name) {
+		$clearName = function($name) {
 			return mb_strtoupper(trim($name));
-		}
-		$query = clearName($name);
+		};
+		$query = $clearName($name);
 		$results = $this->list->where('query', $query)->recursiveCall();	
 		
-		return $results->filter(function($model) use($query) {
-			return $query === clearName($model->name);
+		return $results->filter(function($model) use($query, $clearName) {
+			return $query === $clearName($model->name);
 		});
 	}
 }

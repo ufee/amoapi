@@ -65,11 +65,14 @@ class Amoapi
 		if (empty($data['zone'])) {
 			$data['zone'] = 'ru';
 		}
+		if (empty($data['lang'])) {
+			$data['lang'] = $data['zone'] == 'ru' ? 'ru' : 'en';
+		}
 		if (empty($data['timezone'])) {
 			$data['timezone'] = 'Europe/Moscow';
 		}
 		$account = [
-			'id' => '', 'domain' => '', 'login' => '', 'hash' => '', 'zone' => '', 'timezone' => ''
+			'id' => '', 'domain' => '', 'login' => '', 'hash' => '', 'zone' => '', 'lang' => '', 'timezone' => ''
 		];
 		foreach ($account as $key=>$val) {
 			if (!isset($data[$key])) {

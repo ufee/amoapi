@@ -3,13 +3,10 @@
  * amoCRM API client Transactions service
  */
 namespace Ufee\Amo\Services;
-use Ufee\Amo\Base\Models\Traits,
-	Ufee\Amo\Base\Collections\Collection;
+use Ufee\Amo\Base\Collections\Collection;
 
 class Transactions extends \Ufee\Amo\Base\Services\LimitedList
 {
-	use Traits\EntityDetector;
-
 	protected static 
 		$_require = [
 			'add' => ['customer_id', 'price'],
@@ -70,31 +67,6 @@ class Transactions extends \Ufee\Amo\Base\Services\LimitedList
 			$models = $create_models;
 		}
 		return $added;
-	}
-
-    /**
-     * Delete transactions
-	 * @param mixed $transactions
-     */
-	public function delete($transactions)
-	{
-		if (!is_array($transactions)) {
-			$transactions = [$transactions];
-		}
-		$ids = [];
-		foreach ($transactions as $transaction) {
-			if ($trans_id = $this->getIdFrom($transaction)) {
-				$ids[]= $trans_id;
-			}
-		}
-		if (count($ids) == 0) {
-			return null;
-		}
-		$deleted = $this->delete->delete($ids);
-		if ($deleted->count() === count($ids)) {
-			return true;
-		}
-		return false;
 	}
 
     /**

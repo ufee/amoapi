@@ -15,7 +15,10 @@ class Customers extends \Ufee\Amo\Base\Services\MainEntity
 		$entity_key = 'customers',
 		$entity_model = '\Ufee\Amo\Models\Customer',
 		$entity_collection = '\Ufee\Amo\Collections\CustomerCollection',
-		$cache_time = false;
+		$cache_time = false,
+		$methods = [
+			'list', 'add', 'update', 'delete'
+		];
 	
     /**
      * Get full

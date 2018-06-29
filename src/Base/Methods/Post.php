@@ -38,22 +38,37 @@ class Post extends Method
      */
     protected function parseResponse(Api\Query &$query)
     {
-		if (!$json = $query->response->parseJson()) {
+		if (!$response = $query->response->parseJson()) {
 			throw new \Exception('Invalid API response (non JSON), code: '.$query->response->getCode());
 		}
-		if (!isset($json->_embedded->items)) {
-			if (isset($json->error)) {
-				throw new \Exception('API response error (code: '.$query->response->getCode().') '.$json->error);
+		if (!isset($response->_embedded->items)) {
+			if (isset($response->error)) {
+				throw new \Exception('API response error (code: '.$query->response->getCode().') '.$response->error);
 			}
-			if (isset($json->title) && isset($json->detail)) {
-				throw new \Exception('API response error (code: '.$query->response->getCode().'), '.$json->detail);
+			if (isset($response->title) && isset($response->detail)) {
+				throw new \Exception('API response error (code: '.$query->response->getCode().'), '.$response->detail);
 			}
-			throw new \Exception('Invalid API response ('.$this->service->entity_key.': items not found), code: '.$query->response->getCode());
+			if (!in_array($query->response->getCode(), [200, 204])) {
+				throw new \Exception('Invalid API response ('.$this->service->entity_key.': items not found), code: '.$query->response->getCode());
+			}
+		}
+		if (!empty($response->_embedded->errors)) {
+			throw new \Exception('API response errors: '.json_encode($response->_embedded->errors, JSON_UNESCAPED_UNICODE));
 		}
 		$result = new Collection();
-		foreach ($json->_embedded->items as $raw) {
-			$raw->{'query_hash'} = $query->generateHash();
-			$result->push($raw);
+		if (isset($response->_embedded->items)) {
+			foreach ($response->_embedded->items as $raw) {
+				if (is_array($raw)) {
+					foreach ($raw as $raw_item) {
+						$raw_item->{'query_hash'} = $query->generateHash();
+						$result->push($raw_item);		
+					}
+				} else if (is_object($raw)) {
+					$raw->{'query_hash'} = $query->generateHash();
+					$result->push($raw);				
+				}
+
+			}
 		}
 		return $result;
 	}

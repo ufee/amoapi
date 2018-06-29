@@ -213,75 +213,6 @@ $company->name = 'Amoapi v7';
 $company->save();
 ```
 
-## Работа с покупателями
-Получение всех покупателей
-```php
-$customers = $amo->customers;
-$customers = $amo->customers()->recursiveCall();
-$customers = $amo->customers()->call(); // первые 500
-```
-Получение по ID
-```php
-$customer = $amo->customers()->find($id); // array|integer
-```
-Получение покупателей с дополнительным условием
-```php
-$customer = $amo->customers()->where('key', $val)->recursiveCall();
-```
-Связанные сущности по сделке 
-```php
-$contact = $customer->contact;
-$contacts = $customer->contacts;
-$company = $customer->company;
-$tasks = $customer->tasks;
-$notes = $customer->notes;
-$transactions = $customer->transactions;
-```
-Создание покупателей
-```php
-$customer = $amo->customers()->create();
-$customer->name = 'Amoapi v7';
-$customer->next_date = time();
-$customer->next_price = 100;
-$customer->responsible_user_id = $amo->account->currentUser->id;
-$customer->cf('Число')->setValue(5);
-$customer->cf('Текст')->setValue('Test');
-$customer->cf('Мультисписок')->reset()->setValues(['Мужская одежда', 'Аксессуары']);
-$customer->cf('День рождения')->setValue(date('Y-m-d'));
-$customer->cf('Дата')->setValue(date('Y-m-d'));
-$customer->cf('Переключатель')->disable();
-$customer->save();
-```
-
-## Работа с покупками
-Получение транзакций (покупок)
-```php
-$transactions = $amo->transactions;
-$transactions = $customer->transactions;
-```
-Добавление транзакций
-```php
-$transaction = $amo->transactions()->create();
-$transaction->customer_id = 1234;
-```
-или
-```php
-$transaction = $customer->createTransaction();
-$transaction->price = 1500;
-$transaction->save();
-```
-Обновление комментариев транзакций покупателя
-```php
-$transaction->comment = 'Тест';
-$transaction->save();
-```
-Удаление транзакций покупателя
-```php
-$amo->transactions()->delete($transactions); // array|integer
-$customer->transactions->delete(); // удаление всех покупок покупателя
-$transaction->delete(); // удаление покупки
-```
-
 ## Работа с задачами
 Получение всех задач
 ```php
@@ -375,4 +306,153 @@ $note->text = 'Amoapi v7';
 $note->element_type = 2;
 $note->element_id = 34762728;
 $note->save();
+```
+
+## Работа со списками
+Получение всех списков (каталогов)
+```php
+$catalogs = $amo->catalogs;
+```
+Получение по ID
+```php
+$catalog = $amo->catalogs()->find($id); // array|integer
+```
+Получение списков с дополнительным условием
+```php
+$catalogs = $amo->catalogs()->where('key', $val)->call();
+```
+Связанные сущности по списку
+```php
+$elements = $catalog->elements;
+```
+Создание списков
+```php
+$catalogs = [
+    $amo->catalogs()->create(),
+    $amo->catalogs()->create()
+];
+$catalogs[0]->name = 'Amoapi v7 - 1';
+$catalogs[1]->name = 'Amoapi v7 - 2';
+$amo->catalogs()->add($catalogs);
+
+$catalog = $amo->catalogs()->create();
+$catalog->name = 'Amoapi v7';
+$catalog->save();
+```
+Удаление списков
+```php
+$amo->catalogs()->delete($catalogs); // array|integer
+$catalog->delete();
+```
+
+## Работа с элементами каталога (товарами)
+Получение товаров
+```php
+$element = $amo->catalogElements()->find($id);
+$elements = $amo->catalogElements()->where('catalog_id', 1234)->call();
+$elements = $catalog->elements;
+```
+Добавление товаров
+```php
+$element = $amo->catalogElements()->create();
+$element->catalog_id = 1234;
+```
+или
+```php
+$element = $catalog->createElement();
+$element->name = 'Холодильник LG';
+$element->cf('Артикул')->setValue('ML-4675');
+$element->cf('Количество')->setValue(100);
+$element->cf('Цена')->setValue(38500);
+$element->save();
+```
+Обновление товаров
+```php
+$element->cf('Скидка')->setValue(5);
+$element->save();
+```
+Связанные сущности по товару
+```php
+$catalog = $element->catalog;
+$leads = $element->leads;
+```
+Удаление товаров
+```php
+$amo->elements()->delete($elements); // array|integer
+$catalog->elements->delete(); // удаление всех товаров каталога
+$element->delete();
+```
+
+## Работа с покупателями
+Получение всех покупателей
+```php
+$customers = $amo->customers;
+$customers = $amo->customers()->recursiveCall();
+$customers = $amo->customers()->call(); // первые 500
+```
+Получение по ID
+```php
+$customer = $amo->customers()->find($id); // array|integer
+```
+Получение покупателей с дополнительным условием
+```php
+$customer = $amo->customers()->where('key', $val)->recursiveCall();
+```
+Связанные сущности покупателя
+```php
+$contact = $customer->contact;
+$contacts = $customer->contacts;
+$company = $customer->company;
+$tasks = $customer->tasks;
+$notes = $customer->notes;
+$transactions = $customer->transactions;
+```
+Создание покупателей
+```php
+$customer = $amo->customers()->create();
+$customer->name = 'Amoapi v7';
+$customer->next_date = time();
+$customer->next_price = 100;
+$customer->responsible_user_id = $amo->account->currentUser->id;
+$customer->cf('Число')->setValue(5);
+$customer->cf('Текст')->setValue('Test');
+$customer->cf('Мультисписок')->reset()->setValues(['Мужская одежда', 'Аксессуары']);
+$customer->cf('День рождения')->setValue(date('Y-m-d'));
+$customer->cf('Дата')->setValue(date('Y-m-d'));
+$customer->cf('Переключатель')->disable();
+$customer->save();
+```
+Удаление покупателей
+```php
+$amo->customers()->delete($customers); // array|integer
+$customer->delete();
+```
+
+## Работа с покупками
+Получение транзакций (покупок)
+```php
+$transactions = $amo->transactions;
+$transactions = $customer->transactions;
+```
+Добавление транзакций
+```php
+$transaction = $amo->transactions()->create();
+$transaction->customer_id = 1234;
+```
+или
+```php
+$transaction = $customer->createTransaction();
+$transaction->price = 1500;
+$transaction->save();
+```
+Обновление комментариев транзакций покупателя
+```php
+$transaction->comment = 'Тест';
+$transaction->save();
+```
+Удаление транзакций покупателей
+```php
+$amo->transactions()->delete($transactions); // array|integer
+$customer->transactions->delete(); // удаление всех покупок покупателя
+$transaction->delete(); // удаление покупки
 ```
