@@ -36,7 +36,6 @@ class Amoapi
     private function __construct(Array $account)
     {
 		$this->_account = $account;
-		$this->_queries = new Collections\QueryCollection();
     }
 	
     /**
@@ -82,8 +81,11 @@ class Amoapi
 		}
         if (!isset(self::$_instances[$account['id']])) {
             self::$_instances[$account['id']] = new static($account);
-        }
-        return self::getInstance($account['id']);
+		}
+		$instance = self::getInstance($account['id']);
+		$instance->_queries = new Collections\QueryCollection();
+		$instance->_queries->boot($instance);
+        return $instance;
 	}
 
     /**

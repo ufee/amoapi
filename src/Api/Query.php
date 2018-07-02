@@ -14,7 +14,7 @@ class Query extends QueryModel
     public function execute()
     {
         $last_time = 1;
-        if ($last_query = $this->instance->queries->last()) {
+        if ($last_query = $this->instance()->queries->last()) {
             $last_time = $last_query->start_time;
         }
         $current_time = microtime(true);
@@ -32,7 +32,7 @@ class Query extends QueryModel
         $this->attributes['execution_time'] = round($this->end_time - $this->start_time, 5);
         $this->attributes['memory_usage'] = memory_get_peak_usage(true)/1024/1024;
         $this->generateHash();
-        $this->instance->queries->pushQuery($this);
+        $this->instance()->queries->pushQuery($this);
         return $this;
     }
 

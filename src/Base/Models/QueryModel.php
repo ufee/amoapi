@@ -3,7 +3,8 @@
  * amoCRM Base API Query model
  */
 namespace Ufee\Amo\Base\Models;
-use Ufee\Amo\Amoapi;
+use Ufee\Amo\Amoapi,
+	Ufee\Amo\Base\Services\Service;
 
 class QueryModel
 {
@@ -22,7 +23,7 @@ class QueryModel
 			'headers'
 		],
 		$hidden = [
-			'instance',
+			'account_id',
 			'service',
 			'curl',
 			'latency',
@@ -44,7 +45,7 @@ class QueryModel
         foreach ($this->hidden as $field_key) {
 			$this->attributes[$field_key] = null;
 		}
-		$this->attributes['instance'] = $instance;
+		$this->attributes['account_id'] = $instance->getAuth('id');
 		$this->attributes['service'] = $service_class;
 		$this->_boot();
 	}
@@ -59,10 +60,10 @@ class QueryModel
 		$this->attributes['method'] = 'GET';
 		$this->attributes['latency'] = 1;
 		$this->attributes['curl'] = \curl_init();
-		$this->attributes['cookie_file'] = AMOAPI_ROOT.'/Cookies/'.$this->instance->getAuth('domain').'.cookie';
+		$this->attributes['cookie_file'] = AMOAPI_ROOT.'/Cookies/'.$this->instance()->getAuth('domain').'.cookie';
 		curl_setopt_array($this->curl, [
 			CURLOPT_AUTOREFERER => 1,
-			CURLOPT_USERAGENT => 'Amoapi v.7 ('.$this->instance->getAuth('domain').')',
+			CURLOPT_USERAGENT => 'Amoapi v.7 ('.$this->instance()->getAuth('domain').')',
 			CURLOPT_SSL_VERIFYHOST => 0,
 			CURLOPT_SSL_VERIFYPEER => 0,
 			CURLOPT_RETURNTRANSFER => 1,
@@ -147,7 +148,7 @@ class QueryModel
         if ($this->args) {
             $url .= '?' . http_build_query($this->args);
         }
-        return 'https://'.$this->instance->getAuth('domain').'.amocrm.'.$this->instance->getAuth('zone').$url;
+        return 'https://'.$this->instance()->getAuth('domain').'.amocrm.'.$this->instance()->getAuth('zone').$url;
 	}
 
     /**
@@ -175,6 +176,29 @@ class QueryModel
     public function endDate($format = 'Y-m-d H:i:s')
     {
         return date($format, $this->end_time);
+	}
+
+    /**
+     * Get query service
+	 * @return Service
+     */
+    public function getService()
+    {
+		$class = $this->service;
+        if (!$service = $class::getInstance()) {
+			$instance = $this->instance();
+			$service = $class::setInstance(null, $instance);
+		}
+		return $service;
+	}
+
+    /**
+     * Get Amoapi instance
+	 * @return Amoapi
+     */
+    public function instance()
+    {
+		return Amoapi::getInstance($this->account_id);
 	}
 
     /**
@@ -224,7 +248,7 @@ class QueryModel
      */
     public function __destruct()
     {
-        if (!is_null($this->curl)) {
+        if (is_resource($this->curl)) {
 			curl_close($this->curl);
 		}
     }

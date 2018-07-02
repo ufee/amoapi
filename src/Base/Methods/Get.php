@@ -47,10 +47,8 @@ class Get extends Method
 			);
 		}
 		if ($this->service->canCache()) {
-			if ($cached = $this->service->queries->getCached($query->generateHash(), $this->service->cache_time)) {
-				return $this->parseResponse(
-					$cached->response
-				);
+			if ($cached = $this->service->queries->getCached($query->generateHash())) {
+				return $this->parseResponse($cached);
 			}
 		}
 		$query->execute();

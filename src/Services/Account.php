@@ -10,7 +10,7 @@ class Account extends \Ufee\Amo\Base\Services\Cached
 		$methods = [
 			'current'
 		],
-		$cache_time = 0,
+		$cache_time = 600,
 		$_current_data;
 	
     /**

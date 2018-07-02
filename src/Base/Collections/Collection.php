@@ -7,7 +7,8 @@ namespace Ufee\Amo\Base\Collections;
 
 class Collection implements \IteratorAggregate 
 {
-	protected $items;
+	protected 
+		$items;
 	
     /**
      * Constructor

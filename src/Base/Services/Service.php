@@ -47,6 +47,9 @@ class Service
      */
     public static function setInstance($name, \Ufee\Amo\Amoapi &$instance)
     {
+		if (is_null($name)) {
+			$name = lcfirst(static::getBasename());
+		}
 		if (!isset(static::$_service_instances[$name])) {
 			static::$_service_instances[$name] = new static($instance->getAuth('id'));
 		}
@@ -58,8 +61,11 @@ class Service
 	 * @param $name Service name
 	 * @return Service
      */
-    public static function getInstance($name)
+    public static function getInstance($name = null)
     {
+		if (is_null($name)) {
+			$name = lcfirst(static::getBasename());
+		}
 		if (!isset(static::$_service_instances[$name])) {
 			return null;
 		}

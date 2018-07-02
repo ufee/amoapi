@@ -7,14 +7,14 @@ namespace Ufee\Amo\Api;
 class Logger
 {
 	protected
-		$path = '/logs/',
+		$path = '/Logs/',
 		$options = [
 			'name' => '',
 			'chunk' => 'm-Y',
 			'date_format' => "d.m.Y H:i:s \r\n-------------------\r\n",
 		];
 	protected static
-			$_instances = [];
+		$_instances = [];
 
 			
     /**
@@ -34,7 +34,7 @@ class Logger
 		if (strpos($this->options['name'], '/') > 0) {
 			$exps = explode('/', $this->options['name']);
 			$this->options['name'] = array_pop($exps);
-			$this->path = '/logs/'.join('/', $exps).'/';
+			$this->path = $this->path.join('/', $exps).'/';
 		}
 		if ($this->options['chunk'] != '') {
 			$this->path .= date($this->options['chunk'].'/', time());

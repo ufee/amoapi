@@ -12,11 +12,20 @@ class Cached extends Service
 		$modified_from = false;
 	
     /**
+     * Get cache time
+	 * @return integer
+     */
+	public function cacheTime()
+	{
+		return $this->canCache() ? $this->cache_time : -1;
+	}
+
+    /**
      * Can cache queries
 	 * @return bool
      */
 	public function canCache()
 	{
-		return $this->cache_time !== false && is_numeric($this->cache_time);
+		return is_numeric($this->cache_time);
 	}
 }
