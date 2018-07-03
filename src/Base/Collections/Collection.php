@@ -7,8 +7,7 @@ namespace Ufee\Amo\Base\Collections;
 
 class Collection implements \IteratorAggregate 
 {
-	protected 
-		$items;
+	protected $items;
 	
     /**
      * Constructor
@@ -321,7 +320,7 @@ class Collection implements \IteratorAggregate
      * Get elements by value
 	 * @param mixed $a items element value || key
 	 * @param string $b items element value
-	 * @return mixed
+	 * @return Collection
      */
     public function find($a, $b = null)
     {
@@ -349,57 +348,59 @@ class Collection implements \IteratorAggregate
     /**
      * Get elements by value - one array
 	 * @param array $vals items element value
-	 * @return mixed
+	 * @return Collection
      */
     protected function _findArr($vals)
     {
-		$finded = [];
+		$findedVals = [];
 		foreach ($this->items as $item) {
 			foreach ($vals as $val) {
 				if ($val == $item) {
-					$finded[]= $item;
+					$findedVals[]= $item;
 				}
 			}
 		}
-		return new static($finded);
+		return new static($findedVals);
 	}
 	
     /**
      * Get elements by value - array
+	 * @param string $key items element key
 	 * @param mixed $val items element value
-	 * @return mixed
+	 * @return Collection
      */
     protected function _findArrKey($key, $val)
     {
-		$finded = [];
+		$findedByKey = [];
 		foreach ($this->items as $item) {
 			if ($val == $item[$key]) {
-				$finded[]= $item;
+				$findedByKey[]= $item;
 			}
 		}
-		return new static($finded);
+		return new static($findedByKey);
 	}
 	
     /**
      * Get elements by value - objects
+	 * @param string $key items element key
 	 * @param mixed $val items element value
-	 * @return mixed
+	 * @return Collection
      */
     protected function _findObj($key, $val)
     {
-		$finded = [];
+		$findedFromObj = [];
 		foreach ($this->items as $item) {
-			if ($val == $item->$key) {
-				$finded[]= $item;
+			if ($val == $item->{$key}) {
+				$findedFromObj[]= $item;
 			}
 		}
-		return new static($finded);
+		return new static($findedFromObj);
 	}
 
     /**
      * Get elements by callback
 	 * @param callable $callback
-	 * @return mixed
+	 * @return Collection
      */
     protected function _findCallable($callback)
     {

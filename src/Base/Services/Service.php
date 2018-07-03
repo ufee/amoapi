@@ -3,8 +3,15 @@
  * amoCRM API client Base service
  */
 namespace Ufee\Amo\Base\Services;
-use Ufee\Amo\Amoapi;
-
+use Ufee\Amo\Amoapi,
+	Ufee\Amo\Models\Account,
+	Ufee\Amo\Collections\QueryCollection;
+	
+/**
+ * @property Amoapi $instance
+ * @property Account $account
+ * @property QueryCollection $queries
+ */
 class Service
 {
 	protected static

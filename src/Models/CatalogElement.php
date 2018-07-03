@@ -63,7 +63,6 @@ class CatalogElement extends \Ufee\Amo\Base\Models\ModelWithCF
     protected function customFields_access($customFields)
     {
 		if (is_null($this->attributes['customFields'])) {
-
 			$model_cfields = new Collection([]);
 			$account_cfields = $this->service->account->customFields->{static::$cf_category};
 			if (!$catalogFields = $account_cfields->get($this->catalog_id)) {

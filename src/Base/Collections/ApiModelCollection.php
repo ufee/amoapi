@@ -6,8 +6,7 @@ namespace Ufee\Amo\Base\Collections;
 
 class ApiModelCollection extends Collection
 {
-	protected
-		$service;
+	protected $service;
 	
     /**
      * Constructor

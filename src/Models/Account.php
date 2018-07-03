@@ -65,9 +65,11 @@ class Account extends \Ufee\Amo\Base\Models\Model
 			(array)$data->_embedded->task_types, $this
 		);
 		$catalogCustomFields = [];
-		foreach ($data->_embedded->custom_fields->catalogs as $catalog_id=>$cfields) {
-			$catalogCustomFields[$catalog_id] = (array)$cfields;
-		}		
+		if (isset($data->_embedded->custom_fields->catalogs)) {
+			foreach ($data->_embedded->custom_fields->catalogs as $catalog_id=>$cfields) {
+				$catalogCustomFields[$catalog_id] = (array)$cfields;
+			}	
+		}	
 		// дополнительные поля
 		$this->attributes['customFields'] = new AccountCustomFields(
 			(array)$data->_embedded->custom_fields->companies, 
