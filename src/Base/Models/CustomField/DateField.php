@@ -7,47 +7,47 @@ use Ufee\Amo\Amoapi;
 
 class DateField extends EntityField
 {
-    /**
-     * Get formatted date
+	/**
+	 * Get formatted date
 	 * @return string
-     */
-    public function format($format)
-    {
+	 */
+	public function format($format)
+	{
 		if (!$date = $this->getValue()) {
 			return null;
 		}
-        $date = new \DateTime($date, new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
-        return $date->format($format);
-    }
-    
-    /**
-     * Get date timestamp
+		$date = new \DateTime($date, new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		return $date->format($format);
+	}
+		
+	/**
+	 * Get date timestamp
 	 * @return integer
-     */
-    public function getTimestamp()
-    {
+	 */
+	public function getTimestamp()
+	{
 		if (!$date = $this->getValue()) {
 			return null;
 		}
-        $date = new \DateTime($date, new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
-        return $date->getTimestamp();
-    }
-    
-    /**
-     * Set date timestamp
+		$date = new \DateTime($date, new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		return $date->getTimestamp();
+	}
+		
+	/**
+	 * Set date timestamp
 	 * @param integer $stamp
-     */
-    public function setTimestamp($stamp)
-    {
+	 */
+	public function setTimestamp($stamp)
+	{
 		return $this->setValue(date('Y-m-d H:i:s', $stamp));
-    }
-    
-    /**
-     * Set date
+	}
+		
+	/**
+	 * Set date
 	 * @param string $date
-     */
-    public function setDate($date)
-    {
+	 */
+	public function setDate($date)
+	{
 		return $this->setValue($date);
 	}
 }

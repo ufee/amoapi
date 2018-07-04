@@ -45,7 +45,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     {
         array_push($this->items, $query);
         if ($this->_logs) {
-            Api\Logger::getInstance($query->instance->getAuth('domain').'.log')->log(
+            Api\Logger::getInstance($query->instance()->getAuth('domain').'.log')->log(
                 '['.$query->method.'] '.$query->url.' -> '.$query->getUrl(),
                 $query->headers,
                 $query->post_data,
