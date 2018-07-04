@@ -30,6 +30,7 @@ class LimitedList extends Cached
 		$this->api_args = [
 			'USER_LOGIN' => $this->instance->getAuth('login'),
 			'USER_HASH' => $this->instance->getAuth('hash'),
+			'lang' => $this->instance->getAuth('lang')
 		];
 	}
 

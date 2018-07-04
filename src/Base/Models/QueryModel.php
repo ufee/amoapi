@@ -157,7 +157,7 @@ class QueryModel
      */
     public function generateHash()
     {
-        return $this->attributes['hash'] = md5($this->method . $this->getUrl() . json_encode($this->post_data));
+        return $this->attributes['hash'] = md5($this->method . $this->getUrl().json_encode($this->post_data));
 	}
 
     /**

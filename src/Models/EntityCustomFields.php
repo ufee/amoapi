@@ -7,8 +7,7 @@ use Ufee\Amo\Base\Collections as BaseCollections;
 
 class EntityCustomFields
 {
-    protected 
-        $attributes = [];
+    protected $attributes = [];
 
     /**
      * Constructor
