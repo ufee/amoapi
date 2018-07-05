@@ -205,6 +205,16 @@ class LimitedList extends Cached
 	}
 
     /**
+     * Update from raw data
+	 * @param array $raw
+	 * @return Collection
+     */
+	public function updateRaw(Array $raw)
+	{
+		return $this->update->update($raw);
+	}
+
+    /**
      * Delete models
 	 * @param mixed $models
      */
