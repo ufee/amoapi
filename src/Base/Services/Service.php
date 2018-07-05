@@ -3,9 +3,9 @@
  * amoCRM API client Base service
  */
 namespace Ufee\Amo\Base\Services;
-use Ufee\Amo\Amoapi,
-	Ufee\Amo\Models\Account,
-	Ufee\Amo\Collections\QueryCollection;
+use Ufee\Amo\Amoapi;
+use Ufee\Amo\Models\Account;
+use Ufee\Amo\Collections\QueryCollection;
 	
 /**
  * @property Amoapi $instance
@@ -14,18 +14,16 @@ use Ufee\Amo\Amoapi,
  */
 class Service
 {
-	protected static
-		$_service_instances = [],
-		$_require = [
-			'add' => [],
-			'update' => ['id', 'updated_at']
-		];
-	protected
-		$account_id,
-		$entity_key = 'entitys',
-		$entity_model = '\Ufee\Amo\Base\Model',
-		$methods = [],
-		$api_args = [];
+	protected static $_service_instances = [];
+	protected static $_require = [
+		'add' => [],
+		'update' => ['id', 'updated_at']
+	];
+	protected $account_id;
+	protected $entity_key = 'entitys';
+	protected $entity_model = '\Ufee\Amo\Base\Model';
+	protected $methods = [];
+	protected $api_args = [];
 		
     /**
      * Constructor

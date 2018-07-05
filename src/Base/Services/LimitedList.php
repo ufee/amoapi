@@ -3,23 +3,22 @@
  * amoCRM API client Base service
  */
 namespace Ufee\Amo\Base\Services;
-use Ufee\Amo\Base\Models\Traits,
-	Ufee\Amo\Base\Collections\Collection;
+use Ufee\Amo\Base\Models\Traits;
+use Ufee\Amo\Base\Collections\Collection;
 
 class LimitedList extends Cached
 {
 	use Traits\EntityDetector;
 	
-	protected
-		$entity_collection = '\Ufee\Amo\Base\Collections\ApiModelCollection',
-		$limit_rows_add = 300,
-		$limit_rows_update = 300,
-		$limit_rows = 500,
-		$max_rows = 0,
-		$modified_from = false,
-		$methods = [
-			'list', 'add', 'update'
-		];
+	protected $entity_collection = '\Ufee\Amo\Base\Collections\ApiModelCollection';
+	protected $limit_rows_add = 300;
+	protected $limit_rows_update = 300;
+	protected $limit_rows = 500;
+	protected $max_rows = 0;
+	protected $modified_from = false;
+	protected $methods = [
+		'list', 'add', 'update'
+	];
 	
     /**
      * Service on load
@@ -36,20 +35,26 @@ class LimitedList extends Cached
 
     /**
      * Create new model
-	 * @param mixed $id
+	 * @param mixed $create_data
 	 * @returm Model
      */
-	public function create($id = null)
+	public function create($create_data = null)
 	{
 		$model_class = $this->entity_model;
-		$data = [
+		$model_data = [
 			'request_id' => mt_rand(), 
 			'account_id' => $this->instance->getAuth('id')
 		];
-		if (is_numeric($id)) {
-			$data['id'] = $id;
+		if (is_numeric($create_data)) {
+			$create_data = ['id' => $create_data];
 		}
-		$model = new $model_class($data, $this);
+		if (is_array($create_data)) {
+			foreach ($create_data as $key=>$val) {
+				$model_data[$key] = $val;
+			}
+		}
+		$model = new $model_class($model_data, $this);
+
 		return $model;
 	}
 

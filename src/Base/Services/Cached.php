@@ -7,9 +7,8 @@ use Ufee\Amo\Amoapi;
 
 class Cached extends Service
 {
-	protected
-		$cache_time = false,
-		$modified_from = false;
+	protected $cache_time = false;
+	protected $modified_from = false;
 	
     /**
      * Get cache time
