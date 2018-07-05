@@ -48,6 +48,75 @@ $companies = $amo->companies()->searchByName('ООО Шарики за Роли�
 $contacts = $amo->contacts()->searchByEmail('Test@Mail.Ru');
 $contacts = $amo->contacts()->searchByPhone('89271002030');
 ```
+## Работа с дополнительными полями
+Убрать значение
+```php
+$entity->cf('Имя поля')->reset();
+```
+Получить значение
+```php
+$entity->cf('Имя поля')->getValue();
+$entity->cf('Имя поля')->getValues();
+$entity->cf('Имя поля')->getEnums();
+$entity->cf('Дата')->format('Y-m-d');
+$entity->cf('Дата')->getTimestamp();
+```
+Задать значение
+```php
+$entity->cf('Имя поля')->setEnum($enum);
+$entity->cf('Имя поля')->setEnums($enum);
+$entity->cf('Число')->setValue(5);
+$entity->cf('Текст')->setValue('Test');
+$entity->cf('Мультисписок')->reset()->setValues(['Мужская одежда', 'Аксессуары']);
+$entity->cf('День рождения')->setDate('Y-m-d');
+$entity->cf('Дата')->setTimestamp(14867456357);
+$entity->cf('Дата')->setDate('Y-m-d');
+$entity->cf('Переключатель')->enable();
+$entity->cf('Переключатель')->disable();
+$entity->cf('Полный адрес')->setCountry('Россия');
+$entity->cf('Полный адрес')->setRegion('Чувашская республика');
+$entity->cf('Полный адрес')->setCity('Чебоксары');
+$entity->cf('Полный адрес')->setIndex(428000);
+$entity->cf('Телефон')->setValue('987654321', 'Home');
+$entity->cf('Телефон')->setValue('123456789');
+$entity->cf('Email')->setValue('best@list.ru');
+$entity->cf('Мгн. сообщения')->setValue('bestJa', 'Jabber');
+$entity->cf('Юр. лицо')->setName('Команда F5');
+$entity->cf('Юр. лицо')->setAddress('РФ, ЧР, г.Чебоксары');
+$entity->cf('Юр. лицо')->setType(1);
+$entity->cf('Юр. лицо')->setInn(123);
+$entity->cf('Юр. лицо')->setKpp(456);
+```
+## Работа с коллекциями
+Перебор, поиск и фильтрация
+```php
+foreach ($amo->leads as $lead) {}
+$amo->leads->each(function($lead) {});
+$leads = $amo->leads->find('name', 'Трубы гофрированные');
+$leads = $amo->leads->filter(function($lead) {
+    return $lead->sale > 0;
+});
+$lead = $lead->first();
+$lead = $lead->last();
+```
+Сортировка
+```php
+$leads->sortBy('sale', 'DESC');
+$leads->usort(function($a, $b) {});
+$leads->uasort(function($a, $b) {});
+```
+Дополнительно
+```php
+$has_contains =  $leads->contains('name', 'Test');
+$sale_sum = $leads->sum('sale');
+$leads = $leads->transform(function($lead) {
+    return [
+        'id' => $lead->id,
+        'name' => $lead->name
+    ];
+});
+$leads = $leads->toArray();
+```
 ## Работа со сделками
 Получение всех сделок
 ```php
@@ -61,7 +130,7 @@ $leads = $amo->leads()
              ->modifiedFrom('Y-m-5 09:20:00') // по дате, с 5 числа текущего месяца, с 9:20 утра
              ->modifiedFrom(1528188143) // или по timestamp
              ->maxRows(1000)
-             ->list();
+             ->listing();
 ```
 Получение по ID
 ```php
@@ -99,7 +168,6 @@ $lead->sale = 100500;
 $lead->cf('Число')->setValue(5);
 $lead->cf('Текст')->setValue('Test');
 $lead->cf('Мультисписок')->reset()->setValues(['Мужская одежда', 'Аксессуары']);
-$lead->cf('День рождения')->setValue(date('Y-m-d'));
 $lead->cf('Дата')->setValue(date('Y-m-d'));
 $lead->cf('Переключатель')->disable();
 $lead->save();
@@ -149,17 +217,6 @@ $contact->attachTags(['Amoapi', 'Test']);
 $contact->cf('Телефон')->setValue('987654321', 'Home');
 $contact->cf('Телефон')->setValue('123456789');
 $contact->cf('Email')->setValue('best@list.ru');
-$contact->cf('Мгн. сообщения')->setValue('bestJa', 'Jabber');
-$contact->cf('Короткий адрес')->setValue('РФ, ЧР, г.Чебоксары');
-$contact->cf('Полный адрес')->setIndex(428000);
-$contact->cf('Настрой')->setValue('Отличный');
-$contact->cf('Адрес сайта')->setValue('https://cmdf5.ru/');
-$contact->cf('Описание')->setValue('Рыбным текстом называется текст, служащий для временного наполнения макета в публикациях или производстве веб-сайтов, пока финальный текст еще не создан.');
-$contact->cf('Юр. лицо')->setName('Команда F5');
-$contact->cf('Юр. лицо')->setAddress('РФ, ЧР, г.Чебоксары');
-$contact->cf('Юр. лицо')->setType(1);
-$contact->cf('Юр. лицо')->setInn(123);
-$contact->cf('Юр. лицо')->setKpp(456);
 $contact->save();
 ```
 Создание контакта из сделки
@@ -417,7 +474,6 @@ $customer->responsible_user_id = $amo->account->currentUser->id;
 $customer->cf('Число')->setValue(5);
 $customer->cf('Текст')->setValue('Test');
 $customer->cf('Мультисписок')->reset()->setValues(['Мужская одежда', 'Аксессуары']);
-$customer->cf('День рождения')->setValue(date('Y-m-d'));
 $customer->cf('Дата')->setValue(date('Y-m-d'));
 $customer->cf('Переключатель')->disable();
 $customer->save();
