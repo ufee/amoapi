@@ -34,23 +34,21 @@ if (!defined('AMOAPI_ROOT')) {
  */
 class Amoapi
 {
-	private static
-		$_instances = [];
-	private
-		$services = [
-			'account',
-			'leads',
-			'contacts',
-			'companies',
-			'tasks',
-			'notes',
-			'customers',
-			'transactions',
-			'catalogs',
-			'catalogElements'
-		],
-		$_account,
-		$_queries;
+	private static $_instances = [];
+	private $services = [
+		'account',
+		'leads',
+		'contacts',
+		'companies',
+		'tasks',
+		'notes',
+		'customers',
+		'transactions',
+		'catalogs',
+		'catalogElements'
+	];
+	private $_account;
+	private $_queries;
 	
     /**
      * Constructor

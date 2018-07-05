@@ -282,10 +282,10 @@ class LimitedList extends Cached
 	}
 
     /**
-     * Get model list
+     * Get all models
 	 * @return Collection
      */
-	public function list()
+	public function listing()
 	{
 		return $this->list->recursiveCall();
 	}
