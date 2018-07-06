@@ -16,6 +16,7 @@ trait LinkedTasks
 		$task->task_type = $type;
 		$task->element_type = static::$_type_id;
 		$task->element_id = $this->id;
+		$task->responsible_user_id = $this->responsible_user_id;
 		
 		if (!is_null($this->attributes['tasks'])) {
 			$this->attributes['tasks']->push($task);

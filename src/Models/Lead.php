@@ -92,6 +92,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
     {
 		$lead = $this;
 		$contact = $this->service->instance->contacts()->create();
+		$contact->responsible_user_id = $this->responsible_user_id;
 		$contact->attachLead($this);
 
 		$contact->onCreate(function(&$model) use (&$lead) {
@@ -108,6 +109,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
     {
 		$lead = $this;
 		$company = $this->service->instance->companies()->create();
+		$company->responsible_user_id = $this->responsible_user_id;
 		$company->attachLead($this);
 
 		$company->onCreate(function(&$model) use (&$lead) {

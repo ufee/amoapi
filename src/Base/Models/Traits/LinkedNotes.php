@@ -16,6 +16,7 @@ trait LinkedNotes
 		$note->note_type = $type;
 		$note->element_type = static::$_type_id;
 		$note->element_id = $this->id;
+		$note->responsible_user_id = $this->responsible_user_id;
 		
 		if (!is_null($this->attributes['notes'])) {
 			$this->attributes['notes']->push($note);

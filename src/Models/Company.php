@@ -70,6 +70,42 @@ class Company extends \Ufee\Amo\Base\Models\ModelWithCF
 		);
 	}
 
+
+	/**
+     * Create linked lead model
+     * @return Lead
+     */
+    public function createLead()
+    {
+		$company = $this;
+		$lead = $this->service->instance->leads()->create();
+		$lead->responsible_user_id = $this->responsible_user_id;
+		$lead->attachCompany($this);
+
+		$lead->onCreate(function(&$model) use (&$company) {
+			$company->attachLead($model);
+		});
+		return $lead;
+	}
+
+
+	/**
+     * Create linked contact model
+     * @return Contact
+     */
+    public function createContact()
+    {
+		$company = $this;
+		$contact = $this->service->instance->contacts()->create();
+		$contact->responsible_user_id = $this->responsible_user_id;
+		$contact->attachCompany($this);
+
+		$contact->onCreate(function(&$model) use (&$company) {
+			$company->attachContact($model);
+		});
+		return $contact;
+	}
+
     /**
      * Convert Model to array
      * @return array
