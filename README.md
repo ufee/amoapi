@@ -512,3 +512,17 @@ $amo->transactions()->delete($transactions); // array|integer
 $customer->transactions->delete(); // удаление всех покупок покупателя
 $transaction->delete(); // удаление покупки
 ```
+
+## Работа с веб-хуками
+Получение вебхуков (webhooks)
+```php
+$webhooks = $amo->webhooks;
+```
+Добавление вебхуков
+```php
+$result = $amo->webhooks()->subscribe('http://site.ru/handler/', ['add_lead', 'update_contact', 'responsible_lead']);
+```
+Удаление вебхуков
+```php
+$result = $amo->webhooks()->unsubscribe('http://site.ru/handler/', ['update_contact', 'responsible_lead']);
+```

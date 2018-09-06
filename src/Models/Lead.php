@@ -117,7 +117,43 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		});
 		return $company;
 	}
+	
+	/**
+     * Set lead pipeline
+	 * @param integer|Pipeline $pipeline
+     * @return Lead
+     */
+    public function setPipeline($pipeline)
+    {
+		if (is_numeric($pipeline)) {
+			$pipeline = $this->service->account->pipelines->byId($pipeline);
+		}
+		if (!$pipeline instanceof Pipeline) {
+			throw new \Exception('Invalid pipeline');
+		}
+		$this->pipeline_id = $pipeline->id;
+		$this->attributes['pipeline'] = $pipeline;
+		return $this;
+	}
 
+	/**
+     * Set lead status
+	 * @param integer|PipelineStatus $status
+     * @return Lead
+     */
+    public function setStatus($status)
+    {
+		if (is_numeric($status)) {
+			$status = $this->pipeline->statuses->byId($status);
+		}
+		if (!$status instanceof PipelineStatus) {
+			throw new \Exception('Invalid pipeline status');
+		}
+		$this->status_id = $status->id;
+		$this->attributes['status'] = $status;
+		return $this;
+	}
+ 
     /**
      * Convert Model to array
      * @return array

@@ -33,4 +33,12 @@ class CheckboxField extends EntityField
     {
 		return $this->setValue(0);
 	}
+
+    /**
+     * Has checked box
+     */
+    public function hasChecked()
+    {
+		return (bool)$this->getValue();
+	}
 }

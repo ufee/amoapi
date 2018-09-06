@@ -188,7 +188,7 @@ class PipelineStatus extends \Ufee\Amo\Base\Models\Model
 		if (is_null($this->attributes['prevs'])) {
 			$current = $this;
 			$this->attributes['prevs'] = $this->pipeline->statuses->find(function($status) use($current) {
-				return !$status->hasMissed() && $status->hasBeforeFrom($current);
+				return !$status->hasSuccess() && !$status->hasMissed() && $status->hasBeforeFrom($current);
 			});	
 		}
 		return $this->attributes['prevs'];	

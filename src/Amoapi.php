@@ -21,6 +21,7 @@ if (!defined('AMOAPI_ROOT')) {
  * @property \Ufee\Amo\Collections\TransactionsCollection $transactions
  * @property \Ufee\Amo\Collections\CatalogCollection $catalogs
  * @property \Ufee\Amo\Collections\CatalogElementCollection $catalogElements
+ * @property \Ufee\Amo\Collections\WebhookCollection $webhooks
  * @method \Ufee\Amo\Services\Account account()
  * @method \Ufee\Amo\Services\Leads leads()
  * @method \Ufee\Amo\Services\Contacts contacts()
@@ -31,6 +32,7 @@ if (!defined('AMOAPI_ROOT')) {
  * @method \Ufee\Amo\Services\Transactions transactions()
  * @method \Ufee\Amo\Services\Catalogs catalogs()
  * @method \Ufee\Amo\Services\CatalogElements catalogElements()
+ * @method \Ufee\Amo\Services\Webhooks webhooks()
  */
 class Amoapi
 {
@@ -45,7 +47,8 @@ class Amoapi
 		'customers',
 		'transactions',
 		'catalogs',
-		'catalogElements'
+		'catalogElements',
+		'webhooks',
 	];
 	private $_account;
 	private $_queries;
