@@ -184,10 +184,10 @@ class QueryModel
      */
     public function getService()
     {
-		$class = $this->service;
-        if (!$service = $class::getInstance()) {
-			$instance = $this->instance();
-			$service = $class::setInstance(null, $instance);
+		$instance = $this->instance();
+		$serviceClass = $this->service;
+        if (!$service = $serviceClass::getInstance(null, $instance)) {
+			$service = $serviceClass::setInstance(null, $instance);
 		}
 		return $service;
 	}

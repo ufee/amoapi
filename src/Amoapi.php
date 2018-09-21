@@ -139,7 +139,7 @@ class Amoapi
 			throw new \Exception('Invalid service called: '.$service_name);
 		}
 		$service_class = '\\Ufee\\Amo\\Services\\'.ucfirst($service_name);
-		if (!$service = $service_class::getInstance($service_name)) {
+		if (!$service = $service_class::getInstance($service_name, $this)) {
 			$service = $service_class::setInstance($service_name, $this);
 		}
 		return $service;
@@ -158,7 +158,7 @@ class Amoapi
 			throw new \Exception('Invalid service called: '.$target);
 		}
 		$service_class = '\\Ufee\\Amo\\Services\\'.ucfirst($target);
-		if (!$service = $service_class::getInstance($target)) {
+		if (!$service = $service_class::getInstance($target, $this)) {
 			$service = $service_class::setInstance($target, $this);
 		}
 		if (!method_exists($service, $target)) {

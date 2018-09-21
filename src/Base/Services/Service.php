@@ -55,10 +55,11 @@ class Service
 		if (is_null($name)) {
 			$name = lcfirst(static::getBasename());
 		}
-		if (!isset(static::$_service_instances[$name])) {
-			static::$_service_instances[$name] = new static($instance->getAuth('id'));
+		$key = $name.'-'.$instance->getAuth('id');
+		if (!isset(static::$_service_instances[$key])) {
+			static::$_service_instances[$key] = new static($instance->getAuth('id'));
 		}
-		return static::getInstance($name);
+		return static::getInstance($name, $instance);
 	}
 	
     /**
@@ -66,15 +67,16 @@ class Service
 	 * @param $name Service name
 	 * @return Service
      */
-    public static function getInstance($name = null)
+    public static function getInstance($name = null, \Ufee\Amo\Amoapi &$instance)
     {
 		if (is_null($name)) {
 			$name = lcfirst(static::getBasename());
 		}
-		if (!isset(static::$_service_instances[$name])) {
+		$key = $name.'-'.$instance->getAuth('id');
+		if (!isset(static::$_service_instances[$key])) {
 			return null;
 		}
-		return static::$_service_instances[$name];
+		return static::$_service_instances[$key];
 	}
 
     /**
