@@ -157,7 +157,14 @@ class QueryModel
      */
     public function generateHash()
     {
-        return $this->attributes['hash'] = md5($this->method . $this->getUrl().json_encode($this->post_data));
+        return $this->attributes['hash'] = md5(
+			$this->instance()->getAuth('domain').
+			$this->instance()->getAuth('login').
+			$this->instance()->getAuth('hash').
+			$this->method.
+			$this->getUrl().
+			json_encode($this->post_data)
+		);
 	}
 
     /**
@@ -225,6 +232,17 @@ class QueryModel
 		}
 		throw new \Exception('Protected Query field set fail: '.$field);
 		$this->attributes[$field] = $value;
+	}
+
+    /**
+     * Clear query cache
+     * @return QueryModel
+     */
+    public function clearCache()
+    {
+		if (file_exists($this->cache_path.'/'.$this->hash.'.cache')) {
+			@unlink($this->cache_path.'/'.$this->hash.'.cache');
+		}
 	}
 
     /**

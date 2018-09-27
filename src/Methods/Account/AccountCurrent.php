@@ -18,10 +18,13 @@ class AccountCurrent extends \Ufee\Amo\Base\Methods\Get
     protected function parseResponse(\Ufee\Amo\Api\Query &$query)
     {
 		if (!$data = $query->response->parseJson()) {
-			throw new \Exception('Invalid API response (non JSON)');
+			throw new \Exception('Invalid API response (non JSON), code: '.$query->response->getCode());
+		}
+		if (isset($data->response) && isset($data->response->error) && isset($data->response->error_code)) {
+			throw new \Exception('API Error: '.$data->response->error_code.' - '.$data->response->error.', http code: '.$query->response->getCode());
 		}
 		if (!isset($data->id)) {
-			throw new \Exception('Invalid API response (account: not found)');
+			throw new \Exception('Invalid API response (account: not found), code: '.$query->response->getCode());
 		}
 		return new \Ufee\Amo\Models\Account($data, $this->service);
 	}

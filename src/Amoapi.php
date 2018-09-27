@@ -104,7 +104,10 @@ class Amoapi
 			$account[$key] = $data[$key];
 		}
         if (!isset(self::$_instances[$account['id']])) {
-            self::$_instances[$account['id']] = new static($account);
+			self::$_instances[$account['id']] = new static($account);
+			if (file_exists(AMOAPI_ROOT.'/Cookies/'.$account['domain'].'.cookie')) {
+				@unlink(AMOAPI_ROOT.'/Cookies/'.$account['domain'].'.cookie');
+			}
 		}
 		$instance = self::getInstance($account['id']);
 		$instance->_queries = new Collections\QueryCollection();

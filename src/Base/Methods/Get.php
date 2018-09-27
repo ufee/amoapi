@@ -52,7 +52,7 @@ class Get extends Method
 			}
 		}
 		$query->execute();
-		if ($query->response->getCode() == 429) {
+		while ($query->response->getCode() == 429) {
 			sleep(1);
 			$query->execute();
 		}

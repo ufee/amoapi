@@ -12,6 +12,8 @@ class User extends \Ufee\Amo\Base\Models\Model
 			'name',
 			'last_name',
 			'login',
+			'phone',
+			'photo',
 			'language',
 			'group_id',
 			'is_active',

@@ -32,7 +32,9 @@ class Query extends QueryModel
         $this->attributes['execution_time'] = round($this->end_time - $this->start_time, 5);
         $this->attributes['memory_usage'] = memory_get_peak_usage(true)/1024/1024;
         $this->generateHash();
-        $this->instance()->queries->pushQuery($this);
+        if (in_array($this->response->getCode(), [200])) {
+            $this->instance()->queries->pushQuery($this);
+        }
         return $this;
     }
 

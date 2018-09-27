@@ -100,6 +100,17 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         $this->_listener = $callback;
         return $this;
     }
+
+    /**
+     * Flush cache queries
+	 * @return QueryCollection
+     */
+    public function flush()
+    {
+        array_map('unlink', glob($this->cache_path.'/*.cache'));
+        $this->items = [];
+        return $this;
+    }
     
     /**
      * Cache queries
