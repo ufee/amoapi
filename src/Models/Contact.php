@@ -19,6 +19,7 @@ class Contact extends \Ufee\Amo\Base\Models\ModelWithCF
 			'service',
 			'createdUser',
 			'responsibleUser',
+			'updatedUser',
 			'tags',
 			'leads',
 			'customFields',

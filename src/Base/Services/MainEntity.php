@@ -22,6 +22,6 @@ class MainEntity extends LimitedList
      */
 	public function search($query)
 	{
-		return $this->list->where('query', $query)->recursiveCall();	
+		return $this->list->where('query', $query)->recursiveCall();
 	}
 }

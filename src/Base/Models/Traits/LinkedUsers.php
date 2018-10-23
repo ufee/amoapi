@@ -23,4 +23,13 @@ trait LinkedUsers
     {
 		return $this->service->account->users->find('id', $this->attributes['responsible_user_id'])->first();
 	}
+
+    /**
+     * Protect access updated user
+	 * @return User|null
+     */
+    protected function updatedUser_access()
+    {
+		return $this->service->account->users->find('id', $this->attributes['updated_by'])->first();
+	}
 }

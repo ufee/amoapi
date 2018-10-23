@@ -22,7 +22,8 @@ class ApiModel extends Model
 			'query_hash',
 			'service',
 			'createdUser',
-			'responsibleUser'
+			'responsibleUser',
+			'updatedUser'
 		],
 		$writable = [
 			'created_by',

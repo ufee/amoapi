@@ -19,6 +19,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			'service',
 			'createdUser',
 			'responsibleUser',
+			'updatedUser',
 			'tags',
 			'pipeline',
 			'status',
@@ -41,6 +42,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			'main_contact_id',
 			'company_id',
 			'updated_at',
+			'updated_by',
 			'closed_at',
 			'closest_task_at'
 		];
