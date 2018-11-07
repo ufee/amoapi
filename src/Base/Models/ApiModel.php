@@ -106,7 +106,11 @@ class ApiModel extends Model
 			$date = new \DateTime('now', new \DateTimeZone($this->service->instance->getAuth('timezone')));
 			$this->updated_at = $date->getTimestamp();					
 		}
-		return $this->getChangedData();
+		$data = $this->getChangedData();
+		if ($this->hasAttribute('tags') && $this->hasChanged('tags') && empty($this->attributes['tags'])) {
+			$data['tags'] = '';
+		}
+		return $data;
 	}
 		
     /**
