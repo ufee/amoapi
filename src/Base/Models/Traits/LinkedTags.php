@@ -83,7 +83,8 @@ trait LinkedTags
      */
     public function detachTag($tag)
     {
-		if ($key = array_search($tag)) {
+		$key = array_search($tag, $this->attributes['tags']);
+		if ($key !== false) {
 			unset($this->attributes['tags'][$key]);
 			$this->changed[]= 'tags';
 		}
