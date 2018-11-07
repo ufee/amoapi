@@ -39,11 +39,11 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     /**
      * Push new queries
 	 * @param Query $query
+     * @param bool $save
 	 * @return QueryCollection
      */
-    public function pushQuery(Api\Query $query)
+    public function pushQuery(Api\Query $query, $save = true)
     {
-        array_push($this->items, $query);
         if ($this->_logs) {
             Api\Logger::getInstance($query->instance()->getAuth('domain').'.log')->log(
                 '['.$query->method.'] '.$query->url.' -> '.$query->getUrl(),
@@ -57,11 +57,14 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
                 $query->response->getData()
             );
         }
-        if ($query->getService()->canCache()) {
-            $this->cacheQuery($query);
-        }
         if (is_callable($this->_listener)) {
             call_user_func($this->_listener, $query);
+        }
+        if ($save) {
+            array_push($this->items, $query);
+            if ($query->getService()->canCache()) {
+                $this->cacheQuery($query);
+            }
         }
         return $this;
 	}
