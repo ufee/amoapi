@@ -119,7 +119,6 @@ class ApiModel extends Model
      */
     public function getResponse()
     {
-		print_r($this->service->queries);
 		if (!$query = $this->service->queries->find('hash', $this->query_hash)->first()) {
 			return null;
 		}
