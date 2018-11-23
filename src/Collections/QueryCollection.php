@@ -29,7 +29,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
                     if ($cacheQuery->getService()->canCache() && microtime(1)-$cacheQuery->end_time <= $cacheQuery->getService()->cacheTime()) {
                         array_push($this->items, $cacheQuery);
                     } else {
-                        unlink($cache_file);
+                        @unlink($cache_file);
                     }
                 }
             }

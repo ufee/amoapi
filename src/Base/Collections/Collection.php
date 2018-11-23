@@ -373,8 +373,10 @@ class Collection implements \IteratorAggregate
     {
 		$findedByKey = [];
 		foreach ($this->items as $item) {
-			if ($val == $item[$key]) {
-				$findedByKey[]= $item;
+			if (isset($item[$key])) {
+				if ($val == $item[$key]) {
+					$findedByKey[]= $item;
+				}
 			}
 		}
 		return new static($findedByKey);
@@ -390,8 +392,10 @@ class Collection implements \IteratorAggregate
     {
 		$findedFromObj = [];
 		foreach ($this->items as $item) {
-			if ($val == $item->{$key}) {
-				$findedFromObj[]= $item;
+			if (isset($item->{$key})) {
+				if ($val == $item->{$key}) {
+					$findedFromObj[]= $item;
+				}
 			}
 		}
 		return new static($findedFromObj);
