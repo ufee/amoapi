@@ -14,10 +14,10 @@ abstract class Config
     public static function getAccount()
     {
 		return [
-			'id' => 8838928,
-			'domain' => 'dlatestov',
-			'login' => 'mery131@yandex.ru',
-			'hash' => 'ee8d12668c60e1a6bbda4130352093c1'
+			'id' => 123,
+			'domain' => 'testdomain',
+			'login' => 'test@login',
+			'hash' => 'testhash'
 		];
     }
 }

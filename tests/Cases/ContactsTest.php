@@ -52,4 +52,26 @@ class ContactsTest extends \Tests\TestCase
 			($has_created && is_numeric($create_models[0]->id) && is_numeric($create_models[1]->id))
 		);
     }
+	
+    public function testSearchContactByPhone()
+    {
+		$cf_phone = $this->amo->getAuth('lang') == 'ru' ? 'Телефон' : 'Phone';
+		$time = time();
+		$phone_set_val = '+7'.$time;
+		$phone_search_val = '8'.$time;
+		
+		$model = $this->amo->contacts()->create();
+		$model->name = 'Test SearchContact '.$time;
+		$model->cf($cf_phone)->setValue($phone_set_val);
+		$has_created = $model->save();
+		
+		Assert::assertTrue(
+			($has_created && is_numeric($model->id))
+		);
+		$contacts = $this->amo->contacts()->searchByPhone($phone_search_val);
+		
+		Assert::assertTrue(
+			($contacts->count() > 0 && $contacts->first()->id == $model->id)
+		);
+	}
 }

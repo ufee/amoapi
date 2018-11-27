@@ -30,7 +30,14 @@ class Logger
 		}
 		$this->options = array_merge($this->options, $name);
 		$this->options['name'] = ltrim($this->options['name'], '/');
-		
+	}
+
+    /**
+     * Set default log path
+	 * @return Logger
+     */
+    public function setDefaultPath()
+    {
 		if (strpos($this->options['name'], '/') > 0) {
 			$exps = explode('/', $this->options['name']);
 			$this->options['name'] = array_pop($exps);
@@ -44,10 +51,23 @@ class Logger
             mkdir($this->path);
         }
 	}
+
+    /**
+     * Set custom log path
+	 * @return Logger
+     */
+    public function setCustomPath($value)
+    {
+		$this->path = $value;
+        if (!file_exists($this->path)) {
+            mkdir($this->path);
+		}
+		return $this;
+	}
 	
     /**
      * Get instance
-	 * @return object
+	 * @return Logger
      */
     public static function getInstance($name = null)
     {

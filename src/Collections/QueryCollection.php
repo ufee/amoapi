@@ -11,6 +11,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     protected 
         $cache_path = '/Cache/',
         $_listener,
+        $logger = null,
         $_logs = false;
     
     /**
@@ -19,6 +20,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
      */
     public function boot(Amoapi $instance)
     {
+        $this->logger = Api\Logger::getInstance($instance->getAuth('domain').'.log');
         $this->cache_path = AMOAPI_ROOT.$this->cache_path.$instance->getAuth('domain');
         if (!file_exists($this->cache_path)) {
             mkdir($this->cache_path);
@@ -45,7 +47,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     public function pushQuery(Api\Query $query, $save = true)
     {
         if ($this->_logs) {
-            Api\Logger::getInstance($query->instance()->getAuth('domain').'.log')->log(
+            $this->logger->log(
                 '['.$query->method.'] '.$query->url.' -> '.$query->getUrl(),
                 $query->headers,
                 $query->post_data,
@@ -84,12 +86,20 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 
     /**
      * Debug queries
-	 * @param bool $flag
+	 * @param mixed $val
      * @return QueryCollection
      */
-    public function logs($flag)
+    public function logs($val)
     {
-        $this->_logs = (bool)$flag;
+        if (is_bool($val)) {
+            if ($this->_logs = $val) {
+                $this->logger->setDefaultPath();
+            }
+        }
+        if (is_string($val)) {
+            $this->_logs = true;
+            $this->logger->setCustomPath($val);
+        }
         return $this;
 	}
 
