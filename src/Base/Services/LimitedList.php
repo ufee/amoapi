@@ -160,7 +160,6 @@ class LimitedList extends Cached
 		foreach ($update_parts as $part) {
 			$updated_part = $this->_update($part);
 			$updated_raws->merge($updated_part);
-
 		}
 		$updated = true;
 		foreach ($update_models as &$model) {

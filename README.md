@@ -24,12 +24,14 @@ $amo = \Ufee\Amo\Amoapi::setInstance([
 	'login' => 'test@login',
 	'hash' => 'testhash',
 	'zone' => 'com', // default: ru
-	'timezone' => 'Europe/London' // default: Europe/Moscow
+    'timezone' => 'Europe/London', // default: Europe/Moscow
+    'lang' => 'en' // default: ru
 ]);
 ```
 Включение логирования заросов (/Logs/m-Y/domain.log)
 ```php
-$amo->queries->logs(true);
+$amo->queries->logs(true); // to default path
+$amo->queries->logs('path_to_log/queries'); // to custom path
 ```
 Пользовательская отладка запросов 
 ```php
@@ -52,6 +54,7 @@ $contacts = $amo->contacts()->searchByPhone('89271002030');
 Убрать значение
 ```php
 $entity->cf('Имя поля')->reset();
+$entity->cf('Организация')->removeBy('name', 'ИП Петров А.А.');
 ```
 Получить значение
 ```php
@@ -60,6 +63,7 @@ $entity->cf('Имя поля')->getValues();
 $entity->cf('Имя поля')->getEnums();
 $entity->cf('Дата')->format('Y-m-d');
 $entity->cf('Дата')->getTimestamp();
+$entity->cf('Организация')->getValues();
 ```
 Задать значение
 ```php
@@ -86,6 +90,11 @@ $entity->cf('Юр. лицо')->setAddress('РФ, ЧР, г.Чебоксары');
 $entity->cf('Юр. лицо')->setType(1);
 $entity->cf('Юр. лицо')->setInn(123);
 $entity->cf('Юр. лицо')->setKpp(456);
+$entity->cf('Организация')->addValue([
+    'name' => 'ИП Петров А.А.',
+    'city' => 'Москва',
+    '...' => '...'
+]);
 ```
 ## Работа с коллекциями
 Перебор, поиск и фильтрация
