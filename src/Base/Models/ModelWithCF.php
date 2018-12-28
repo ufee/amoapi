@@ -99,11 +99,15 @@ class ModelWithCF extends ApiModel
      */
     public function setCustomFields(array $custom_fields)
 	{
+		$this->attributes['customFields'] = null;
 		$this->attributes['custom_fields'] = [];
 		foreach($custom_fields as $cf) {
 			$this->attributes['custom_fields'][$cf->id] = $cf;
 		}
-		$this->changed[]= 'custom_fields';
+		$this->customFields->each(function(&$cfield) {
+			$cfield->setChanged('values');
+		});
+		$this->setChanged('custom_fields');
 		return $this;
 	}
 

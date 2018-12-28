@@ -79,6 +79,19 @@ class Model
 	}
 
 	/**
+     * Set changed field
+	 * @param string $field
+	 * @return Model
+     */
+    public function setChanged($field)
+    {
+		if (!in_array($field, $this->changed)) {
+			$this->changed[]= $field;
+		}
+		return $this;
+	}
+
+	/**
      * Has changed field
 	 * @param string $field
 	 * @return bool

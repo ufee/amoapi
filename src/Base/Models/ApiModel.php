@@ -165,10 +165,10 @@ class ApiModel extends Model
 			$this->updated_at = $date->getTimestamp();
 		}
 		if ($this->hasAttribute('custom_fields')) {
-			$this->changed[]= 'custom_fields';
+			$this->setChanged('custom_fields');
 		}
 		foreach ($this->writable as $i=>$field) {
-			$this->changed[]= $field;
+			$this->setChanged($field);
 		}
 	}
 }
