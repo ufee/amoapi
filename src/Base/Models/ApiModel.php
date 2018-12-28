@@ -148,4 +148,27 @@ class ApiModel extends Model
 		}
 		return $this->service->update($this);
 	}
+
+   /**
+     * Clone CRM model
+     */
+    public function __clone()
+    {
+		$date = new \DateTime('now', new \DateTimeZone($this->service->instance->getAuth('timezone')));
+		$this->attributes['id'] = null;
+		$this->attributes['query_hash'] = null;
+		$this->attributes['request_id'] = mt_rand();
+		$this->created_at = $date->getTimestamp();
+		$this->_onCreate = function() {};
+
+		if ($this->hasAttribute('updated_at')) {
+			$this->updated_at = $date->getTimestamp();
+		}
+		if ($this->hasAttribute('custom_fields')) {
+			$this->changed[]= 'custom_fields';
+		}
+		foreach ($this->writable as $i=>$field) {
+			$this->changed[]= $field;
+		}
+	}
 }

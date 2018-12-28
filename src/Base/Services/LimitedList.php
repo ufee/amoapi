@@ -54,7 +54,6 @@ class LimitedList extends Cached
 			}
 		}
 		$model = new $model_class($model_data, $this);
-
 		return $model;
 	}
 

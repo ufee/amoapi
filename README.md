@@ -19,11 +19,11 @@ vendor/bin/phpunit vendor/ufee/amoapi
 Получение объекта для работы с конкретным аккаунтом
 ```php
 $amo = \Ufee\Amo\Amoapi::setInstance([
-	'id' => 123,
-	'domain' => 'testdomain',
-	'login' => 'test@login',
-	'hash' => 'testhash',
-	'zone' => 'com', // default: ru
+    'id' => 123,
+    'domain' => 'testdomain',
+    'login' => 'test@login',
+    'hash' => 'testhash',
+    'zone' => 'com', // default: ru
     'timezone' => 'Europe/London', // default: Europe/Moscow
     'lang' => 'en' // default: ru
 ]);
@@ -31,15 +31,18 @@ $amo = \Ufee\Amo\Amoapi::setInstance([
 Включение логирования заросов (/Logs/m-Y/domain.log)
 ```php
 $amo->queries->logs(true); // to default path
+```
+или
+```php
 $amo->queries->logs('path_to_log/queries'); // to custom path
 ```
 Пользовательская отладка запросов 
 ```php
 $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
-	echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
-	print_r($query->headers);
-	print_r($query->post_data);
-	echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
+    echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
+    print_r($query->headers);
+    print_r($query->post_data);
+    echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
 });
 ```
 ## Поиск сущностей
@@ -68,7 +71,7 @@ $entity->cf('Организация')->getValues();
 Задать значение
 ```php
 $entity->cf('Имя поля')->setEnum($enum);
-$entity->cf('Имя поля')->setEnums($enum);
+$entity->cf('Имя поля')->setEnums($enums);
 $entity->cf('Число')->setValue(5);
 $entity->cf('Текст')->setValue('Test');
 $entity->cf('Мультисписок')->reset()->setValues(['Мужская одежда', 'Аксессуары']);
@@ -99,8 +102,8 @@ $entity->cf('Организация')->addValue([
 ## Работа с коллекциями
 Перебор, поиск и фильтрация
 ```php
-foreach ($amo->leads as $lead) {}
-$amo->leads->each(function($lead) {});
+foreach ($amo->leads as $lead) { ... }
+$amo->leads->each(function($lead) { ... });
 $leads = $amo->leads->find('name', 'Трубы гофрированные');
 $leads = $amo->leads->filter(function($lead) {
     return $lead->sale > 0;
@@ -187,6 +190,12 @@ $lead = $contact->createLead();
 $lead->name = 'Amoapi v7';
 $lead->save();
 ```
+Копирование сделки
+```php
+$copy = clone $lead;
+$copy->name = 'New lead';
+$lead->save();
+```
 
 ## Работа с контактами
 Получение всех контактов
@@ -234,6 +243,12 @@ $contact = $lead->createContact();
 $contact->name = 'Amoapi v7';
 $contact->save();
 ```
+Копирование контакта
+```php
+$copy = clone $contact;
+$copy->name = 'New contact';
+$copy->save();
+```
 
 ## Работа с компаниями
 Получение всех компаний
@@ -277,6 +292,12 @@ $company = $contact->createCompany();
 $company = $lead->createCompany();
 $company->name = 'Amoapi v7';
 $company->save();
+```
+Копирование компании
+```php
+$copy = clone $company;
+$copy->name = 'New company';
+$copy->save();
 ```
 
 ## Работа с задачами

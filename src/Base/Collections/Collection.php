@@ -390,6 +390,9 @@ class Collection implements \IteratorAggregate
     {
 		$findedFromObj = [];
 		foreach ($this->items as $item) {
+			if (get_class($item) == 'stdClass' && !property_exists($item, $key)) {
+				continue;
+			}
 			if ($val == $item->{$key}) {
 				$findedFromObj[]= $item;
 			}
