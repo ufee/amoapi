@@ -194,7 +194,7 @@ $lead->save();
 ```php
 $copy = clone $lead;
 $copy->name = 'New lead';
-$lead->save();
+$copy->save();
 ```
 
 ## Работа с контактами

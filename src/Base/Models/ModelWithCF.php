@@ -92,6 +92,21 @@ class ModelWithCF extends ApiModel
 		return array_merge($data, $raw);
 	}
 
+    /**
+     * Set raw custom_fields
+	 * @param array $custom_fields raw
+	 * @return ModelWithCF
+     */
+    public function setCustomFields(array $custom_fields)
+	{
+		$this->attributes['custom_fields'] = [];
+		foreach($custom_fields as $cf) {
+			$this->attributes['custom_fields'][$cf->id] = $cf;
+		}
+		$this->changed[]= 'custom_fields';
+		return $this;
+	}
+
 	/**
      * Saved data trigger
 	 * @return void
