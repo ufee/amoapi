@@ -9,7 +9,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 {
 	use Traits\LinkedContacts, Traits\MainContact, Traits\LinkedCompany, Traits\LinkedTasks, Traits\LinkedNotes, Traits\LinkedPipeline, Traits\EntityDetector, Traits\LinkedTags;
 
-	protected static 
+	protected static
 		$cf_category = 'leads',
 		$_type = 'lead',
 		$_type_id = 2;
@@ -45,9 +45,10 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			'updated_at',
 			'updated_by',
 			'closed_at',
-			'closest_task_at'
+			'closest_task_at',
+			'created_user_id'
 		];
-	
+
     /**
      * Model on load
 	 * @param array $data
@@ -64,7 +65,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		if (isset($data->tags)) {
 			foreach ($data->tags as $tag) {
 				$this->attributes['tags'][]= $tag->name;
-			}			
+			}
 		}
 		$this->attributes['company_id'] = null;
 		if (isset($data->company->id)) {
@@ -120,7 +121,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		});
 		return $company;
 	}
-	
+
 	/**
      * Set lead pipeline
 	 * @param integer|Pipeline $pipeline
@@ -156,7 +157,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		$this->attributes['status'] = $status;
 		return $this;
 	}
- 
+
     /**
      * Convert Model to array
      * @return array

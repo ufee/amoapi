@@ -9,7 +9,7 @@ class Company extends \Ufee\Amo\Base\Models\ModelWithCF
 {
 	use Traits\LinkedLeads, Traits\LinkedContacts, Traits\LinkedTasks, Traits\LinkedNotes, Traits\EntityDetector, Traits\LinkedTags;
 
-	protected static 
+	protected static
 		$cf_category = 'companies',
 		$_type = 'company',
 		$_type_id = 3;
@@ -37,9 +37,10 @@ class Company extends \Ufee\Amo\Base\Models\ModelWithCF
 			'leads_id',
 			'updated_at',
 			'updated_by',
-			'closest_task_at'
+			'closest_task_at',
+			'created_user_id'
 		];
-	
+
     /**
      * Model on load
 	 * @param array $data
@@ -53,7 +54,7 @@ class Company extends \Ufee\Amo\Base\Models\ModelWithCF
 		if (isset($data->tags)) {
 			foreach ($data->tags as $tag) {
 				$this->attributes['tags'][]= $tag->name;
-			}			
+			}
 		}
 		$this->attributes['leads_id'] = [];
 		if (isset($data->leads->id)) {
