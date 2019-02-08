@@ -43,21 +43,24 @@ class Post extends Method
     protected function parseResponse(Api\Query &$query)
     {
 		if (!$response = $query->response->parseJson()) {
-			throw new \Exception('Invalid API response (non JSON), code: '.$query->response->getCode());
+			throw new \Exception('Invalid API response (non JSON), code: '.$query->response->getCode(), $query->response->getCode());
 		}
 		if (!isset($response->_embedded->items)) {
 			if (isset($response->error)) {
-				throw new \Exception('API response error (code: '.$query->response->getCode().') '.$response->error);
+				throw new \Exception('API response error (code: '.$query->response->getCode().') '.$response->error, $query->response->getCode());
 			}
 			if (isset($response->title) && isset($response->detail)) {
-				throw new \Exception('API response error (code: '.$query->response->getCode().'), '.$response->detail);
+				throw new \Exception('API response error (code: '.$query->response->getCode().'), '.$response->detail, $query->response->getCode());
 			}
 			if (!in_array($query->response->getCode(), [200, 204])) {
-				throw new \Exception('Invalid API response ('.$this->service->entity_key.': items not found), code: '.$query->response->getCode());
+				if (isset($response->response) && isset($response->response->error)) {
+					throw new \Exception('Invalid API response ('.$this->service->entity_key.': items not found) - '.strval($response->response->error), $query->response->getCode());
+				}
+				throw new \Exception('Invalid API response ('.$this->service->entity_key.': items not found), code: '.$query->response->getCode(), $query->response->getCode());
 			}
 		}
 		if (!empty($response->_embedded->errors)) {
-			throw new \Exception('API response errors: '.json_encode($response->_embedded->errors, JSON_UNESCAPED_UNICODE));
+			throw new \Exception('API response errors: '.json_encode($response->_embedded->errors, JSON_UNESCAPED_UNICODE), $query->response->getCode());
 		}
 		$result = new Collection();
 		if (isset($response->_embedded->items)) {
