@@ -508,6 +508,13 @@ $customer->cf('Дата')->setValue(date('Y-m-d'));
 $customer->cf('Переключатель')->disable();
 $customer->save();
 ```
+Создание покупателя из контакта
+```php
+$customer = $contact->createCustomer();
+$customer->name = 'Amoapi v7';
+$customer->next_date = time();
+$customer->save();
+```
 Удаление покупателей
 ```php
 $amo->customers()->delete($customers); // array|integer

@@ -47,7 +47,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			'closed_at',
 			'closest_task_at'
 		];
-	
+
     /**
      * Model on load
 	 * @param array $data
@@ -64,7 +64,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		if (isset($data->tags)) {
 			foreach ($data->tags as $tag) {
 				$this->attributes['tags'][]= $tag->name;
-			}			
+			}
 		}
 		$this->attributes['company_id'] = null;
 		if (isset($data->company->id)) {
@@ -120,7 +120,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		});
 		return $company;
 	}
-	
+
 	/**
      * Set lead pipeline
 	 * @param integer|Pipeline $pipeline
@@ -156,7 +156,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		$this->attributes['status'] = $status;
 		return $this;
 	}
- 
+
     /**
      * Convert Model to array
      * @return array

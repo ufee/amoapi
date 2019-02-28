@@ -7,7 +7,7 @@ use Ufee\Amo\Base\Models\Traits;
 
 class Company extends \Ufee\Amo\Base\Models\ModelWithCF
 {
-	use Traits\LinkedLeads, Traits\LinkedContacts, Traits\LinkedTasks, Traits\LinkedNotes, Traits\EntityDetector, Traits\LinkedTags;
+	use Traits\LinkedLeads, Traits\LinkedContacts, Traits\LinkedCustomers, Traits\LinkedTasks, Traits\LinkedNotes, Traits\EntityDetector, Traits\LinkedTags;
 
 	protected static 
 		$cf_category = 'companies',
@@ -35,11 +35,12 @@ class Company extends \Ufee\Amo\Base\Models\ModelWithCF
 			'responsible_user_id',
 			'contacts_id',
 			'leads_id',
+			'customers_id',
 			'updated_at',
 			'updated_by',
 			'closest_task_at'
 		];
-	
+
     /**
      * Model on load
 	 * @param array $data
@@ -53,7 +54,7 @@ class Company extends \Ufee\Amo\Base\Models\ModelWithCF
 		if (isset($data->tags)) {
 			foreach ($data->tags as $tag) {
 				$this->attributes['tags'][]= $tag->name;
-			}			
+			}
 		}
 		$this->attributes['leads_id'] = [];
 		if (isset($data->leads->id)) {
@@ -66,11 +67,13 @@ class Company extends \Ufee\Amo\Base\Models\ModelWithCF
 			$this->attributes['contacts_id'] = $data->contacts->id;
 		}
 		$this->attributes['contacts'] = null;
-		unset(
-			$this->attributes['customers']->_links
-		);
-	}
 
+		$this->attributes['customers_id'] = [];
+		if (isset($data->customers->id)) {
+			$this->attributes['customers_id'] = $data->customers->id;
+		}
+		$this->attributes['customers'] = null;
+	}
 
 	/**
      * Create linked lead model
@@ -89,7 +92,6 @@ class Company extends \Ufee\Amo\Base\Models\ModelWithCF
 		return $lead;
 	}
 
-
 	/**
      * Create linked contact model
      * @return Contact
@@ -105,6 +107,23 @@ class Company extends \Ufee\Amo\Base\Models\ModelWithCF
 			$company->attachContact($model);
 		});
 		return $contact;
+	}
+
+	/**
+     * Create linked customer model
+     * @return Customer
+     */
+    public function createCustomer()
+    {
+		$company = $this;
+		$customer = $this->service->instance->customers()->create();
+		$customer->responsible_user_id = $this->responsible_user_id;
+		$customer->attachCompany($this);
+
+		$customer->onCreate(function(&$model) use (&$company) {
+			$company->attachCustomer($model);
+		});
+		return $customer;
 	}
 
     /**
