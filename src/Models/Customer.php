@@ -41,7 +41,11 @@ class Customer extends \Ufee\Amo\Base\Models\ModelWithCF
 			'main_contact_id',
 			'updated_at',
 			'updated_by',
-			'closest_task_at'
+			'closest_task_at',
+			'periodicity',
+			'ltv',
+			'purchases_count',
+			'average_check'
 		];
 	
     /**
