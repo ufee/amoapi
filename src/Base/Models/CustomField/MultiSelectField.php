@@ -59,7 +59,7 @@ class MultiSelectField extends EntityField
         $values = array_unique(array_merge($this->getValues(), $values));
         $enums = [];
         foreach($values as $value) {
-            $enum = array_search($value, (array)$this->field->enums);
+            $enum = array_search($value, get_object_vars($this->field->enums));
             if ($enum === false) {
                 throw new \Exception('Invalid value: "'.$value.'" for cfield "'.$this->name.'" (enum not found)');
             }
@@ -86,6 +86,9 @@ class MultiSelectField extends EntityField
         $enums = array_unique(array_merge($this->getEnums(), $enums));
         $new_values = [];
         foreach ($enums as $enum) {
+            if (!array_key_exists($enum, get_object_vars($this->field->enums))) {
+                throw new \Exception('Invalid enum: "'.$enum.'" for cfield "'.$this->name.'" (not found)');
+            }
             $new_values[$enum]= (object)[
                 'enum' => $enum,
                 'value' => $this->field->enums->{$enum}
