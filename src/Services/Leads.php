@@ -21,6 +21,16 @@ class Leads extends \Ufee\Amo\Base\Services\MainEntity
 		$cache_time = false;
 
     /**
+     * Service on load
+	 * @return void
+     */
+	protected function _boot()
+	{
+		parent::_boot();
+		$this->api_args['with'] = 'loss_reason_name';
+	}
+
+    /**
      * Get full
 	 * @return Collection
      */

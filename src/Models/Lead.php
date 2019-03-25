@@ -24,6 +24,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			'pipeline',
 			'status',
 			'loss_reason_id',
+			'loss_reason_name',
 			'customFields',
 			'contacts',
 			'contact',
