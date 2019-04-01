@@ -49,7 +49,7 @@ $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
 
 Свой путь для кеширования запросов
 ```php
-$amo->queries->cachePath(LOGS.'path_to/cache');
+$amo->queries->cachePath('path_to/cache');
 ```
 ## Поиск сущностей
 Поиск по дополнительному полю
