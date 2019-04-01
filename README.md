@@ -46,6 +46,7 @@ $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
 });
 ```
 Зарпос /api/v2/account кешируется, время кеширования задается в Services\Account.php
+
 Свой путь для кеширования запросов
 ```php
 $amo->queries->cachePath(LOGS.'path_to/cache');
