@@ -9,7 +9,8 @@ use Ufee\Amo\Amoapi,
 class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 {
     protected 
-        $cache_path = '/Cache/',
+        $instance,
+        $cache_path = '/Cache',
         $_listener,
         $logger = null,
         $_logs = false;
@@ -18,12 +19,23 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
      * Boot instance
 	 * @param Amoapi $instance
      */
-    public function boot(Amoapi $instance)
+    public function boot(Amoapi &$instance)
     {
+        $this->instance = $instance;
         $this->logger = Api\Logger::getInstance($instance->getAuth('domain').'.log');
-        $this->cache_path = AMOAPI_ROOT.$this->cache_path.$instance->getAuth('domain');
+        $this->cachePath(AMOAPI_ROOT.$this->cache_path);
+    }
+
+    /**
+     * Set cache path
+	 * @param string $val
+     * @return QueryCollection
+     */
+    public function cachePath($val)
+    {
+        $this->cache_path = $val.'/'.$this->instance->getAuth('domain');
         if (!file_exists($this->cache_path)) {
-            mkdir($this->cache_path);
+            mkdir($this->cache_path, 0777, true);
         }
         if ($caches = glob($this->cache_path.'/*.cache')) {
             foreach ($caches as $cache_file) {
@@ -36,7 +48,8 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
                 }
             }
         }
-    }
+        return $this;
+	}
     
     /**
      * Push new queries
