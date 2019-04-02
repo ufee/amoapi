@@ -54,7 +54,8 @@ $amo->queries->cachePath('path_to/cache');
 ## Поиск сущностей
 Поиск по дополнительному полю
 ```php
-$leads = $amo->leads()->searchByCustomField('Москва', 'Город');
+$leads = $amo->leads()->searchByCustomField('Москва', 'Город'); // by CF name
+$leads = $amo->leads()->searchByCustomField('Москва', 623425); // by CF id
 $companies = $amo->companies()->searchByName('ООО Шарики за Ролики');
 $contacts = $amo->contacts()->searchByEmail('Test@Mail.Ru');
 $contacts = $amo->contacts()->searchByPhone('89271002030');

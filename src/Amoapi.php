@@ -2,7 +2,7 @@
 /**
  * amoCRM API client
  * @author Vlad Ionov <vlad@f5.com.ru>
- * @version 0.7
+ * @version 0.8
  */
 namespace Ufee\Amo;
 
