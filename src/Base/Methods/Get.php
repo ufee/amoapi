@@ -7,8 +7,8 @@ use Ufee\Amo\Api;
 
 class Get extends Method
 {
-	protected
-		$method = 'get';
+	protected $method = 'get';
+	protected $url = '';
 	
     /**
      * Request arg set

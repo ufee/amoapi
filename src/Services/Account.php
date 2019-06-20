@@ -20,8 +20,6 @@ class Account extends \Ufee\Amo\Base\Services\Cached
 	protected function _boot()
 	{
 		$this->api_args = [
-			'USER_LOGIN' => $this->instance->getAuth('login'),
-			'USER_HASH' => $this->instance->getAuth('hash'),
 			'with' => 'users,groups,pipelines,custom_fields,note_types,task_types',
 			'lang' => $this->instance->getAuth('lang')
 		];

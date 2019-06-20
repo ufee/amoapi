@@ -18,8 +18,11 @@ class WebhooksSubscriber extends \Ufee\Amo\Base\Methods\Post
 
 		$result = $this->call(['subscribe' => $raws], $arg);
 		$result->each(function($hook) {
-			if (!$hook->result && $hook->notice) {
-				throw new \Exception('Error subscribe hook: '.$hook->notice);
+			if (!$hook->result) {
+				if (isset($hook->notice)) {
+					throw new \Exception('Error subscribe hook: '.$hook->notice);
+				}
+				throw new \Exception('Unknown error subscribe hook');
 			}
 		});
 		return $result;
@@ -37,8 +40,11 @@ class WebhooksSubscriber extends \Ufee\Amo\Base\Methods\Post
 
 		$result = $this->call(['unsubscribe' => $raws], $arg);
 		$result->each(function($hook) {
-			if (!$hook->result && $hook->notice) {
-				throw new \Exception('Error unsubscribe hook: '.$hook->notice);
+			if (!$hook->result) {
+				if (isset($hook->notice)) {
+					throw new \Exception('Error unsubscribe hook: '.$hook->notice);
+				}
+				throw new \Exception('Unknown error unsubscribe hook');
 			}
 		});
 		return $result;

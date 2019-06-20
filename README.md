@@ -45,6 +45,10 @@ $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
     echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
 });
 ```
+Включение/выключение автоматической авторизации при ошибке 401
+```php
+$amo->autoAuth(true); // true/false
+```
 Зарпос /api/v2/account кешируется, время кеширования задается в Services\Account.php
 
 Свой путь для кеширования запросов
@@ -569,4 +573,15 @@ $result = $amo->webhooks()->subscribe('http://site.ru/handler/', ['add_lead', 'u
 Удаление вебхуков
 ```php
 $result = $amo->webhooks()->unsubscribe('http://site.ru/handler/', ['update_contact', 'responsible_lead']);
+```
+
+## Работа с frontend методами
+Скачивание файла из примечания
+```php
+$contents = $amo->ajax()->getAattachment('AbCd_attach_name.zip');
+```
+Выполнение произвольных запросов
+```php
+$amo->ajax()->get($url = '/ajax/example', $args = []);
+$amo->ajax()->post($url = '/ajax/example', $data = [], $args = []);
 ```

@@ -13,8 +13,9 @@ class Query extends QueryModel
      */
     public function execute()
     {
+        $instance = $this->instance();
         $last_time = 1;
-        if ($last_query = $this->instance()->queries->last()) {
+        if ($last_query = $instance->queries->last()) {
             $last_time = $last_query->start_time;
         }
         $current_time = microtime(true);
@@ -28,11 +29,25 @@ class Query extends QueryModel
         $this->attributes['response'] = new Response(
             $this->method == 'POST' ? $this->post() : $this->get(), $this
         );
+        curl_close($this->curl);
+        if (!in_array($this->response->getCode(), [200, 204]) && file_exists($instance->queries->getCookiePath())) {
+           @unlink($instance->queries->getCookiePath());
+        }
+        if ($this->response->getCode() == 401 && $this->url != $instance::AUTH_URL && $instance->hasAutoAuth()) {
+            $instance->authorize();
+            $instance->queries->refreshSession();
+            $this->setCurl();
+            return $this->execute();
+        }
         $this->attributes['end_time'] = microtime(true);
         $this->attributes['execution_time'] = round($this->end_time - $this->start_time, 5);
         $this->attributes['memory_usage'] = memory_get_peak_usage(true)/1024/1024;
         $this->generateHash();
-        $this->instance()->queries->pushQuery($this, in_array($this->response->getCode(), [200]));
+        $instance->queries->pushQuery($this, in_array($this->response->getCode(), [200]));
+
+		if (!$instance->hasSession() && in_array($this->response->getCode(), [200, 204])) {
+            $instance->queries->refreshSession();
+		}
         return $this;
     }
 

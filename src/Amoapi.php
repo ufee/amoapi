@@ -33,10 +33,17 @@ if (!defined('AMOAPI_ROOT')) {
  * @method \Ufee\Amo\Services\Catalogs catalogs()
  * @method \Ufee\Amo\Services\CatalogElements catalogElements()
  * @method \Ufee\Amo\Services\Webhooks webhooks()
+ * @method \Ufee\Amo\Services\Ajax ajax()
  */
 class Amoapi
 {
+	const VERSION = 8;
+	const SESS_LIFETIME = 900;
+	const AUTH_URL = '/private/api/auth.php';
+
 	private static $_instances = [];
+	private static $_queries = [];
+
 	private $services = [
 		'account',
 		'leads',
@@ -49,9 +56,14 @@ class Amoapi
 		'catalogs',
 		'catalogElements',
 		'webhooks',
+		'ajax'
 	];
 	private $_account;
-	private $_queries;
+	private $auto_auth = false;
+	private $session = [
+		'id' => null,
+		'modified_at' => 0
+	];
 	
     /**
      * Constructor
@@ -73,6 +85,80 @@ class Amoapi
 			return $this->_account[$key];
 		}
 		return $this->_account;
+	}
+
+    /**
+     * Create auth session
+	 * @return Amoapi
+     */
+    public function authorize()
+    {
+		$this->session['id'] = null;
+		$this->session['modified_at'] = 0;
+		$query = new Api\Query($this);
+		$query->setUrl(self::AUTH_URL)
+			  ->resetArgs()
+			  ->setArgs([
+				'USER_LOGIN' => $this->getAuth('login'),
+				'USER_HASH' => $this->getAuth('hash'),
+				'type' => 'json'
+			  ]);
+		$query->execute();
+		if (!$data = $query->response->parseJson()) {
+			throw new \Exception('Auth failed with invalid response data: '.$query->response->getData(), $query->response->getCode());
+		}
+		if (!$data->response->auth) {
+			if (isset($data->response->error_code) && isset($data->response->error)) {
+				throw new \Exception($data->response->error_code.': '.$data->response->error, $query->response->getCode());
+			}
+			throw new \Exception('Auth failed');
+		}
+		if ($query->response->getCode() != 200) {
+			throw new \Exception('Auth failed with response code: '.$query->response->getCode(), $query->response->getCode());
+		}
+		return $this;
+	}
+
+    /**
+     * Set auto authorize
+	 * @param bool $value
+	 * @return bool
+     */
+    public function autoAuth($value = true)
+    {
+        return $this->auto_auth = (bool)$value;
+	}
+
+    /**
+     * Has auto authorize
+	 * @return bool
+     */
+    public function hasAutoAuth()
+    {
+        return $this->auto_auth;
+	}
+
+    /**
+     * Set session
+	 * @param string $id
+	 * @param integer $modified
+	 * @return Amoapi
+     */
+    public function setSession($id, $modified)
+    {
+		$this->session['id'] = $id;
+		$this->session['modified_at'] = $modified;
+		return $this;
+	}
+
+    /**
+     * Has session exists
+	 * @return bool
+     */
+    public function hasSession()
+    {
+		$seconds = time()-$this->session['modified_at'];
+        return !is_null($this->session['id']) && $seconds < self::SESS_LIFETIME;
 	}
 
 	/**
@@ -105,13 +191,10 @@ class Amoapi
 		}
         if (!isset(self::$_instances[$account['id']])) {
 			self::$_instances[$account['id']] = new static($account);
-			if (file_exists(AMOAPI_ROOT.'/Cookies/'.$account['domain'].'.cookie')) {
-				@unlink(AMOAPI_ROOT.'/Cookies/'.$account['domain'].'.cookie');
-			}
 		}
 		$instance = self::getInstance($account['id']);
-		$instance->_queries = new Collections\QueryCollection();
-		$instance->_queries->boot($instance);
+		self::$_queries[$account['id']] = new Collections\QueryCollection();
+		self::$_queries[$account['id']]->boot($instance);
         return $instance;
 	}
 
@@ -155,7 +238,10 @@ class Amoapi
 	public function __get($target)
 	{
 		if ($target === 'queries') {
-			return $this->_queries;
+			return self::$_queries[$this->_account['id']];
+		}
+		if ($target === 'session') {
+			return $this->session;
 		}
 		if (!in_array($target, $this->services)) {
 			throw new \Exception('Invalid service called: '.$target);

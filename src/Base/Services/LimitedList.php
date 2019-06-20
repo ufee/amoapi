@@ -27,8 +27,6 @@ class LimitedList extends Cached
 	protected function _boot()
 	{
 		$this->api_args = [
-			'USER_LOGIN' => $this->instance->getAuth('login'),
-			'USER_HASH' => $this->instance->getAuth('hash'),
 			'lang' => $this->instance->getAuth('lang')
 		];
 	}

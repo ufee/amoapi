@@ -11,6 +11,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     protected 
         $instance,
         $cache_path = '/Cache',
+        $cookie_file,
         $_listener,
         $logger = null,
         $_logs = false;
@@ -24,6 +25,32 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         $this->instance = $instance;
         $this->logger = Api\Logger::getInstance($instance->getAuth('domain').'.log');
         $this->cachePath(AMOAPI_ROOT.$this->cache_path);
+        $this->cookie_file = AMOAPI_ROOT.DIRECTORY_SEPARATOR.'Cookies'.DIRECTORY_SEPARATOR.$instance->getAuth('domain').'.cookie';
+        $this->refreshSession();
+    }
+
+    /**
+     * Get cookie path
+     * @return string
+     */
+    public function getCookiePath()
+    {
+        return $this->cookie_file;
+    }
+
+    /**
+     * Refresh current session
+     * @return string
+     */
+    public function refreshSession()
+    {
+		if (file_exists($this->cookie_file) && $cookies = file_get_contents($this->cookie_file)) {
+			if (preg_match('#session_id\s(.+)\s#Uis', $cookies, $match) && !empty($match[1])) {
+                clearstatcache(true, $this->cookie_file);
+                $this->instance->setSession($match[1], filemtime($this->cookie_file));
+            }
+        }
+        return $this;
     }
 
     /**
@@ -77,7 +104,8 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         }
         if ($save) {
             array_push($this->items, $query);
-            if ($query->getService()->canCache()) {
+            $service = $query->getService();
+            if ($service && $service->canCache()) {
                 $this->cacheQuery($query);
             }
         }
@@ -98,7 +126,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     }
 
     /**
-     * Debug queries
+     * Log queries
 	 * @param mixed $val
      * @return QueryCollection
      */
@@ -146,5 +174,5 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     public function cacheQuery(Api\Query $query)
     {
         return file_put_contents($this->cache_path.'/'.$query->hash.'.cache', serialize($query));
-	}
+    }
 }
