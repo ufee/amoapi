@@ -46,7 +46,8 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			'updated_at',
 			'updated_by',
 			'closed_at',
-			'closest_task_at'
+			'closest_task_at',
+			'visitor_uid'
 		];
 
     /**
