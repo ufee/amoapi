@@ -24,6 +24,7 @@ class Customer extends \Ufee\Amo\Base\Models\ModelWithCF
 			'customFields',
 			'company',
 			'contacts',
+			'contact',
 			'tasks',
 			'notes',
 			'transactions'
