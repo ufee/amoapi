@@ -170,5 +170,8 @@ class ApiModel extends Model
 		foreach ($this->writable as $i=>$field) {
 			$this->setChanged($field);
 		}
+		if ($this->hasAttribute('tags')) {
+			$this->setChanged('tags');
+		}
 	}
 }
