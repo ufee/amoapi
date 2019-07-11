@@ -38,7 +38,7 @@ class EntityField extends \Ufee\Amo\Base\Models\Model
     public function setValue($value)
     {
 		$this->values = [
-			['value' => $value]
+			(object)['value' => $value]
 		];
 		return $this;
 	}
