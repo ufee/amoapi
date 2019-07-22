@@ -9,6 +9,9 @@ namespace Ufee\Amo;
 if (!defined('AMOAPI_ROOT')) {
 	define('AMOAPI_ROOT', dirname(__FILE__));
 }
+if (!defined('CURL_SSLVERSION_TLSv1_2')) {
+	define('CURL_SSLVERSION_TLSv1_2', 6);
+ }
 /**
  * @property \Ufee\Amo\Collections\QueryCollection $queries
  * @property \Ufee\Amo\Models\Account $account
