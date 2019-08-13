@@ -11,7 +11,7 @@ if (!defined('AMOAPI_ROOT')) {
 }
 if (!defined('CURL_SSLVERSION_TLSv1_2')) {
 	define('CURL_SSLVERSION_TLSv1_2', 6);
- }
+}
 /**
  * @property \Ufee\Amo\Collections\QueryCollection $queries
  * @property \Ufee\Amo\Models\Account $account

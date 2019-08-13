@@ -26,7 +26,6 @@ class QueryModel
 			'account_id',
 			'service',
 			'curl',
-			'latency',
 			'cookie_file',
 			'response'
 		],
@@ -59,7 +58,6 @@ class QueryModel
 	{
 		$this->attributes['headers'] = [];
 		$this->attributes['method'] = 'GET';
-		$this->attributes['latency'] = 1;
 		$this->setCurl();
 	}
 
@@ -196,12 +194,15 @@ class QueryModel
      */
     public function generateHash()
     {
+		$args = $this->args;
+		unset($args['USER_LOGIN'], $args['USER_HASH']);
         return $this->attributes['hash'] = md5(
 			$this->instance()->getAuth('domain').
 			$this->instance()->getAuth('login').
 			$this->instance()->getAuth('hash').
+			$this->instance()->getAuth('zone').
 			$this->method.
-			$this->getUrl().
+			json_encode($args).
 			json_encode($this->post_data)
 		);
 	}

@@ -6,12 +6,11 @@ namespace Ufee\Amo\Services;
 
 class Account extends \Ufee\Amo\Base\Services\Cached
 {
-	protected
-		$methods = [
-			'current'
-		],
-		$cache_time = 600,
-		$_current_data;
+	protected static $_cache_time = 600;
+	protected $methods = [
+					'current'
+			];
+	protected $_current_data;
 	
     /**
      * Service on load

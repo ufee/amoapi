@@ -10,6 +10,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 {
     protected 
         $instance,
+        $delay = 1,
         $cache_path = '/Cache',
         $cookie_file,
         $_listener,
@@ -27,6 +28,24 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         $this->cachePath(AMOAPI_ROOT.$this->cache_path);
         $this->cookie_file = AMOAPI_ROOT.DIRECTORY_SEPARATOR.'Cookies'.DIRECTORY_SEPARATOR.$instance->getAuth('domain').'.cookie';
         $this->refreshSession();
+    }
+
+    /**
+     * Get query delay
+     * @return integer
+     */
+    public function getDelay()
+    {
+        return $this->delay;
+    }
+
+    /**
+     * Set query delay
+     * @param integer $value
+     */
+    public function setDelay($value)
+    {
+        $this->delay = $value;
     }
 
     /**
@@ -67,7 +86,8 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         if ($caches = glob($this->cache_path.'/*.cache')) {
             foreach ($caches as $cache_file) {
                 if ($cacheQuery = unserialize(file_get_contents($cache_file))) {
-                    if ($cacheQuery->getService()->canCache() && microtime(1)-$cacheQuery->end_time <= $cacheQuery->getService()->cacheTime()) {
+                    $service = $cacheQuery->getService();
+                    if ($service::canCache() && microtime(1)-$cacheQuery->end_time <= $service::cacheTime()) {
                         array_push($this->items, $cacheQuery);
                     } elseif(is_file($cache_file)) {
                         @unlink($cache_file);
