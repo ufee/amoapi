@@ -34,7 +34,7 @@ class User extends \Ufee\Amo\Base\Models\Model
     public function __construct($data = [], UserGroup $group)
     {
 		parent::__construct($data);
-		
+		$this->attributes['phone'] = $data->phone_number;
 		$this->attributes['group'] = $group;
 	}
 }
