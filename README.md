@@ -28,13 +28,21 @@ $amo = \Ufee\Amo\Amoapi::setInstance([
     'lang' => 'en' // default: ru
 ]);
 ```
-Включение логирования заросов (/Logs/m-Y/domain.log)
+Включение логирования заросов (Logs/m-Y/domain.log)
 ```php
 $amo->queries->logs(true); // to default path
 ```
 или
 ```php
 $amo->queries->logs('path_to_log/queries'); // to custom path
+```
+Не более 1 запроса за заданное время, в секундах
+```php
+$amo->queries->setDelay(0.5); // default: 1 sec
+```
+Кеширование запросов сервиса, в секундах
+```php
+\Ufee\Amo\Services\Account::setCacheTime(1800); // default: 600 sec
 ```
 Пользовательская отладка запросов 
 ```php
