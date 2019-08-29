@@ -6,7 +6,7 @@ namespace Ufee\Amo\Models;
 
 class Task extends \Ufee\Amo\Base\Models\ApiModel
 {
-	protected static 
+	protected static
 		$_type = 'task';
 	protected
 		$hidden = [
@@ -25,11 +25,12 @@ class Task extends \Ufee\Amo\Base\Models\ApiModel
 			'text',
 			'responsible_user_id',
 			'updated_at',
+            'created_at',
 			'is_completed',
 			'created_by',
 			'result'
 		];
-	
+
     /**
      * Model on load
 	 * @param array $data
@@ -54,7 +55,7 @@ class Task extends \Ufee\Amo\Base\Models\ApiModel
     {
 		return isset($this->attributes['result']->id);
 	}
-	
+
     /**
      * Get linked result
 	 * @param bool $force
