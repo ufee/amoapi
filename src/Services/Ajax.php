@@ -73,7 +73,7 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 		$query = new Api\Query($this->instance);
 		$query->setHeader('X-Requested-With', 'XMLHttpRequest')
 			  ->setUrl($url)
-              ->setMethod('POST')
+			  ->setMethod('POST')
 			  ->setPostData($data)
 			  ->setArgs($args)
 			  ->execute();

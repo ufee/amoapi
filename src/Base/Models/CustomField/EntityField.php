@@ -32,6 +32,19 @@ class EntityField extends \Ufee\Amo\Base\Models\Model
 	}
 
     /**
+     * Get cf values
+	 * @return array
+     */
+    public function getValues()
+    {
+        $values = [];
+		foreach ($this->values as $setted) {
+            $values[]= $setted->value;
+        }
+        return $values;
+    }
+
+    /**
      * Set cf values
 	 * @param mixed $value value
      */

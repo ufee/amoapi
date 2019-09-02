@@ -7,7 +7,7 @@ use Ufee\Amo\Base\Models\Traits;
 
 class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 {
-	use Traits\LinkedContacts, Traits\MainContact, Traits\LinkedCompany, Traits\LinkedTasks, Traits\LinkedNotes, Traits\LinkedPipeline, Traits\EntityDetector, Traits\LinkedTags;
+	use Traits\LinkedContacts, Traits\MainContact, Traits\LinkedCompany, Traits\LinkedTasks, Traits\LinkedNotes, Traits\LinkedPipeline, Traits\EntityDetector, Traits\LinkedTags, Traits\LinkedCatalogElements;
 
 	protected static 
 		$cf_category = 'leads',
@@ -43,6 +43,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			'contacts_id',
 			'main_contact_id',
 			'company_id',
+			'catalog_elements_id',
 			'updated_at',
 			'updated_by',
 			'closed_at',
@@ -84,6 +85,12 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		if (isset($data->main_contact->id)) {
 			$this->attributes['main_contact_id'] = $data->main_contact->id;
 		}
+
+		$this->attributes['catalog_elements_id'] = [];
+		if (isset($data->catalog_elements->id)) {
+			$this->attributes['catalog_elements_id'] = $data->catalog_elements->id;
+		}
+		$this->attributes['contacts'] = null;
 		unset(
 			$this->attributes['main_contact'], $this->attributes['pipeline']->_links
 		);

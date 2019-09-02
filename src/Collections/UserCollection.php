@@ -14,6 +14,6 @@ class UserCollection extends \Ufee\Amo\Base\Collections\Collection
 	 */
 	public function byId($id)
 	{
-		return $this->collection->find('id', $id)->first();
+		return $this->find('id', $id)->first();
 	}
 }
