@@ -308,6 +308,9 @@ class LimitedList extends Cached
      */
 	public function find($id)
 	{
+		if (is_array($id) && count($id) === 0) {
+			throw new \Exception('Model ids should not be empty');
+		}
 		$result = $this->list->where('limit_rows', is_array($id) ? count($id) : 1)
 							 ->where('limit_offset', 0)
 							 ->where('id', $id)
