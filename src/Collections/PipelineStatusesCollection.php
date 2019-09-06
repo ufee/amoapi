@@ -62,6 +62,18 @@ class PipelineStatusesCollection extends CollectionWrapper
     }
 
 	/**
+     * Get opened statuses
+     * @return Collection
+     */
+    public function opened()
+    {
+		$opened = $this->collection->find(function($status) {
+			return !in_array($status->id, [142, 143]);
+		});
+		return $opened;
+    }
+
+	/**
      * Get closed statuses
      * @return Collection
      */
