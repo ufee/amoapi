@@ -122,7 +122,7 @@ $entity->cf('Организация')->addValue([
 Перебор, поиск и фильтрация
 ```php
 foreach ($amo->leads as $lead) { ... }
-$amo->leads->each(function($lead) { ... });
+$amo->leads->each(function(&$lead) { ... });
 $leads = $amo->leads->find('name', 'Трубы гофрированные');
 $leads = $amo->leads->filter(function($lead) {
     return $lead->sale > 0;
