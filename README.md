@@ -456,6 +456,7 @@ $catalog->delete();
 ```php
 $element = $amo->catalogElements()->find($id);
 $elements = $amo->catalogElements()->where('catalog_id', 1234)->call();
+$elements = $amo->catalogElements()->searchByCustomField('ML-4675', 'Артикул');
 $elements = $catalog->elements;
 ```
 Добавление товаров

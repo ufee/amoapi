@@ -4,8 +4,12 @@
  */
 namespace Ufee\Amo\Services;
 
+use Ufee\Amo\Base\Services\Traits\SearchByCustomField;
+
 class CatalogElements extends \Ufee\Amo\Base\Services\LimitedList
 {
+    use SearchByCustomField;
+    
 	protected static 
 		$_require = [
 			'add' => ['catalog_id', 'name'],
