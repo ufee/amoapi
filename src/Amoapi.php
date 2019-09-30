@@ -209,7 +209,7 @@ class Amoapi
     public static function getInstance($account_id)
     {
 		if (!is_numeric($account_id)) {
-			throw new \Exception('Account id must be numeric: '.$daaccount_idta);
+			throw new \Exception('Account id must be numeric: '.$account_id);
 		}
 		if (!isset(self::$_instances[$account_id])) {
 			throw new \Exception('Account not found: '.$account_id);
