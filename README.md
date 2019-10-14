@@ -28,6 +28,10 @@ $amo = \Ufee\Amo\Amoapi::setInstance([
     'lang' => 'en' // default: ru
 ]);
 ```
+Включение/выключение автоматической авторизации при ошибке 401
+```php
+$amo->autoAuth(true); // true/false
+```
 Включение логирования заросов (Logs/m-Y/domain.log)
 ```php
 $amo->queries->logs(true); // to default path
@@ -52,10 +56,6 @@ $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
     print_r($query->post_data);
     echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
 });
-```
-Включение/выключение автоматической авторизации при ошибке 401
-```php
-$amo->autoAuth(true); // true/false
 ```
 Зарпос /api/v2/account кешируется, время кеширования задается в Services\Account.php
 
@@ -364,6 +364,12 @@ $task->element_type = 1;
 $task->element_id = 34762725;
 $task->save();
 ```
+Получение родительского контакта, сделки или компании
+```php
+$contact = $task->linkedContact;
+$lead = $task->linkedLead;
+$comapny = $task->linkedCompany;
+```
 
 ## Работа с примечаниями
 Получение всех примечаний
@@ -413,6 +419,12 @@ $note->element_type = 2;
 $note->element_id = 34762728;
 $note->save();
 ```
+Получение родительского контакта, сделки или компании
+```php
+$contact = $note->linkedContact;
+$lead = $note->linkedLead;
+$comapny = $note->linkedCompany;
+```
 
 ## Работа со списками
 Получение всех списков (каталогов)
@@ -456,7 +468,6 @@ $catalog->delete();
 ```php
 $element = $amo->catalogElements()->find($id);
 $elements = $amo->catalogElements()->where('catalog_id', 1234)->call();
-$elements = $amo->catalogElements()->searchByCustomField('ML-4675', 'Артикул');
 $elements = $catalog->elements;
 ```
 Добавление товаров
