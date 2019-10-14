@@ -52,10 +52,6 @@ class Get extends Method
 			}
 		}
 		$query->execute();
-		while ($query->response->getCode() == 429) {
-			sleep(1);
-			$query->execute();
-		}
 		return $this->parseResponse(
 			$query
 		);

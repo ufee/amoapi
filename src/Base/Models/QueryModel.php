@@ -14,6 +14,7 @@ class QueryModel
 			'method',
 			'args',
 			'post_data',
+			'retry',
 			'start_time',
 			'end_time',
 			'execution_time',
@@ -47,6 +48,7 @@ class QueryModel
 		}
 		$this->attributes['account_id'] = $instance->getAuth('id');
 		$this->attributes['service'] = $service_class;
+		$this->attributes['retry'] = true;
 		$this->_boot();
 	}
 
@@ -63,9 +65,9 @@ class QueryModel
 
     /**
      * Set query curl
-	 * @return void
+	 * @return static
      */
-	protected function setCurl()
+	public function setCurl()
 	{
 		$instance = $this->instance();
 		$this->attributes['curl'] = \curl_init();
@@ -87,6 +89,7 @@ class QueryModel
 				'USER_HASH' => $instance->getAuth('hash')
 			]);
 		}
+		return $this;
 	}
 
     /**
@@ -148,6 +151,16 @@ class QueryModel
     public function setUrl($url)
     {
 		$this->attributes['url'] = $url;
+		return $this;
+	}
+	
+    /**
+     * Set retry status
+     * @param bool $status
+     */
+    public function setRetry($status)
+    {
+		$this->attributes['retry'] = (bool)$status;
 		return $this;
 	}
 	

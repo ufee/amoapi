@@ -26,10 +26,6 @@ class Post extends Method
 			array_merge($this->service->api_args, $this->args, $arg)
 		);
 		$query->execute();
-		while ($query->response->getCode() == 429) {
-			sleep(1);
-			$query->execute();
-		}
 		return $this->parseResponse(
 			$query
 		);

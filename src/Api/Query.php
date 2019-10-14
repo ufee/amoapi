@@ -34,12 +34,23 @@ class Query extends QueryModel
         if (!in_array($this->response->getCode(), [200, 204]) && file_exists($instance->queries->getCookiePath())) {
            @unlink($instance->queries->getCookiePath());
         }
-        if ($this->response->getCode() == 401 && $this->url != $instance::AUTH_URL && $instance->hasAutoAuth()) {
+        if ($this->response->getCode() == 401 && $this->url != $instance::AUTH_URL && $this->retry && $instance->hasAutoAuth()) {
             $instance->authorize();
             $instance->queries->refreshSession();
             $this->setCurl();
+			$this->setRetry(false);
             return $this->execute();
         }
+		while ($this->response->getCode() == 429) {
+			sleep(1);
+			$this->setCurl()->execute();
+		}
+		if (in_array($this->response->getCode(), [502,504])) {
+			sleep(1);
+            $this->setCurl();
+			$this->setRetry(false);
+            return $this->execute();
+		}
         $this->attributes['end_time'] = microtime(true);
         $this->attributes['execution_time'] = round($this->end_time - $this->start_time, 5);
         $this->attributes['memory_usage'] = memory_get_peak_usage(true)/1024/1024;
