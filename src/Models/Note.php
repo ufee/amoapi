@@ -3,13 +3,19 @@
  * amoCRM Note model
  */
 namespace Ufee\Amo\Models;
+use Ufee\Amo\Base\Models\Traits;
 
 class Note extends \Ufee\Amo\Base\Models\ApiModel
 {
+	use Traits\LinkedParents, Traits\EntityDetector;
+
 	protected
 		$hidden = [
 			'query_hash',
 			'service',
+			'linkedLead',
+			'linkedContact',
+			'linkedCompany',
 			'createdUser',
 			'responsibleUser',
 			'noteType'
@@ -24,6 +30,7 @@ class Note extends \Ufee\Amo\Base\Models\ApiModel
 			'updated_at',
 			'created_at',
 			'created_by',
+			'attachment',
 			'params'
 		];
 	

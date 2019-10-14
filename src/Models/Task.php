@@ -3,15 +3,21 @@
  * amoCRM Task model
  */
 namespace Ufee\Amo\Models;
+use Ufee\Amo\Base\Models\Traits;
 
 class Task extends \Ufee\Amo\Base\Models\ApiModel
 {
+	use Traits\LinkedParents, Traits\EntityDetector;
+
 	protected static 
 		$_type = 'task';
 	protected
 		$hidden = [
 			'query_hash',
 			'service',
+			'linkedLead',
+			'linkedContact',
+			'linkedCompany',
 			'createdUser',
 			'responsibleUser',
 			'taskType',
@@ -21,6 +27,7 @@ class Task extends \Ufee\Amo\Base\Models\ApiModel
 			'element_id',
 			'element_type',
 			'complete_till_at',
+			'duration',
 			'task_type',
 			'text',
 			'responsible_user_id',
