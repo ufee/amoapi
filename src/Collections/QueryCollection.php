@@ -110,7 +110,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
             $this->logger->log(
                 '['.$query->method.'] '.$query->url.' -> '.$query->getUrl(),
                 $query->headers,
-                $query->post_data,
+                count($query->json_data) ? $query->json_data : $query->post_data,
                 'Start: '.$query->startDate('H:i:s').' ('.$query->start_time.')',
                 'End:   '.$query->endDate('H:i:s').' ('.$query->end_time.')',
                 'Execution time: '.$query->execution_time.' (sleep: '.(float)$query->sleep_time.')',

@@ -17,6 +17,26 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 	}
 
     /**
+     * Set Note pinned
+	 * @param integer $note_id
+	 * @param bool $state
+	 * return bool
+     */
+	public function setNotePinned($note_id, $state = true)
+	{
+		if (!$this->instance->hasSession() && !$this->instance->hasAutoAuth()) {
+			$this->instance->authorize();
+		}
+		$result = $this->patch('/v3/notes/'.$note_id, [
+			'pinned' => (bool)$state
+		]);
+		if (!empty($result->_embedded) && isset($result->_embedded->items[0]) && $result->_embedded->items[0]->id === $note_id) {
+			return true;
+		}
+		return false;
+	}
+
+    /**
      * Ajax GET attachment
 	 * @param string $attachment filename
 	 * return string
@@ -75,6 +95,30 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 			  ->setUrl($url)
 			  ->setMethod('POST')
 			  ->setPostData($data)
+			  ->setArgs($args)
+			  ->execute();
+		if ($query->response->getCode() != 200) {
+			throw new \Exception('Invalid response code: '.$query->response->getCode(), $query->response->getCode());
+		}
+		if ($data = $query->response->parseJson()) {
+			return $data;
+		}
+		return $query->response->getData();
+	}
+
+    /**
+     * Ajax PATCH request
+	 * @param string $url
+	 * @param array $data
+	 * @param array $args
+	 * return mixed
+     */
+	public function patch($url, array $data = [], array $args = [])
+	{
+		$query = new Api\Query($this->instance);
+		$query->setUrl($url)
+			  ->setMethod('PATCH')
+			  ->setJsonData($data)
 			  ->setArgs($args)
 			  ->execute();
 		if ($query->response->getCode() != 200) {

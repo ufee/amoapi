@@ -100,6 +100,7 @@ class Amoapi
 		$this->session['modified_at'] = 0;
 		$query = new Api\Query($this);
 		$query->setUrl(self::AUTH_URL)
+			  ->setRetry(false)
 			  ->resetArgs()
 			  ->setArgs([
 				'USER_LOGIN' => $this->getAuth('login'),

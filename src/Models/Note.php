@@ -45,6 +45,30 @@ class Note extends \Ufee\Amo\Base\Models\ApiModel
 	}
 
     /**
+     * Set Note pinned
+	 * @param bool $state
+     * @return bool
+     */
+    public function setPinned($state = true)
+    {
+		try {
+			$this->service->instance->ajax()->setNotePinned($this->id, $state);
+			return true;
+		} catch (\Exception $e) {
+			return false;
+		}
+	}
+
+    /**
+     * Get attachment contents
+	 * return string
+     */
+	public function getAattachment()
+	{
+		return $this->service->instance->ajax()->getAattachment($this->attachment);
+	}
+	
+    /**
      * Convert Model to array
      * @return array
      */

@@ -14,6 +14,7 @@ class QueryModel
 			'method',
 			'args',
 			'post_data',
+			'json_data',
 			'retry',
 			'start_time',
 			'end_time',
@@ -60,6 +61,8 @@ class QueryModel
 	{
 		$this->attributes['headers'] = [];
 		$this->attributes['method'] = 'GET';
+		$this->attributes['post_data'] = [];
+		$this->attributes['json_data'] = [];
 		$this->setCurl();
 	}
 
@@ -142,6 +145,19 @@ class QueryModel
 			$this->attributes['post_data'][$key] = $val;
 		}
 		return $this;
+	}
+	
+    /**
+     * Set post json data
+     * @param array $data
+     */
+    public function setJsonData($data = [])
+    {
+		foreach ($data as $key=>$val) {
+			$this->attributes['json_data'][$key] = $val;
+		}
+		$this->setHeader('Content-Type', 'application/json');
+		return $this;
     }
 
     /**
@@ -216,7 +232,8 @@ class QueryModel
 			$this->instance()->getAuth('zone').
 			$this->method.
 			json_encode($args).
-			json_encode($this->post_data)
+			json_encode($this->post_data).
+			json_encode($this->json_data)
 		);
 	}
 

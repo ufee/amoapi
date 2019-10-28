@@ -26,9 +26,10 @@ class Query extends QueryModel
             usleep($sleep_time);
             $this->attributes['sleep_time'] = $sleep_time/1000000;
         }
-        $this->attributes['start_time'] = microtime(true);
+		$this->attributes['start_time'] = microtime(true);
+		$method = strtolower($this->method);
         $this->attributes['response'] = new Response(
-            $this->method == 'POST' ? $this->post() : $this->get(), $this
+        	$this->$method(), $this
         );
         curl_close($this->curl);
         if (!in_array($this->response->getCode(), [200, 204]) && file_exists($instance->queries->getCookiePath())) {
@@ -36,6 +37,7 @@ class Query extends QueryModel
         }
         if ($this->response->getCode() == 401 && $this->url != $instance::AUTH_URL && $this->retry && $instance->hasAutoAuth()) {
             $instance->authorize();
+            usleep(0.5*1000000);
             $instance->queries->refreshSession();
             $this->setCurl();
 			$this->setRetry(false);
@@ -80,9 +82,22 @@ class Query extends QueryModel
      */
     private function post()
     {
-        curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
+		curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
         curl_setopt($this->curl, CURLOPT_POST, true);
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, http_build_query($this->post_data));
+        return curl_exec($this->curl);
+	}
+	
+    /**
+     * PATCH query
+     * @return Query
+     */
+    private function patch()
+    {
+		curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
+		curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
+    	curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'PATCH');  
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, json_encode($this->json_data));
         return curl_exec($this->curl);
     }
 }
