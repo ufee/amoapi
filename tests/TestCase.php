@@ -21,5 +21,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
 		$this->amo = Amoapi::setInstance(
 			Config::getAccount()
 		);
+		$this->amo->autoAuth(true);
     }
 }
