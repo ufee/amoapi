@@ -30,7 +30,7 @@ $amo = \Ufee\Amo\Amoapi::setInstance([
 ```
 Включение/выключение автоматической авторизации при ошибке 401
 ```php
-$amo->autoAuth(true); // true/false
+$amo->autoAuth(true); // true/false, рекомендуется true
 ```
 Включение логирования заросов (Logs/m-Y/domain.log)
 ```php
@@ -378,9 +378,9 @@ $notes = $amo->notes;
 $notes = $amo->notes()->where('type', 'contact')->recursiveCall();
 $notes = $amo->notes()->where('type', 'lead')->call(); // первые 500
 ```
-Получение по ID
+Получение примечаний по ID и типу сущности
 ```php
-$note = $amo->notes()->find($id); // array|integer
+$note = $amo->notes()->find($id, 'lead');
 ```
 Получение примечаний с дополнительным условием
 ```php
@@ -418,6 +418,14 @@ $note->text = 'Amoapi v7';
 $note->element_type = 2;
 $note->element_id = 34762728;
 $note->save();
+```
+Закрепление/открепление примечаний (note type 4)
+```php
+$note->setPinned(true); // true/false
+```
+Получение содержимого файла (note type 5)
+```php
+$contents = $note->getAattachment();
 ```
 Получение родительского контакта, сделки или компании
 ```php
@@ -604,4 +612,5 @@ $contents = $amo->ajax()->getAattachment('AbCd_attach_name.zip');
 ```php
 $amo->ajax()->get($url = '/ajax/example', $args = []);
 $amo->ajax()->post($url = '/ajax/example', $data = [], $args = []);
+$amo->ajax()->patch($url = '/ajax/example', $data = [], $args = []);
 ```
