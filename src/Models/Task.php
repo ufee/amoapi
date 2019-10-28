@@ -4,6 +4,7 @@
  */
 namespace Ufee\Amo\Models;
 use Ufee\Amo\Base\Models\Traits;
+use Ufee\Amo\Amoapi;
 
 class Task extends \Ufee\Amo\Base\Models\ApiModel
 {
@@ -52,6 +53,33 @@ class Task extends \Ufee\Amo\Base\Models\ApiModel
 		unset(
 			$this->attributes['result']->_links
 		);
+	}
+
+    /**
+     * Get task start date
+     * @return bool
+     */
+    public function startDate($format = 'Y-m-d H:i:s')
+    {
+		$date = new \DateTime();
+		$date->setTimestamp($this->complete_till_at);
+		if (date('H:i', $this->complete_till_at) == '23:59') {
+			$date->setTime(0,0,0);
+		}
+		$date->setTimezone(new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		return $date->format($format);
+	}
+
+    /**
+     * Get task end date
+     * @return bool
+     */
+    public function endDate($format = 'Y-m-d H:i:s')
+    {
+		$date = new \DateTime();
+		$date->setTimestamp($this->complete_till_at+$this->duration);
+		$date->setTimezone(new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		return $date->format($format);
 	}
 
     /**
