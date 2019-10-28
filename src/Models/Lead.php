@@ -22,9 +22,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			'updatedUser',
 			'tags',
 			'pipeline',
-			'status',
-			'loss_reason_id',
-			'loss_reason_name',
+			'status',			
 			'customFields',
 			'contacts',
 			'contact',
@@ -47,7 +45,9 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			'updated_by',
 			'closed_at',
 			'closest_task_at',
-			'visitor_uid'
+			'visitor_uid',
+			'loss_reason_id',
+			'loss_reason_name'
 		];
 
     /**
