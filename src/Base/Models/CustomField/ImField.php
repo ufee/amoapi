@@ -14,7 +14,10 @@ class ImField extends EntityField
     {
         $values = [];
 		foreach ($this->values as $setted) {
-            $values[]= $setted->value;
+            if (!isset($values[$setted->enum])) {
+                $values[$setted->enum] = [];
+            }
+            $values[$setted->enum][]= $setted->value;
         }
         return $values;
     }
@@ -28,9 +31,12 @@ class ImField extends EntityField
     {
         $enum_key = mb_strtoupper($enum_key);
         $enum = array_search($enum_key, (array)$this->field->enums);
-         if ($enum === false) {
+        if ($enum === false) {
             throw new \Exception('Invalid enum: "'.$enum_key.'" for cfield "'.$this->name.'" (enum not found)');
-         }
+        }
+        if (is_numeric($enum)) {
+            $enum = intval($enum);
+        }
         $new_values = [];
         foreach ($this->values as $setted) {
             if ($value == $setted->value) {

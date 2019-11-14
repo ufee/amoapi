@@ -7,6 +7,19 @@ namespace Ufee\Amo\Base\Models\CustomField;
 class SmartAddressField extends EntityField
 {
     /**
+     * Get cf values
+	 * @return array
+     */
+    public function getValues()
+    {
+        $values = [];
+		foreach ($this->values as $setted) {
+            $values[$setted->subtype]= $setted->value;
+        }
+        return $values;
+    }
+
+    /**
      * Set index
 	 * @param string $value
      */

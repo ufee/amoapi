@@ -107,4 +107,21 @@ trait LinkedParents
 		}
 		return $this->attributes['linkedCompany'];
 	}
+
+    /**
+     * Get linked parent
+     * @return Contact|Lead|Company|null
+     */
+    public function getParent()
+    {
+		if ($this->hasLinkedLead()) {
+			return $this->linkedLead;
+		}
+		if ($this->hasLinkedContact()) {
+			return $this->linkedContact;
+		}
+		if ($this->hasLinkedCompany()) {
+			return $this->linkedCompany;
+		}
+	}
 }

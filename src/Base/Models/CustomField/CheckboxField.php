@@ -7,17 +7,18 @@ namespace Ufee\Amo\Base\Models\CustomField;
 class CheckboxField extends EntityField
 {
     /**
-     * Set cf values
-	 * @param integer $value
+     * Get cf values
+	 * @return array
      */
-    public function setValue($value)
+    public function getValues()
     {
-		$this->values = [
-			['value' => (int)$value]
-		];
-		return $this;
+        $values = [];
+		foreach ($this->values as $setted) {
+            $values[]= (int)$setted->value;
+        }
+        return $values;
     }
-    
+
     /**
      * Set cf value to 1
      */

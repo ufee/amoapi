@@ -56,8 +56,18 @@ class Task extends \Ufee\Amo\Base\Models\ApiModel
 	}
 
     /**
-     * Get task start date
+     * Get task expired status
      * @return bool
+     */
+    public function hasExpired()
+    {
+		$date = new \DateTime('now', new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		return !$this->is_completed && $date->format('Y-m-d H:i') > $this->endDate('Y-m-d H:i');
+	}
+
+    /**
+     * Get task start date
+     * @return string
      */
     public function startDate($format = 'Y-m-d H:i:s')
     {
@@ -72,7 +82,7 @@ class Task extends \Ufee\Amo\Base\Models\ApiModel
 
     /**
      * Get task end date
-     * @return bool
+     * @return string
      */
     public function endDate($format = 'Y-m-d H:i:s')
     {

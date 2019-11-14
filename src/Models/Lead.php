@@ -124,6 +124,9 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		$company->responsible_user_id = $this->responsible_user_id;
 		$company->attachLead($this);
 
+		if ($this->hasMainContact()) {
+			$company->attachContact($this->main_contact_id);
+		}
 		$company->onCreate(function(&$model) use (&$lead) {
 			$lead->attachCompany($model);
 		});

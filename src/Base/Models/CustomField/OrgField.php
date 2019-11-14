@@ -35,16 +35,15 @@ class OrgField extends EntityField
 	}
 
     /**
-     * Get organizations
+     * Get cf values
 	 * @return array
      */
     public function getValues()
     {
-        $values = [];
-		foreach ($this->values as $setted) {
-            $values[]= $setted->value;
-        }
-        return $values;
+		if (!isset($this->values[0])) {
+			return null;
+		}
+		return (array)$this->values[0]->value;
     }
 
     /**

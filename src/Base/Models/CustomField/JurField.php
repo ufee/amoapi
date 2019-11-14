@@ -24,7 +24,17 @@ class JurField extends EntityField
             ];
         }
 		return $this->values[0]->value;
-	}
+    }
+    
+
+    /**
+     * Get cf values
+	 * @return array
+     */
+    public function getValues()
+    {
+        return (array)$this->getValue();
+    }
 
     /**
      * Set client name
@@ -102,18 +112,6 @@ class JurField extends EntityField
         $setted->tax_registration_reason_code = $value;
         return $this->setValue($setted);
     }
-
-    /**
-     * Set cf values
-	 * @param mixed $value value
-     */
-    public function setValue($value)
-    {
-		$this->values = [
-			(object)['value' => $value]
-		];
-		return $this;
-	}
 
     /**
      * Get cf raw values

@@ -53,7 +53,7 @@ $amo->queries->setDelay(0.5); // default: 1 sec
 $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
     echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
     print_r($query->headers);
-    print_r($query->post_data);
+    print_r(count($query->json_data) ? $query->json_data : $query->post_data);
     echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
 });
 ```

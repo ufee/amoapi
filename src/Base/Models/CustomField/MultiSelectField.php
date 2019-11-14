@@ -90,8 +90,8 @@ class MultiSelectField extends EntityField
                 throw new \Exception('Invalid enum: "'.$enum.'" for cfield "'.$this->name.'" (not found)');
             }
             $new_values[$enum]= (object)[
-                'enum' => $enum,
-                'value' => $this->field->enums->{$enum}
+                'value' => $this->field->enums->{$enum},
+                'enum' => $enum
             ];
         }
         $this->values = array_values($new_values);

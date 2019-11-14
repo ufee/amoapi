@@ -133,6 +133,18 @@ class ApiModel extends Model
 	}
 
     /**
+     * Get hash from model fields
+	 * @return object
+     */
+    public function getHash()
+    {
+		$fields = $this->toArray();
+		return md5(
+			json_encode($fields)
+		);
+	}
+
+    /**
      * Save model in CRM
 	 * @return bool
      */
@@ -148,6 +160,17 @@ class ApiModel extends Model
 		}
 		return $this->service->update($this);
 	}
+
+    /**
+     * Convert Model to array
+     * @return array
+     */
+    public function toArray()
+    {
+		$fields = parent::toArray();
+		unset($fields['request_id']);
+		return $fields;
+    }
 
    /**
      * Clone CRM model

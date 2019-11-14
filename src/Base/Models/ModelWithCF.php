@@ -9,6 +9,7 @@ use Ufee\Amo\Models\EntityCustomFields,
 class ModelWithCF extends ApiModel
 {
 	protected static 
+		$_type = '',
 		$cf_category = '';
 	protected 
 		$hidden = [
@@ -64,6 +65,7 @@ class ModelWithCF extends ApiModel
 					'id' => $cfield->id,
 					'account_id' => $this->service->account->id,
 					'name' => $cfield->name,
+					'code' => isset($this->attributes['custom_fields'][$cfield->id]->code) ? $this->attributes['custom_fields'][$cfield->id]->code : null,
 					'values' => isset($this->attributes['custom_fields'][$cfield->id]) ? $this->attributes['custom_fields'][$cfield->id]->values : [],
 					'field' => $cfield
 				];
@@ -86,7 +88,7 @@ class ModelWithCF extends ApiModel
 		if (!is_null($this->attributes['customFields']) && $cf_raws = $this->customFields->getChangedApiRaw()) {
 			$raw['custom_fields'] = $cf_raws;
 			foreach ($cf_raws as $cf_raw) {
-				$this->attributes['custom_fields'][$cf_raw['id']] = $this->customFields->byId($cf_raw['id'])->getRaw();
+				$this->attributes['custom_fields'][$cf_raw['id']] = (object)$this->customFields->byId($cf_raw['id'])->getRaw();
 			}
 		}
 		return array_merge($data, $raw);
@@ -111,6 +113,20 @@ class ModelWithCF extends ApiModel
 		return $this;
 	}
 
+    /**
+     * Resfresh changed data of custom fields collection
+	 * @return ModelWithCF
+     */
+    public function refreshCustomFieldChanges()
+	{
+		if (!is_null($this->attributes['customFields']) && $cf_raws = $this->customFields->getChangedApiRaw()) {
+			foreach ($cf_raws as $cf_raw) {
+				$this->attributes['custom_fields'][$cf_raw['id']] = (object)$this->customFields->byId($cf_raw['id'])->getRaw();
+			}
+		}
+		return $this;
+	}
+
 	/**
      * Saved data trigger
 	 * @return void
@@ -126,13 +142,40 @@ class ModelWithCF extends ApiModel
 	}
 
     /**
+     * Get Model type
+     * @return array
+     */
+    public static function getType()
+    {
+		return static::$_type;
+	}
+
+    /**
+     * Get hash from model fields
+	 * @return object
+     */
+    public function getHash()
+    {
+		$fields = $this->toArray();
+		$fields['custom_fields'] = [];
+		$this->customFields->each(function(&$cfield) use(&$fields) {
+			$fields['custom_fields'][$cfield->id] = $cfield->getValues();
+		});
+		print_r($fields['custom_fields']);
+		echo "\n".json_encode($fields)."\n";
+		return md5(
+			json_encode($fields)
+		);
+	}
+
+    /**
      * Convert Model to array
      * @return array
      */
     public function toArray()
     {
+		$this->refreshCustomFieldChanges();
 		$fields = parent::toArray();
-		unset($fields['response']);
 		return $fields;
     }
 }

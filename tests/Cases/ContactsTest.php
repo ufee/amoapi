@@ -23,6 +23,8 @@ class ContactsTest extends \Tests\TestCase
     {
 		$model = $this->amo->contacts()->create();
 		$model->name = 'Test UpdateContact '.time();
+		$email = 'amoapitest'.time().'@amo.api';
+		$model->cf('Email')->setValue($email);
 		$has_created = $model->save();
 		
 		Assert::assertTrue(
@@ -35,6 +37,9 @@ class ContactsTest extends \Tests\TestCase
 		
 		Assert::assertEquals(
 			$model->name, 'Test UpdateContact NEW'
+		);
+		Assert::assertEquals(
+			$model->cf('Email')->getValue(), $email
 		);
     }
 	
