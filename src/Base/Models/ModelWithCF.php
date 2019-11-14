@@ -161,8 +161,6 @@ class ModelWithCF extends ApiModel
 		$this->customFields->each(function(&$cfield) use(&$fields) {
 			$fields['custom_fields'][$cfield->id] = $cfield->getValues();
 		});
-		print_r($fields['custom_fields']);
-		echo "\n".json_encode($fields)."\n";
 		return md5(
 			json_encode($fields)
 		);
