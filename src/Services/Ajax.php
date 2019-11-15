@@ -18,6 +18,35 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 
     /**
      * Set Note pinned
+	 * @param integer $bot_id
+	 * @param integer $entity_id
+	 * @param integer $entity_type - 1 – контакт, 2- сделка, 3 – компания
+	 * @param bool $state
+	 * return bool
+     */
+	public function runSalesbot($bot_id, $entity_id, $entity_type)
+	{
+		if (!$this->instance->hasSession() && !$this->instance->hasAutoAuth()) {
+			$this->instance->authorize();
+		}
+		$bot = [
+			'bot_id' => $bot_id,
+			'entity_id' => $entity_id,
+			'entity_type' => $entity_type
+		];
+		$query = new Api\Query($this->instance);
+		$query->setUrl('/api/v2/salesbot/run')
+			  ->setMethod('POST')
+			  ->setPostData([$bot])
+			  ->execute();
+		if ($query->response->getCode() == 202) {
+			return true;
+		}
+		return false;
+	}
+
+    /**
+     * Set Note pinned
 	 * @param integer $note_id
 	 * @param bool $state
 	 * return bool
