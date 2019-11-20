@@ -23,6 +23,7 @@ class Contact extends \Ufee\Amo\Base\Models\ModelWithCF
 			'tags',
 			'leads',
 			'customFields',
+			'company_name',
 			'company',
 			'customers',
 			'notes',
@@ -30,6 +31,8 @@ class Contact extends \Ufee\Amo\Base\Models\ModelWithCF
 		],
 		$writable = [
 			'name',
+			'first_name',
+			'last_name',
 			'created_at',
 			'created_by',
 			'responsible_user_id',
@@ -59,6 +62,7 @@ class Contact extends \Ufee\Amo\Base\Models\ModelWithCF
 		$this->attributes['company_id'] = null;
 		if (isset($data->company->id)) {
 			$this->attributes['company_id'] = $data->company->id;
+			$this->attributes['company_name'] = $data->company->name;
 		}
 		$this->attributes['company'] = null;
 
