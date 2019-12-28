@@ -32,6 +32,7 @@ class QueryModel
 			'response'
 		],
 		$attributes = [],
+		$retries = 0,
 		$cookie = [];
 		
     /**

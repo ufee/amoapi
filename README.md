@@ -44,9 +44,13 @@ $amo->queries->logs('path_to_log/queries'); // to custom path
 ```php
 $amo->queries->setDelay(0.5); // default: 1 sec
 ```
-Кеширование запросов сервиса, в секундах
+Зарпос /api/v2/account кешируется в файлах, время указывается в секундах
 ```php
 \Ufee\Amo\Services\Account::setCacheTime(1800); // default: 600 sec
+```
+Свой путь для кеширования запросов
+```php
+$amo->queries->cachePath('path_to/cache');
 ```
 Пользовательская отладка запросов 
 ```php
@@ -56,12 +60,6 @@ $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
     print_r(count($query->json_data) ? $query->json_data : $query->post_data);
     echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
 });
-```
-Зарпос /api/v2/account кешируется, время кеширования задается в Services\Account.php
-
-Свой путь для кеширования запросов
-```php
-$amo->queries->cachePath('path_to/cache');
 ```
 ## Поиск сущностей
 Поиск по дополнительному полю
@@ -123,12 +121,12 @@ $entity->cf('Организация')->addValue([
 ```php
 foreach ($amo->leads as $lead) { ... }
 $amo->leads->each(function(&$lead) { ... });
-$leads = $amo->leads->find('name', 'Трубы гофрированные');
-$leads = $amo->leads->filter(function($lead) {
+$leadsByCf = $amo->leads->find('name', 'Трубы гофрированные');
+$leadsBySale = $amo->leads->filter(function($lead) {
     return $lead->sale > 0;
 });
-$lead = $lead->first();
-$lead = $lead->last();
+$firstLead = $lead->first();
+$lastLead = $lead->last();
 ```
 Сортировка
 ```php
@@ -146,7 +144,7 @@ $leads = $leads->transform(function($lead) {
         'name' => $lead->name
     ];
 });
-$leads = $leads->toArray();
+$leads_array = $leads->toArray();
 ```
 ## Работа со сделками
 Получение всех сделок

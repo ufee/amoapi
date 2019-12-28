@@ -41,7 +41,7 @@ if (!defined('CURL_SSLVERSION_TLSv1_2')) {
 class Amoapi
 {
 	const VERSION = 8;
-	const SESS_LIFETIME = 800;
+	const SESS_LIFETIME = 900;
 	const AUTH_URL = '/private/api/auth.php';
 
 	private static $_instances = [];

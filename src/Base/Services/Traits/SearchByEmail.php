@@ -13,6 +13,9 @@ trait SearchByEmail
      */
 	public function searchByEmail($email)
 	{
+		if (strlen($email) < 6 || !strpos($email, '@')) {
+			throw new \Exception('Invalid search email value: '.$email);
+		}
 		$clearEmail = function($email) {
 			return mb_strtoupper(trim($email));
 		};

@@ -13,6 +13,7 @@ class Query extends QueryModel
      */
     public function execute()
     {
+        $this->retries++;
         $instance = $this->instance();
         $last_time = 1;
         if ($last_query = $instance->queries->last()) {
@@ -35,15 +36,13 @@ class Query extends QueryModel
         if (!in_array($this->response->getCode(), [200, 204]) && file_exists($instance->queries->getCookiePath())) {
            @unlink($instance->queries->getCookiePath());
         }
-        if ($this->response->getCode() == 401 && $this->url != $instance::AUTH_URL && $this->retry && $instance->hasAutoAuth()) {
+        while ($this->response->getCode() == 401 && $this->url != $instance::AUTH_URL && $this->retries <= 3 && $instance->hasAutoAuth()) {
             $instance->authorize();
-            usleep(0.5*1000000);
             $instance->queries->refreshSession();
             $this->setCurl();
-			$this->setRetry(false);
             return $this->execute();
         }
-		while ($this->response->getCode() == 429) {
+		while ($this->response->getCode() == 429 && $this->retries <= 32) {
 			sleep(1);
 			$this->setCurl()->execute();
 		}
