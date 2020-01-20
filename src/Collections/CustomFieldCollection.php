@@ -23,7 +23,8 @@ class CustomFieldCollection extends CollectionWrapper
         14 => 'Ufee\Amo\Base\Models\CustomField\BirthDayField',
         15 => 'Ufee\Amo\Base\Models\CustomField\JurField',
         17 => 'Ufee\Amo\Base\Models\CustomField\OrgField',
-        18 => 'Ufee\Amo\Base\Models\CustomField\CategoryField'
+        18 => 'Ufee\Amo\Base\Models\CustomField\CategoryField',
+        19 => 'Ufee\Amo\Base\Models\CustomField\CalendarField'
 	];
 	
     /**
