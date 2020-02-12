@@ -90,6 +90,9 @@ class Contact extends \Ufee\Amo\Base\Models\ModelWithCF
 		$lead->responsible_user_id = $this->responsible_user_id;
 		$lead->attachContact($this);
 
+		if ($this->hasCompany()) {
+			$lead->attachCompany($this->company_id);
+		}
 		$lead->onCreate(function(&$model) use (&$contact) {
 			$contact->attachLead($model);
 		});
