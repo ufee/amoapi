@@ -3,13 +3,19 @@
  * amoCRM Note model
  */
 namespace Ufee\Amo\Models;
+use Ufee\Amo\Base\Models\Traits;
 
 class Note extends \Ufee\Amo\Base\Models\ApiModel
 {
+	use Traits\LinkedParents, Traits\EntityDetector;
+
 	protected
 		$hidden = [
 			'query_hash',
 			'service',
+			'linkedLead',
+			'linkedContact',
+			'linkedCompany',
 			'createdUser',
 			'responsibleUser',
 			'noteType'
@@ -24,6 +30,7 @@ class Note extends \Ufee\Amo\Base\Models\ApiModel
 			'updated_at',
 			'created_at',
 			'created_by',
+			'attachment',
 			'params'
 		];
 	
@@ -37,6 +44,30 @@ class Note extends \Ufee\Amo\Base\Models\ApiModel
 		parent::_boot($data);
 	}
 
+    /**
+     * Set Note pinned
+	 * @param bool $state
+     * @return bool
+     */
+    public function setPinned($state = true)
+    {
+		try {
+			$this->service->instance->ajax()->setNotePinned($this->id, $state);
+			return true;
+		} catch (\Exception $e) {
+			return false;
+		}
+	}
+
+    /**
+     * Get attachment contents
+	 * return string
+     */
+	public function getAattachment()
+	{
+		return $this->service->instance->ajax()->getAattachment($this->attachment);
+	}
+	
     /**
      * Convert Model to array
      * @return array

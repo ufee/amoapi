@@ -7,7 +7,7 @@ use Ufee\Amo\Base\Models\Traits;
 
 class Contact extends \Ufee\Amo\Base\Models\ModelWithCF
 {
-	use Traits\LinkedLeads, Traits\LinkedCompany, Traits\LinkedTasks, Traits\LinkedNotes, Traits\EntityDetector, Traits\LinkedTags;
+	use Traits\LinkedLeads, Traits\LinkedCompany, Traits\LinkedCustomers, Traits\LinkedTasks, Traits\LinkedNotes, Traits\EntityDetector, Traits\LinkedTags;
 
 	protected static 
 		$cf_category = 'contacts',
@@ -23,6 +23,7 @@ class Contact extends \Ufee\Amo\Base\Models\ModelWithCF
 			'tags',
 			'leads',
 			'customFields',
+			'company_name',
 			'company',
 			'customers',
 			'notes',
@@ -30,16 +31,19 @@ class Contact extends \Ufee\Amo\Base\Models\ModelWithCF
 		],
 		$writable = [
 			'name',
+			'first_name',
+			'last_name',
 			'created_at',
 			'created_by',
 			'responsible_user_id',
 			'leads_id',
 			'company_id',
+			'customers_id',
 			'updated_at',
 			'updated_by',
 			'closest_task_at'
 		];
-	
+
     /**
      * Model on load
 	 * @param array $data
@@ -53,11 +57,12 @@ class Contact extends \Ufee\Amo\Base\Models\ModelWithCF
 		if (isset($data->tags)) {
 			foreach ($data->tags as $tag) {
 				$this->attributes['tags'][]= $tag->name;
-			}			
+			}
 		}
 		$this->attributes['company_id'] = null;
 		if (isset($data->company->id)) {
 			$this->attributes['company_id'] = $data->company->id;
+			$this->attributes['company_name'] = $data->company->name;
 		}
 		$this->attributes['company'] = null;
 
@@ -66,9 +71,12 @@ class Contact extends \Ufee\Amo\Base\Models\ModelWithCF
 			$this->attributes['leads_id'] = $data->leads->id;
 		}
 		$this->attributes['leads'] = null;
-		unset(
-			$this->attributes['customers']->_links
-		);
+		
+		$this->attributes['customers_id'] = [];
+		if (isset($data->customers->id)) {
+			$this->attributes['customers_id'] = $data->customers->id;
+		}
+		$this->attributes['customers'] = null;
 	}
 
 	/**
@@ -82,6 +90,9 @@ class Contact extends \Ufee\Amo\Base\Models\ModelWithCF
 		$lead->responsible_user_id = $this->responsible_user_id;
 		$lead->attachContact($this);
 
+		if ($this->hasCompany()) {
+			$lead->attachCompany($this->company_id);
+		}
 		$lead->onCreate(function(&$model) use (&$contact) {
 			$contact->attachLead($model);
 		});
@@ -103,6 +114,23 @@ class Contact extends \Ufee\Amo\Base\Models\ModelWithCF
 			$contact->attachCompany($model);
 		});
 		return $company;
+	}
+
+	/**
+     * Create linked customer model
+     * @return Customer
+     */
+    public function createCustomer()
+    {
+		$contact = $this;
+		$customer = $this->service->instance->customers()->create();
+		$customer->responsible_user_id = $this->responsible_user_id;
+		$customer->attachContact($this);
+
+		$customer->onCreate(function(&$model) use (&$contact) {
+			$contact->attachCustomer($model);
+		});
+		return $customer;
 	}
 
     /**

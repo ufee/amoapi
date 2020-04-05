@@ -27,8 +27,6 @@ class LimitedList extends Cached
 	protected function _boot()
 	{
 		$this->api_args = [
-			'USER_LOGIN' => $this->instance->getAuth('login'),
-			'USER_HASH' => $this->instance->getAuth('hash'),
 			'lang' => $this->instance->getAuth('lang')
 		];
 	}
@@ -54,7 +52,6 @@ class LimitedList extends Cached
 			}
 		}
 		$model = new $model_class($model_data, $this);
-
 		return $model;
 	}
 
@@ -160,7 +157,6 @@ class LimitedList extends Cached
 		foreach ($update_parts as $part) {
 			$updated_part = $this->_update($part);
 			$updated_raws->merge($updated_part);
-
 		}
 		$updated = true;
 		foreach ($update_models as &$model) {
@@ -312,6 +308,9 @@ class LimitedList extends Cached
      */
 	public function find($id)
 	{
+		if (is_array($id) && count($id) === 0) {
+			throw new \Exception('Model ids should not be empty');
+		}
 		$result = $this->list->where('limit_rows', is_array($id) ? count($id) : 1)
 							 ->where('limit_offset', 0)
 							 ->where('id', $id)

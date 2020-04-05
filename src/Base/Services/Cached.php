@@ -7,24 +7,33 @@ use Ufee\Amo\Amoapi;
 
 class Cached extends Service
 {
-	protected $cache_time = false;
+	protected static $_cache_time = false;
 	protected $modified_from = false;
 	
     /**
      * Get cache time
 	 * @return integer
      */
-	public function cacheTime()
+	public static function cacheTime()
 	{
-		return $this->canCache() ? $this->cache_time : -1;
+		return static::canCache() ? static::$_cache_time : -1;
+	}
+
+    /**
+     * Set cache time
+	 * @param integer $value
+     */
+	public static function setCacheTime($value)
+	{
+		static::$_cache_time = $value;
 	}
 
     /**
      * Can cache queries
 	 * @return bool
      */
-	public function canCache()
+	public static function canCache()
 	{
-		return is_numeric($this->cache_time);
+		return is_numeric(static::$_cache_time);
 	}
 }

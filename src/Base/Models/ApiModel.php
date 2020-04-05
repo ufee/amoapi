@@ -133,6 +133,18 @@ class ApiModel extends Model
 	}
 
     /**
+     * Get hash from model fields
+	 * @return object
+     */
+    public function getHash()
+    {
+		$fields = $this->toArray();
+		return md5(
+			json_encode($fields)
+		);
+	}
+
+    /**
      * Save model in CRM
 	 * @return bool
      */
@@ -147,5 +159,42 @@ class ApiModel extends Model
 			return false;
 		}
 		return $this->service->update($this);
+	}
+
+    /**
+     * Convert Model to array
+     * @return array
+     */
+    public function toArray()
+    {
+		$fields = parent::toArray();
+		unset($fields['request_id']);
+		return $fields;
+    }
+
+   /**
+     * Clone CRM model
+     */
+    public function __clone()
+    {
+		$date = new \DateTime('now', new \DateTimeZone($this->service->instance->getAuth('timezone')));
+		$this->attributes['id'] = null;
+		$this->attributes['query_hash'] = null;
+		$this->attributes['request_id'] = mt_rand();
+		$this->created_at = $date->getTimestamp();
+		$this->_onCreate = function() {};
+
+		if ($this->hasAttribute('updated_at')) {
+			$this->updated_at = $date->getTimestamp();
+		}
+		if ($this->hasAttribute('custom_fields')) {
+			$this->setChanged('custom_fields');
+		}
+		foreach ($this->writable as $i=>$field) {
+			$this->setChanged($field);
+		}
+		if ($this->hasAttribute('tags')) {
+			$this->setChanged('tags');
+		}
 	}
 }

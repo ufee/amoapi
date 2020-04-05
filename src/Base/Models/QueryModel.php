@@ -14,6 +14,8 @@ class QueryModel
 			'method',
 			'args',
 			'post_data',
+			'json_data',
+			'retry',
 			'start_time',
 			'end_time',
 			'execution_time',
@@ -26,11 +28,12 @@ class QueryModel
 			'account_id',
 			'service',
 			'curl',
-			'latency',
 			'cookie_file',
 			'response'
 		],
-		$attributes = [];
+		$attributes = [],
+		$retries = 0,
+		$cookie = [];
 		
     /**
      * Constructor
@@ -47,6 +50,7 @@ class QueryModel
 		}
 		$this->attributes['account_id'] = $instance->getAuth('id');
 		$this->attributes['service'] = $service_class;
+		$this->attributes['retry'] = true;
 		$this->_boot();
 	}
 
@@ -58,20 +62,40 @@ class QueryModel
 	{
 		$this->attributes['headers'] = [];
 		$this->attributes['method'] = 'GET';
-		$this->attributes['latency'] = 1;
+		$this->attributes['post_data'] = [];
+		$this->attributes['json_data'] = [];
+		$this->setCurl();
+	}
+
+    /**
+     * Set query curl
+	 * @return static
+     */
+	public function setCurl()
+	{
+		$instance = $this->instance();
 		$this->attributes['curl'] = \curl_init();
-		$this->attributes['cookie_file'] = AMOAPI_ROOT.'/Cookies/'.$this->instance()->getAuth('domain').'.cookie';
 		curl_setopt_array($this->curl, [
-			CURLOPT_AUTOREFERER => 1,
-			CURLOPT_USERAGENT => 'Amoapi v.7 ('.$this->instance()->getAuth('domain').')',
+			CURLOPT_AUTOREFERER => true,
+			CURLOPT_USERAGENT => 'Amoapi v.'.$instance::VERSION.' ('.$instance->getAuth('domain').'/'.$instance->getAuth('zone').')',
 			CURLOPT_SSL_VERIFYHOST => 0,
-			CURLOPT_SSL_VERIFYPEER => 0,
-			CURLOPT_RETURNTRANSFER => 1,
-			CURLOPT_FOLLOWLOCATION => 1,
-			CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2,
-			CURLOPT_COOKIEJAR => $this->cookie_file,
-			CURLOPT_COOKIEFILE => $this->cookie_file,
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_CONNECTTIMEOUT => 30,
+			CURLOPT_TIMEOUT => 60,
+			CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2
 		]);
+		if ($instance->hasSession()) {
+			curl_setopt($this->curl, CURLOPT_COOKIE, 'session_id='.$instance->session['id']);
+		} else {
+			curl_setopt($this->curl, CURLOPT_COOKIEJAR, $instance->queries->getCookiePath());
+			$this->setArgs([
+				'USER_LOGIN' => $instance->getAuth('login'),
+				'USER_HASH' => $instance->getAuth('hash')
+			]);
+		}
+		return $this;
 	}
 
     /**
@@ -90,7 +114,27 @@ class QueryModel
      */
     public function setArgs($args = [])
     {
-		$this->attributes['args'] = $args;
+		foreach ($args as $key=>$val) {
+			$this->attributes['args'][$key] = $val;
+		}
+		return $this;
+	}
+	
+    /**
+     * Reset query args
+     * @param array $args
+     */
+    public function resetArgs($args = [])
+    {
+		if (empty($args)) {
+			$this->attributes['args'] = [];
+		} else {
+			foreach ($args as $key) {
+				if (isset($this->attributes['args'][$key])) {
+					unset($this->attributes['args'][$key]);
+				}
+			}
+		}
 		return $this;
     }
 
@@ -100,7 +144,22 @@ class QueryModel
      */
     public function setPostData($data = [])
     {
-		$this->attributes['post_data'] = $data;
+		foreach ($data as $key=>$val) {
+			$this->attributes['post_data'][$key] = $val;
+		}
+		return $this;
+	}
+	
+    /**
+     * Set post json data
+     * @param array $data
+     */
+    public function setJsonData($data = [])
+    {
+		foreach ($data as $key=>$val) {
+			$this->attributes['json_data'][$key] = $val;
+		}
+		$this->setHeader('Content-Type', 'application/json');
 		return $this;
     }
 
@@ -111,6 +170,16 @@ class QueryModel
     public function setUrl($url)
     {
 		$this->attributes['url'] = $url;
+		return $this;
+	}
+	
+    /**
+     * Set retry status
+     * @param bool $status
+     */
+    public function setRetry($status)
+    {
+		$this->attributes['retry'] = (bool)$status;
 		return $this;
 	}
 	
@@ -157,13 +226,17 @@ class QueryModel
      */
     public function generateHash()
     {
+		$args = $this->args;
+		unset($args['USER_LOGIN'], $args['USER_HASH']);
         return $this->attributes['hash'] = md5(
 			$this->instance()->getAuth('domain').
 			$this->instance()->getAuth('login').
 			$this->instance()->getAuth('hash').
+			$this->instance()->getAuth('zone').
 			$this->method.
-			$this->getUrl().
-			json_encode($this->post_data)
+			json_encode($args).
+			json_encode($this->post_data).
+			json_encode($this->json_data)
 		);
 	}
 
@@ -192,7 +265,9 @@ class QueryModel
     public function getService()
     {
 		$instance = $this->instance();
-		$serviceClass = $this->service;
+		if (!$serviceClass = $this->service) {
+			return null;
+		}
         if (!$service = $serviceClass::getInstance(null, $instance)) {
 			$service = $serviceClass::setInstance(null, $instance);
 		}

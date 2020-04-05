@@ -7,7 +7,7 @@ use Ufee\Amo\Base\Models\Traits;
 
 class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 {
-	use Traits\LinkedContacts, Traits\MainContact, Traits\LinkedCompany, Traits\LinkedTasks, Traits\LinkedNotes, Traits\LinkedPipeline, Traits\EntityDetector, Traits\LinkedTags;
+	use Traits\LinkedContacts, Traits\MainContact, Traits\LinkedCompany, Traits\LinkedTasks, Traits\LinkedNotes, Traits\LinkedPipeline, Traits\EntityDetector, Traits\LinkedTags, Traits\LinkedCatalogElements;
 
 	protected static 
 		$cf_category = 'leads',
@@ -22,10 +22,11 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			'updatedUser',
 			'tags',
 			'pipeline',
-			'status',
+			'status',			
 			'customFields',
 			'contacts',
 			'contact',
+			'company_name',
 			'company',
 			'notes',
 			'tasks'
@@ -41,12 +42,16 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			'contacts_id',
 			'main_contact_id',
 			'company_id',
+			'catalog_elements_id',
 			'updated_at',
 			'updated_by',
 			'closed_at',
-			'closest_task_at'
+			'closest_task_at',
+			'visitor_uid',
+			'loss_reason_id',
+			'loss_reason_name'
 		];
-	
+
     /**
      * Model on load
 	 * @param array $data
@@ -63,11 +68,12 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		if (isset($data->tags)) {
 			foreach ($data->tags as $tag) {
 				$this->attributes['tags'][]= $tag->name;
-			}			
+			}
 		}
 		$this->attributes['company_id'] = null;
 		if (isset($data->company->id)) {
 			$this->attributes['company_id'] = $data->company->id;
+			$this->attributes['company_name'] = $data->company->name;
 		}
 		$this->attributes['company'] = null;
 
@@ -81,6 +87,12 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		if (isset($data->main_contact->id)) {
 			$this->attributes['main_contact_id'] = $data->main_contact->id;
 		}
+
+		$this->attributes['catalog_elements_id'] = [];
+		if (isset($data->catalog_elements->id)) {
+			$this->attributes['catalog_elements_id'] = $data->catalog_elements->id;
+		}
+		$this->attributes['contacts'] = null;
 		unset(
 			$this->attributes['main_contact'], $this->attributes['pipeline']->_links
 		);
@@ -97,6 +109,9 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		$contact->responsible_user_id = $this->responsible_user_id;
 		$contact->attachLead($this);
 
+		if ($this->hasCompany()) {
+			$contact->attachCompany($this->company_id);
+		}
 		$contact->onCreate(function(&$model) use (&$lead) {
 			$lead->attachContact($model);
 		});
@@ -114,12 +129,15 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		$company->responsible_user_id = $this->responsible_user_id;
 		$company->attachLead($this);
 
+		if ($this->hasMainContact()) {
+			$company->attachContact($this->main_contact_id);
+		}
 		$company->onCreate(function(&$model) use (&$lead) {
 			$lead->attachCompany($model);
 		});
 		return $company;
 	}
-	
+
 	/**
      * Set lead pipeline
 	 * @param integer|Pipeline $pipeline
@@ -155,7 +173,7 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 		$this->attributes['status'] = $status;
 		return $this;
 	}
- 
+
     /**
      * Convert Model to array
      * @return array

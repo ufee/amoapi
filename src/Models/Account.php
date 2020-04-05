@@ -47,7 +47,7 @@ class Account extends \Ufee\Amo\Base\Models\Model
 		// пользователи
 		$users = [];
 		foreach ($data->_embedded->users as $id=>$user) {
-			$users[$id]= new \Ufee\Amo\Models\User($user, $this->userGroups->get($user->group_id));
+			$users[$id]= new \Ufee\Amo\Models\User($user, $this->userGroups->byId($user->group_id));
 		}
 		$this->attributes['users'] = new Collections\UserCollection($users);
 		$this->attributes['currentUser'] = $this->attributes['users']->get($data->current_user);

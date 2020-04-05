@@ -10,7 +10,8 @@ class EntityField extends \Ufee\Amo\Base\Models\Model
 		$system = [
 			'id',
 			'account_id',
-			'name'
+			'name',
+			'code'
 		],
 		$hidden = [
 			'field'
@@ -32,13 +33,26 @@ class EntityField extends \Ufee\Amo\Base\Models\Model
 	}
 
     /**
+     * Get cf values
+	 * @return array
+     */
+    public function getValues()
+    {
+        $values = [];
+		foreach ($this->values as $setted) {
+            $values[]= $setted->value;
+        }
+        return $values;
+    }
+
+    /**
      * Set cf values
 	 * @param mixed $value value
      */
     public function setValue($value)
     {
 		$this->values = [
-			['value' => $value]
+			(object)['value' => $value]
 		];
 		return $this;
 	}
@@ -58,12 +72,17 @@ class EntityField extends \Ufee\Amo\Base\Models\Model
      */
     public function getRaw()
     {
-		return [
+		$raw = [
 			'id' => $this->id,
 			'name' => $this->name,
+			'code' => $this->code,
 			'values' => $this->values,
 			'is_system' => $this->field->is_system
 		];
+		if (empty($raw['code'])) {
+			unset($raw['code']);
+		}
+		return $raw;
 	}
 	
     /**

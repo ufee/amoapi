@@ -8,7 +8,8 @@ class Response
 {
 	private
 		$query,
-		$data;
+		$data,
+		$code;
 		
     /**
      * Constructor
@@ -19,6 +20,7 @@ class Response
     {
 		$this->query = $query;
 		$this->data = $data;
+		$this->code = curl_getinfo($query->curl, CURLINFO_HTTP_CODE);
     }
 	
     /**
@@ -42,28 +44,10 @@ class Response
 	
     /**
      * Get response code
-	 * @return object
-     */
-	public function getInfo()
-	{
-		return (object)curl_getinfo($this->query->curl);
-	}
-	
-    /**
-     * Get response code
 	 * @return integer
      */
 	public function getCode()
 	{
-		return curl_getinfo($this->query->curl, CURLINFO_HTTP_CODE);
-	}
-	
-    /**
-     * Get curl error
-	 * @return string
-     */
-	public function getError()
-	{
-		return curl_error($this->query->curl);
+		return $this->code;
 	}
 }

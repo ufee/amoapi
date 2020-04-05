@@ -35,6 +35,9 @@ trait SearchByPhone
 		};
 		$field_name = $this->instance->getAuth('lang') == 'ru' ? 'Телефон' : 'Phone';
 		$query = $clearPhone($phone);
+		if (strlen($query) < 6) {
+			throw new \Exception('Invalid search phone value: '.$phone);
+		}
 		$results = $this->list->where('query', $query)->recursiveCall();	
 		
 		return $results->filter(function($model) use($query, $field_name, $clearPhone) {

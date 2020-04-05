@@ -52,4 +52,26 @@ class CompaniesTest extends \Tests\TestCase
 			($has_created && is_numeric($create_models[0]->id) && is_numeric($create_models[1]->id))
 		);
     }
+	
+    public function testSearchCompanyByEmail()
+    {
+		$cf_email = 'Email';
+		$time = time();
+		$email_set_val = 'test'.$time.'@test.ru';
+		$email_search_val = 'TEST'.$time.'@Test.Ru';
+		
+		$model = $this->amo->companies()->create();
+		$model->name = 'Test SearchCompany '.$time;
+		$model->cf($cf_email)->setValue($email_set_val);
+		$has_created = $model->save();
+		
+		Assert::assertTrue(
+			($has_created && is_numeric($model->id))
+		);
+		$companies = $this->amo->companies()->searchByEmail($email_search_val);
+		
+		Assert::assertTrue(
+			($companies->count() > 0 && $companies->first()->id == $model->id)
+		);
+	}
 }

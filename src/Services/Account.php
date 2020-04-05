@@ -6,12 +6,11 @@ namespace Ufee\Amo\Services;
 
 class Account extends \Ufee\Amo\Base\Services\Cached
 {
-	protected
-		$methods = [
-			'current'
-		],
-		$cache_time = 600,
-		$_current_data;
+	protected static $_cache_time = 600;
+	protected $methods = [
+					'current'
+			];
+	protected $_current_data;
 	
     /**
      * Service on load
@@ -20,8 +19,6 @@ class Account extends \Ufee\Amo\Base\Services\Cached
 	protected function _boot()
 	{
 		$this->api_args = [
-			'USER_LOGIN' => $this->instance->getAuth('login'),
-			'USER_HASH' => $this->instance->getAuth('hash'),
 			'with' => 'users,groups,pipelines,custom_fields,note_types,task_types',
 			'lang' => $this->instance->getAuth('lang')
 		];

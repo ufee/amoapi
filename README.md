@@ -19,31 +19,53 @@ vendor/bin/phpunit vendor/ufee/amoapi
 Получение объекта для работы с конкретным аккаунтом
 ```php
 $amo = \Ufee\Amo\Amoapi::setInstance([
-	'id' => 123,
-	'domain' => 'testdomain',
-	'login' => 'test@login',
-	'hash' => 'testhash',
-	'zone' => 'com', // default: ru
-	'timezone' => 'Europe/London' // default: Europe/Moscow
+    'id' => 123,
+    'domain' => 'testdomain',
+    'login' => 'test@login',
+    'hash' => 'testhash',
+    'zone' => 'com', // default: ru
+    'timezone' => 'Europe/London', // default: Europe/Moscow
+    'lang' => 'en' // default: ru
 ]);
 ```
-Включение логирования заросов (/Logs/m-Y/domain.log)
+Включение/выключение автоматической авторизации при ошибке 401
 ```php
-$amo->queries->logs(true);
+$amo->autoAuth(true); // true/false, рекомендуется true
+```
+Включение логирования заросов (Logs/m-Y/domain.log)
+```php
+$amo->queries->logs(true); // to default path
+```
+или
+```php
+$amo->queries->logs('path_to_log/queries'); // to custom path
+```
+Не более 1 запроса за заданное время, в секундах
+```php
+$amo->queries->setDelay(0.5); // default: 1 sec
+```
+Зарпос /api/v2/account кешируется в файлах, время указывается в секундах
+```php
+\Ufee\Amo\Services\Account::setCacheTime(1800); // default: 600 sec
+```
+Свой путь для кеширования запросов
+```php
+$amo->queries->cachePath('path_to/cache');
 ```
 Пользовательская отладка запросов 
 ```php
 $amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
-	echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
-	print_r($query->headers);
-	print_r($query->post_data);
-	echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
+    echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
+    print_r($query->headers);
+    print_r(count($query->json_data) ? $query->json_data : $query->post_data);
+    echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
 });
 ```
 ## Поиск сущностей
 Поиск по дополнительному полю
 ```php
-$leads = $amo->leads()->searchByCustomField('Москва', 'Город');
+$leads = $amo->leads()->searchByCustomField('Москва', 'Город'); // by CF name
+$leads = $amo->leads()->searchByCustomField('Москва', 623425); // by CF id
 $companies = $amo->companies()->searchByName('ООО Шарики за Ролики');
 $contacts = $amo->contacts()->searchByEmail('Test@Mail.Ru');
 $contacts = $amo->contacts()->searchByPhone('89271002030');
@@ -52,6 +74,7 @@ $contacts = $amo->contacts()->searchByPhone('89271002030');
 Убрать значение
 ```php
 $entity->cf('Имя поля')->reset();
+$entity->cf('Организация')->removeBy('name', 'ИП Петров А.А.');
 ```
 Получить значение
 ```php
@@ -60,11 +83,12 @@ $entity->cf('Имя поля')->getValues();
 $entity->cf('Имя поля')->getEnums();
 $entity->cf('Дата')->format('Y-m-d');
 $entity->cf('Дата')->getTimestamp();
+$entity->cf('Организация')->getValues();
 ```
 Задать значение
 ```php
 $entity->cf('Имя поля')->setEnum($enum);
-$entity->cf('Имя поля')->setEnums($enum);
+$entity->cf('Имя поля')->setEnums($enums);
 $entity->cf('Число')->setValue(5);
 $entity->cf('Текст')->setValue('Test');
 $entity->cf('Мультисписок')->reset()->setValues(['Мужская одежда', 'Аксессуары']);
@@ -86,18 +110,23 @@ $entity->cf('Юр. лицо')->setAddress('РФ, ЧР, г.Чебоксары');
 $entity->cf('Юр. лицо')->setType(1);
 $entity->cf('Юр. лицо')->setInn(123);
 $entity->cf('Юр. лицо')->setKpp(456);
+$entity->cf('Организация')->addValue([
+    'name' => 'ИП Петров А.А.',
+    'city' => 'Москва',
+    '...' => '...'
+]);
 ```
 ## Работа с коллекциями
 Перебор, поиск и фильтрация
 ```php
-foreach ($amo->leads as $lead) {}
-$amo->leads->each(function($lead) {});
-$leads = $amo->leads->find('name', 'Трубы гофрированные');
-$leads = $amo->leads->filter(function($lead) {
+foreach ($amo->leads as $lead) { ... }
+$amo->leads->each(function(&$lead) { ... });
+$leadsByCf = $amo->leads->find('name', 'Трубы гофрированные');
+$leadsBySale = $amo->leads->filter(function($lead) {
     return $lead->sale > 0;
 });
-$lead = $lead->first();
-$lead = $lead->last();
+$firstLead = $lead->first();
+$lastLead = $lead->last();
 ```
 Сортировка
 ```php
@@ -115,7 +144,7 @@ $leads = $leads->transform(function($lead) {
         'name' => $lead->name
     ];
 });
-$leads = $leads->toArray();
+$leads_array = $leads->toArray();
 ```
 ## Работа со сделками
 Получение всех сделок
@@ -178,6 +207,12 @@ $lead = $contact->createLead();
 $lead->name = 'Amoapi v7';
 $lead->save();
 ```
+Копирование сделки
+```php
+$copy = clone $lead;
+$copy->name = 'New lead';
+$copy->save();
+```
 
 ## Работа с контактами
 Получение всех контактов
@@ -225,6 +260,12 @@ $contact = $lead->createContact();
 $contact->name = 'Amoapi v7';
 $contact->save();
 ```
+Копирование контакта
+```php
+$copy = clone $contact;
+$copy->name = 'New contact';
+$copy->save();
+```
 
 ## Работа с компаниями
 Получение всех компаний
@@ -268,6 +309,12 @@ $company = $contact->createCompany();
 $company = $lead->createCompany();
 $company->name = 'Amoapi v7';
 $company->save();
+```
+Копирование компании
+```php
+$copy = clone $company;
+$copy->name = 'New company';
+$copy->save();
 ```
 
 ## Работа с задачами
@@ -315,6 +362,12 @@ $task->element_type = 1;
 $task->element_id = 34762725;
 $task->save();
 ```
+Получение родительского контакта, сделки или компании
+```php
+$contact = $task->linkedContact;
+$lead = $task->linkedLead;
+$comapny = $task->linkedCompany;
+```
 
 ## Работа с примечаниями
 Получение всех примечаний
@@ -323,9 +376,9 @@ $notes = $amo->notes;
 $notes = $amo->notes()->where('type', 'contact')->recursiveCall();
 $notes = $amo->notes()->where('type', 'lead')->call(); // первые 500
 ```
-Получение по ID
+Получение примечаний по ID и типу сущности
 ```php
-$note = $amo->notes()->find($id); // array|integer
+$note = $amo->notes()->find($id, 'lead');
 ```
 Получение примечаний с дополнительным условием
 ```php
@@ -363,6 +416,20 @@ $note->text = 'Amoapi v7';
 $note->element_type = 2;
 $note->element_id = 34762728;
 $note->save();
+```
+Закрепление/открепление примечаний (note type 4)
+```php
+$note->setPinned(true); // true/false
+```
+Получение содержимого файла (note type 5)
+```php
+$contents = $note->getAattachment();
+```
+Получение родительского контакта, сделки или компании
+```php
+$contact = $note->linkedContact;
+$lead = $note->linkedLead;
+$comapny = $note->linkedCompany;
 ```
 
 ## Работа со списками
@@ -478,6 +545,13 @@ $customer->cf('Дата')->setValue(date('Y-m-d'));
 $customer->cf('Переключатель')->disable();
 $customer->save();
 ```
+Создание покупателя из контакта
+```php
+$customer = $contact->createCustomer();
+$customer->name = 'Amoapi v7';
+$customer->next_date = time();
+$customer->save();
+```
 Удаление покупателей
 ```php
 $amo->customers()->delete($customers); // array|integer
@@ -525,4 +599,16 @@ $result = $amo->webhooks()->subscribe('http://site.ru/handler/', ['add_lead', 'u
 Удаление вебхуков
 ```php
 $result = $amo->webhooks()->unsubscribe('http://site.ru/handler/', ['update_contact', 'responsible_lead']);
+```
+
+## Работа с frontend методами
+Скачивание файла из примечания
+```php
+$contents = $amo->ajax()->getAattachment('AbCd_attach_name.zip');
+```
+Выполнение произвольных запросов
+```php
+$amo->ajax()->get($url = '/ajax/example', $args = []);
+$amo->ajax()->post($url = '/ajax/example', $data = [], $args = []);
+$amo->ajax()->patch($url = '/ajax/example', $data = [], $args = []);
 ```

@@ -46,7 +46,7 @@ class Notes extends \Ufee\Amo\Base\Services\LimitedList
 	 * @param string $element_type - contact/lead/company/task
 	 * @return Model|Collection
      */
-	public function find($id, $element_type = 'all')
+	public function find($id, $element_type = 'lead')
 	{
 		$result = $this->list->where('limit_rows', is_array($id) ? count($id) : 1)
 							 ->where('limit_offset', 0)

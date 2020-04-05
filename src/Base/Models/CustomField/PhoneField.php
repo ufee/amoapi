@@ -26,6 +26,7 @@ class PhoneField extends EntityField
      */
     public function setValue($value, $enum_key = 'Other')
     {
+        $value = trim($value);
 		if (is_numeric($enum_key) && isset($this->field->enums->{$enum_key})) {
 			$enum = $enum_key;
 			$enum_key = $this->field->enums->{$enum_key};
@@ -35,7 +36,10 @@ class PhoneField extends EntityField
 		}
 		if ($enum === false) {
 			throw new \Exception('Invalid enum: "'.$enum_key.'" for cfield "'.$this->name.'" (enum not found)');
-		}
+        }
+        if (is_numeric($enum)) {
+            $enum = intval($enum);
+        }
         $new_values = [];
         foreach ($this->values as $setted) {
             if ($value == $setted->value) {

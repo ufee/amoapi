@@ -25,7 +25,8 @@ class Transaction extends \Ufee\Amo\Base\Models\ApiModel
 			'price',
 			'comment',
 			'next_date',
-			'next_price'
+			'next_price',
+			'elements'
 		];
 	
     /**

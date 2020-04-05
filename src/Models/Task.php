@@ -3,15 +3,22 @@
  * amoCRM Task model
  */
 namespace Ufee\Amo\Models;
+use Ufee\Amo\Base\Models\Traits;
+use Ufee\Amo\Amoapi;
 
 class Task extends \Ufee\Amo\Base\Models\ApiModel
 {
+	use Traits\LinkedParents, Traits\EntityDetector;
+
 	protected static 
 		$_type = 'task';
 	protected
 		$hidden = [
 			'query_hash',
 			'service',
+			'linkedLead',
+			'linkedContact',
+			'linkedCompany',
 			'createdUser',
 			'responsibleUser',
 			'taskType',
@@ -21,9 +28,11 @@ class Task extends \Ufee\Amo\Base\Models\ApiModel
 			'element_id',
 			'element_type',
 			'complete_till_at',
+			'duration',
 			'task_type',
 			'text',
 			'responsible_user_id',
+			'created_at',
 			'updated_at',
 			'is_completed',
 			'created_by',
@@ -44,6 +53,43 @@ class Task extends \Ufee\Amo\Base\Models\ApiModel
 		unset(
 			$this->attributes['result']->_links
 		);
+	}
+
+    /**
+     * Get task expired status
+     * @return bool
+     */
+    public function hasExpired()
+    {
+		$date = new \DateTime('now', new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		return !$this->is_completed && $date->format('Y-m-d H:i') > $this->endDate('Y-m-d H:i');
+	}
+
+    /**
+     * Get task start date
+     * @return string
+     */
+    public function startDate($format = 'Y-m-d H:i:s')
+    {
+		$date = new \DateTime();
+		$date->setTimestamp($this->complete_till_at);
+		if (date('H:i', $this->complete_till_at) == '23:59') {
+			$date->setTime(0,0,0);
+		}
+		$date->setTimezone(new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		return $date->format($format);
+	}
+
+    /**
+     * Get task end date
+     * @return string
+     */
+    public function endDate($format = 'Y-m-d H:i:s')
+    {
+		$date = new \DateTime();
+		$date->setTimestamp($this->complete_till_at+$this->duration);
+		$date->setTimezone(new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		return $date->format($format);
 	}
 
     /**
