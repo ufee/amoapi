@@ -70,8 +70,9 @@ class Query extends QueryModel
      */
     private function get()
     {
-        curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
         curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
+	curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
+        
         return curl_exec($this->curl);
     }
 
@@ -81,22 +82,25 @@ class Query extends QueryModel
      */
     private function post()
     {
-		curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
+        curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
+	curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
         curl_setopt($this->curl, CURLOPT_POST, true);
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, http_build_query($this->post_data));
+        
         return curl_exec($this->curl);
-	}
-	
+    }
+
     /**
      * PATCH query
      * @return Query
      */
     private function patch()
     {
-		curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
-		curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
-    	curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'PATCH');  
+	curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
+	curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
+    	curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, 'PATCH');
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, json_encode($this->json_data));
+        
         return curl_exec($this->curl);
     }
 }
