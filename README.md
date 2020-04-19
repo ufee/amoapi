@@ -604,7 +604,7 @@ $result = $amo->webhooks()->unsubscribe('http://site.ru/handler/', ['update_cont
 ## Работа с frontend методами
 Скачивание файла из примечания
 ```php
-$contents = $amo->ajax()->getAattachment('AbCd_attach_name.zip');
+$contents = $amo->ajax()->getAttachment('AbCd_attach_name.zip');
 ```
 Выполнение произвольных запросов
 ```php

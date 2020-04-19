@@ -26,13 +26,15 @@ class ModelWithCF extends ApiModel
     protected function _boot($data = [])
     {
 		$this->attributes['customFields'] = null;
-		$this->attributes['custom_fields'] = [];
+		$cfs = [];
 		
 		if (isset($data->custom_fields)) {
 			foreach($data->custom_fields as $cf) {
-				$this->attributes['custom_fields'][$cf->id] = $cf;
+				$cfs[$cf->id] = $cf;
 			}
+			$this->attributes['custom_fields'] = gzencode(serialize($cfs), 7);
 		}
+		$data = null;
 	}
 	
     /**
@@ -59,7 +61,12 @@ class ModelWithCF extends ApiModel
 
 			$model_cfields = new Collection([]);
 			$account_cfields = $this->service->account->customFields->{static::$cf_category};
-	
+			
+			if ($this->attributes['custom_fields']) {
+				$this->attributes['custom_fields'] = unserialize(gzdecode($this->attributes['custom_fields']));
+			} else {
+				$this->attributes['custom_fields'] = [];
+			}
 			foreach ($account_cfields->all() as $cfield) {
 				$cf_data = [
 					'id' => $cfield->id,
@@ -73,6 +80,7 @@ class ModelWithCF extends ApiModel
 				$model_cfields->push(new $cf_class($cf_data));
 			}
 			$this->attributes['customFields'] = new EntityCustomFields($model_cfields);
+			$account_cfields = null;
 		}
 		return $this->attributes['customFields'];
 	}

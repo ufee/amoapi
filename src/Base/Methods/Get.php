@@ -96,6 +96,10 @@ class Get extends Method
 					new $model_class($raw, $this->service, $query)
 				);
 			}
+			if (count($response->_embedded->items) > 1) {
+				$response = null;
+				$query->clear();
+			}
 		}
 		return $collection;
 	}

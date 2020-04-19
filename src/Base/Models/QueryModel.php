@@ -321,6 +321,16 @@ class QueryModel
 	}
 
     /**
+     * Clear Model data
+     * @return array
+     */
+    public function clear()
+    {
+		$this->attributes['curl'] = null;
+		$this->attributes['response'] = null;
+	}
+
+    /**
      * Convert Model to array
      * @return array
      */
