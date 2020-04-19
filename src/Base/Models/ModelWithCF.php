@@ -26,6 +26,7 @@ class ModelWithCF extends ApiModel
     protected function _boot($data = [])
     {
 		$this->attributes['customFields'] = null;
+		$this->attributes['custom_fields'] = null;
 		$cfs = [];
 		
 		if (isset($data->custom_fields)) {
