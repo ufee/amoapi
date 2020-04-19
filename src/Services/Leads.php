@@ -27,7 +27,7 @@ class Leads extends \Ufee\Amo\Base\Services\MainEntity
 	protected function _boot()
 	{
 		parent::_boot();
-		$this->api_args['with'] = 'loss_reason_name';
+		$this->api_args['with'] = 'loss_reason_name,catalog_elements_links';
 	}
 
     /**

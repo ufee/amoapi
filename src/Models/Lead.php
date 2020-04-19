@@ -49,7 +49,8 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			'closest_task_at',
 			'visitor_uid',
 			'loss_reason_id',
-			'loss_reason_name'
+			'loss_reason_name',
+			'catalog_elements_links'
 		];
 
     /**
@@ -93,6 +94,13 @@ class Lead extends \Ufee\Amo\Base\Models\ModelWithCF
 			$this->attributes['catalog_elements_id'] = $data->catalog_elements->id;
 		}
 		$this->attributes['contacts'] = null;
+		
+		$this->attributes['catalog_elements_links'] = [];
+		if (isset($data->_embedded->catalog_elements_links)) {
+			foreach ($data->_embedded->catalog_elements_links as $catalog_element_link) {
+				$this->attributes['catalog_elements_links'][$catalog_element_link->id] = $catalog_element_link;
+			}
+		}
 		unset(
 			$this->attributes['main_contact'], $this->attributes['pipeline']->_links
 		);
