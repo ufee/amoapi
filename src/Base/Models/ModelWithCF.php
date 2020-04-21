@@ -63,7 +63,7 @@ class ModelWithCF extends ApiModel
 			$model_cfields = new Collection([]);
 			$account_cfields = $this->service->account->customFields->{static::$cf_category};
 			
-			if ($this->attributes['custom_fields']) {
+			if ($this->attributes['custom_fields'] && is_string($this->attributes['custom_fields'])) {
 				$this->attributes['custom_fields'] = unserialize(gzdecode($this->attributes['custom_fields']));
 			} else {
 				$this->attributes['custom_fields'] = [];

@@ -188,6 +188,11 @@ class ApiModel extends Model
 			$this->updated_at = $date->getTimestamp();
 		}
 		if ($this->hasAttribute('custom_fields')) {
+			if ($this->attributes['custom_fields'] && is_string($this->attributes['custom_fields'])) {
+				$this->attributes['custom_fields'] = unserialize(gzdecode($this->attributes['custom_fields']));
+			} else {
+				$this->attributes['custom_fields'] = [];
+			}
 			$this->setChanged('custom_fields');
 		}
 		foreach ($this->writable as $i=>$field) {
