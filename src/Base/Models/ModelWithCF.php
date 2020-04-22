@@ -62,19 +62,15 @@ class ModelWithCF extends ApiModel
 
 			$model_cfields = new Collection([]);
 			$account_cfields = $this->service->account->customFields->{static::$cf_category};
+			$curr_custom_fields = $this->custom_fields;
 			
-			if ($this->attributes['custom_fields'] && is_string($this->attributes['custom_fields'])) {
-				$this->attributes['custom_fields'] = unserialize(gzdecode($this->attributes['custom_fields']));
-			} else {
-				$this->attributes['custom_fields'] = [];
-			}
 			foreach ($account_cfields->all() as $cfield) {
 				$cf_data = [
 					'id' => $cfield->id,
 					'account_id' => $this->service->account->id,
 					'name' => $cfield->name,
-					'code' => isset($this->attributes['custom_fields'][$cfield->id]->code) ? $this->attributes['custom_fields'][$cfield->id]->code : null,
-					'values' => isset($this->attributes['custom_fields'][$cfield->id]) ? $this->attributes['custom_fields'][$cfield->id]->values : [],
+					'code' => isset($curr_custom_fields[$cfield->id]->code) ? $curr_custom_fields[$cfield->id]->code : null,
+					'values' => isset($curr_custom_fields[$cfield->id]) ? $curr_custom_fields[$cfield->id]->values : [],
 					'field' => $cfield
 				];
 				$cf_class = $account_cfields->getClassFrom($cfield);
@@ -84,6 +80,22 @@ class ModelWithCF extends ApiModel
 			$account_cfields = null;
 		}
 		return $this->attributes['customFields'];
+	}
+	
+    /**
+     * Protect custom_fields access
+	 * @param mixed $custom_fields attribute
+	 * @return array
+     */
+    protected function custom_fields_access($custom_fields)
+    {
+		if ($this->attributes['custom_fields'] && is_string($this->attributes['custom_fields'])) {
+			$this->attributes['custom_fields'] = unserialize(gzdecode($this->attributes['custom_fields']));
+		}
+		if (!is_array($this->attributes['custom_fields'])) {
+			$this->attributes['custom_fields'] = [];
+		}
+		return $this->attributes['custom_fields'];
 	}
 
     /**
