@@ -111,6 +111,9 @@ class Amoapi
 		if (!$data = $query->response->parseJson()) {
 			throw new \Exception('Auth failed with invalid response data: '.$query->response->getData(), $query->response->getCode());
 		}
+		if (!isset($data->response->auth)) {
+			throw new \Exception('Auth failed');
+		}
 		if (!$data->response->auth) {
 			if (isset($data->response->error_code) && isset($data->response->error)) {
 				throw new \Exception($data->response->error_code.': '.$data->response->error, $query->response->getCode());

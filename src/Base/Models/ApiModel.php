@@ -189,7 +189,9 @@ class ApiModel extends Model
 		}
 		if ($this->hasAttribute('custom_fields')) {
 			$this->custom_fields;
-			$this->setChanged('custom_fields');
+			$this->customFields->each(function(&$cfield) {
+				$cfield->setChanged('values');
+			});
 		}
 		foreach ($this->writable as $i=>$field) {
 			$this->setChanged($field);
