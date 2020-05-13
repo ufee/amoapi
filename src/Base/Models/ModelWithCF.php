@@ -140,6 +140,7 @@ class ModelWithCF extends ApiModel
      */
     public function refreshCustomFieldChanges()
 	{
+		$this->custom_fields;
 		if (!is_null($this->attributes['customFields']) && $cf_raws = $this->customFields->getChangedApiRaw()) {
 			foreach ($cf_raws as $cf_raw) {
 				$this->attributes['custom_fields'][$cf_raw['id']] = (object)$this->customFields->byId($cf_raw['id'])->getRaw();

@@ -205,11 +205,7 @@ class Model
 			if (in_array($field_key, $this->hidden)) {
 				continue;
 			}
-			if ($field_key === 'custom_fields') {
-                		$fields[$field_key] = unserialize(gzdecode($val));
-			} else {
-				$fields[$field_key] = $val;
-			}
+			$fields[$field_key] = $val;
 		}
 		return $fields;
     }
