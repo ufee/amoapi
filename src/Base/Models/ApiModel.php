@@ -194,6 +194,9 @@ class ApiModel extends Model
 			});
 		}
 		foreach ($this->writable as $i=>$field) {
+			if (in_array($field, ['loss_reason_id', 'loss_reason_name'])) {
+				continue;
+			}
 			$this->setChanged($field);
 		}
 		if ($this->hasAttribute('tags')) {
