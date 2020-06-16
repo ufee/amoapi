@@ -3,8 +3,6 @@
  * amoCRM API client Base service method
  */
 namespace Ufee\Amo\Base\Methods;
-use Ufee\Amo\Models,
-    Ufee\Amo\Base\Collections\ModelCollection;
 
 class Method
 {

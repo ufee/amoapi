@@ -3,8 +3,9 @@
  * amoCRM API client Base service method
  */
 namespace Ufee\Amo\Base\Methods;
-use Ufee\Amo\Api,
-	Ufee\Amo\Base\Collections\Collection;
+use Ufee\Amo\Api;
+use \Ufee\Amo\Base\Models\QueryModel;
+use Ufee\Amo\Base\Collections\Collection;
 
 class Post extends Method
 {
@@ -18,7 +19,11 @@ class Post extends Method
      */
 	public function call($post_data = [], $arg = [])
 	{
-		$query = new Api\Query($this->service->instance, get_class($this->service));
+		if ($this->service->instance instanceOf \Ufee\Amo\Oauthapi) {
+			$query = new Api\Oauth\Query($this->service->instance, get_class($this->service));
+		} else {
+			$query = new Api\Query($this->service->instance, get_class($this->service));
+		}
 		$query->setUrl($this->url);
 		$query->setMethod('POST');
 		$query->setPostData($post_data);
@@ -36,7 +41,7 @@ class Post extends Method
 	 * @param Query $query
 	 * @return Collection
      */
-    protected function parseResponse(Api\Query &$query)
+    protected function parseResponse(QueryModel &$query)
     {
 		if (!$response = $query->response->parseJson()) {
 			throw new \Exception('Invalid API response (non JSON), code: '.$query->response->getCode(), $query->response->getCode());

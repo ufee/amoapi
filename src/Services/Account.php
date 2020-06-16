@@ -8,8 +8,8 @@ class Account extends \Ufee\Amo\Base\Services\Cached
 {
 	protected static $_cache_time = 600;
 	protected $methods = [
-					'current'
-			];
+		'current'
+	];
 	protected $_current_data;
 	
     /**

@@ -3,6 +3,7 @@
  * Curl response
  */
 namespace Ufee\Amo\Api;
+use \Ufee\Amo\Base\Models\QueryModel;
 
 class Response
 {
@@ -16,7 +17,7 @@ class Response
 	 * @param string $data
 	 * @param Query $query
      */
-    public function __construct($data, Query &$query)
+    public function __construct($data, QueryModel &$query)
     {
 		$this->query = $query;
 		$this->data = $data;

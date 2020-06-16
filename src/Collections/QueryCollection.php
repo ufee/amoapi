@@ -3,8 +3,9 @@
  * amoCRM API Query Collection class
  */
 namespace Ufee\Amo\Collections;
-use Ufee\Amo\Amoapi,
-    Ufee\Amo\Api;
+use Ufee\Amo\ApiClient,
+    Ufee\Amo\Api,
+	Ufee\Amo\Base\Models\QueryModel;
 
 class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 {
@@ -19,15 +20,17 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     
     /**
      * Boot instance
-	 * @param Amoapi $instance
+	 * @param ApiClient $instance
      */
-    public function boot(Amoapi &$instance)
+    public function boot(ApiClient &$instance)
     {
         $this->instance = $instance;
         $this->logger = Api\Logger::getInstance($instance->getAuth('domain').'.log');
         $this->cachePath(AMOAPI_ROOT.$this->cache_path);
-        $this->cookie_file = AMOAPI_ROOT.DIRECTORY_SEPARATOR.'Cookies'.DIRECTORY_SEPARATOR.$instance->getAuth('domain').'.cookie';
-        $this->refreshSession();
+		if ($instance instanceof Amoapi) {
+			$this->cookie_file = AMOAPI_ROOT.DIRECTORY_SEPARATOR.'Cookies'.DIRECTORY_SEPARATOR.$instance->getAuth('domain').'.cookie';
+			$this->refreshSession();
+		}
     }
 
     /**
@@ -100,11 +103,11 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     
     /**
      * Push new queries
-	 * @param Query $query
+	 * @param QueryModel $query
      * @param bool $save
 	 * @return QueryCollection
      */
-    public function pushQuery(Api\Query $query, $save = true)
+    public function pushQuery(QueryModel $query, $save = true)
     {
         if ($this->_logs) {
             $this->logger->log(
@@ -135,11 +138,11 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     /**
      * Get cached query
 	 * @param string $hash
-	 * @return Query|null
+	 * @return QueryModel|null
      */
 	public function getCached($hash)
 	{    
-        $queries = $this->find('hash', $hash)->filter(function(Api\Query $query) {
+        $queries = $this->find('hash', $hash)->filter(function(QueryModel $query) {
             return $query->getService()->canCache() && microtime(1)-$query->end_time <= $query->getService()->cacheTime();
         });
         return $queries->first();
@@ -188,10 +191,10 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     
     /**
      * Cache queries
-	 * @param Query $query
+	 * @param QueryModel $query
 	 * @return bool
      */
-    public function cacheQuery(Api\Query $query)
+    public function cacheQuery(QueryModel $query)
     {
         return file_put_contents($this->cache_path.'/'.$query->hash.'.cache', serialize($query));
     }

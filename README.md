@@ -1,5 +1,6 @@
 ## AmoCRM API Client
 Api клиент для работы с amoCRM
+Поддержка oAuth авторизации начиная с версии 0.9.0.0
 
 ## Установка
 
@@ -14,8 +15,64 @@ composer require ufee/amoapi
 composer require --dev phpunit/phpunit ^5
 vendor/bin/phpunit vendor/ufee/amoapi
 ```
+## Инициализация клиента по oAuth
+Получение объекта для работы с конкретным аккаунтом
+```php
+$amo = \Ufee\Amo\Oauthapi::setInstance([
+    'domain' => 'testdomain',
+	'client_id' => 'b6cf0658-b19...', // id приложения
+	'client_secret' => 'D546t4yRlOprfZ...',
+	'redirect_uri' => 'https://site.ru/amocrm/oauth/redirect',
+    'zone' => 'ru', // or com
+    'timezone' => 'Europe/Moscow',
+    'lang' => 'ru' // or en
+]);
+```
+Получение ранее инициализированного объекта по id приложения
+```php
+$amo = \Ufee\Amo\Oauthapi::getInstance('b6cf0658-b19...');
+```
+Получение URL авторизации в приложении amoCRM
+Необходимо для извлечения кода авторизации
+```php
+$redirect_url = $amo->getOauthUrl($arg = ['mode' => 'popup', 'state' => 'amoapi']);
+```
+Получение oauth данных - access_token, refresh_token производится единоразово, по коду авторизации
+Полученные данные oauth кешируются в файлах, применяются при API запросах автоматически
+Пользовательское сохранеие данных не требуется
+```php
+$oauth = $amo->fetchAccessToken($code);
+```
+При небходимости можно задать oauth данные принудительно, вручную
+Данные также будут кешированы автоматически
+```php
+$amo->setOauth([
+	token_type' => 'Bearer',
+	'expires_in' => 86400,
+	'access_token' => 'bKSuyc4u6oi...',
+	'refresh_token' => 'a89iHvS9uR4...'
+]);
+```
+Свой путь для кеширования oauth данных
+```php
+$amo->setOauthPath('path_to/oauth');
+```
+Токен доступа обновляется автоматически, если срок действия refresh_token не истек
+При небходимости можно обновить oauth данные по refresh_token принудительно, вручную
+Новые oauth данные также будут кешированы автоматически
+```php
+$oauth = $amo->refreshAccessToken($refresh_token = null); // при передаче null используются кешированные oauth данные
+```
+После первичного выполнения метода fetchAccessToken(), можно пользоваться клиентом в обычном режиме
+Повторное выполнение метода fetchAccessToken() или setOauth() необходимо только в случаях, если:
+1) Изменились ключи доступа в приложении
+2) Изменился поддомен amoCRM аккаунта
+3) Истек срок действия refresh_token
+4) Получена ошибка авторизации
 
-## Работа с клиентом
+Рекомендуется убедиться в отсутствии публичного доступа к папке с кешем - /vendor/ufee/amoapi/src/Cache/
+
+## Инициализация клиента по API-hash
 Получение объекта для работы с конкретным аккаунтом
 ```php
 $amo = \Ufee\Amo\Amoapi::setInstance([
@@ -29,9 +86,12 @@ $amo = \Ufee\Amo\Amoapi::setInstance([
 ]);
 ```
 Включение/выключение автоматической авторизации при ошибке 401
+Сессия (cookie) кешируется в файлах
 ```php
 $amo->autoAuth(true); // true/false, рекомендуется true
 ```
+
+## Работа с клиентом
 Включение логирования заросов (Logs/m-Y/domain.log)
 ```php
 $amo->queries->logs(true); // to default path
@@ -52,9 +112,9 @@ $amo->queries->setDelay(0.5); // default: 1 sec
 ```php
 $amo->queries->cachePath('path_to/cache');
 ```
-Пользовательская отладка запросов 
+Пользовательская отладка запросов (обновлено с вводом oAuth)
 ```php
-$amo->queries->listen(function(\Ufee\Amo\Api\Query $query) {
+$amo->queries->listen(function(\Ufee\Amo\Base\Models\QueryModel $query) {
     echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
     print_r($query->headers);
     print_r(count($query->json_data) ? $query->json_data : $query->post_data);

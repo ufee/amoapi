@@ -3,12 +3,14 @@
  * amoCRM API client Base service
  */
 namespace Ufee\Amo\Base\Services;
+use Ufee\Amo\ApiClient;
 use Ufee\Amo\Amoapi;
+use Ufee\Amo\Oauthapi;
 use Ufee\Amo\Models\Account;
 use Ufee\Amo\Collections\QueryCollection;
 	
 /**
- * @property Amoapi $instance
+ * @property ApiClient $instance
  * @property Account $account
  * @property QueryCollection $queries
  */
@@ -19,7 +21,7 @@ class Service
 		'add' => [],
 		'update' => ['id', 'updated_at']
 	];
-	protected $account_id;
+	protected $client_id;
 	protected $entity_key = 'entitys';
 	protected $entity_model = '\Ufee\Amo\Base\Model';
 	protected $methods = [];
@@ -27,11 +29,11 @@ class Service
 		
     /**
      * Constructor
-	 * @param integer $account_id
+	 * @param integer $client_id
      */
-    private function __construct($account_id)
+    private function __construct($client_id)
     {
-        $this->account_id = $account_id;
+        $this->client_id = $client_id;
 		$this->_boot();
 	}
 	
@@ -47,10 +49,10 @@ class Service
     /**
      * Set service instance
 	 * @param $name Service name
-	 * @param Amoapi $instance
+	 * @param ApiClient $instance
 	 * @return Service
      */
-    public static function setInstance($name, \Ufee\Amo\Amoapi &$instance)
+    public static function setInstance($name, \Ufee\Amo\ApiClient &$instance)
     {
 		if (is_null($name)) {
 			$name = lcfirst(static::getBasename());
@@ -67,7 +69,7 @@ class Service
 	 * @param $name Service name
 	 * @return Service
      */
-    public static function getInstance($name = null, \Ufee\Amo\Amoapi &$instance)
+    public static function getInstance($name = null, \Ufee\Amo\ApiClient &$instance)
     {
 		if (is_null($name)) {
 			$name = lcfirst(static::getBasename());
@@ -97,14 +99,15 @@ class Service
 		if (isset($this->{$target})) {
 			return $this->{$target};
 		}
+		$apiClass = is_numeric($this->client_id) ? Amoapi::class : Oauthapi::class;
 		if ($target === 'instance') {
-			return Amoapi::getInstance($this->account_id);
+			return $apiClass::getInstance($this->client_id);
 		}
 		if ($target === 'account') {
-			return Amoapi::getInstance($this->account_id)->account;
+			return $apiClass::getInstance($this->client_id)->account;
 		}
 		if ($target === 'queries') {
-			return Amoapi::getInstance($this->account_id)->queries->find('service', static::class);
+			return $apiClass::getInstance($this->client_id)->queries->find('service', static::class);
 		}
 		if (!in_array($target, $this->methods)) {
 			throw new \Exception('Invalid method called: '.$target);

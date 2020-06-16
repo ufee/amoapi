@@ -3,7 +3,6 @@
  * amoCRM API client GET list limited service method
  */
 namespace Ufee\Amo\Base\Methods;
-use Ufee\Amo\Http;
 
 class LimitedList extends \Ufee\Amo\Base\Methods\Get
 {

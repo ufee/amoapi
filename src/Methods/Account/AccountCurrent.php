@@ -3,7 +3,7 @@
  * amoCRM API Service method - account current
  */
 namespace Ufee\Amo\Methods\Account;
-use Ufee\Amo\Api;
+use \Ufee\Amo\Base\Models\QueryModel;
 
 class AccountCurrent extends \Ufee\Amo\Base\Methods\Get
 {
@@ -15,7 +15,7 @@ class AccountCurrent extends \Ufee\Amo\Base\Methods\Get
 	 * @param Query $query
 	 * @return Collection
      */
-    protected function parseResponse(\Ufee\Amo\Api\Query &$query)
+    protected function parseResponse(QueryModel &$query)
     {
 		if (!$data = $query->response->parseJson()) {
 			throw new \Exception('Invalid API response (non JSON), code: '.$query->response->getCode());

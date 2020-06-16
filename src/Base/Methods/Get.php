@@ -3,7 +3,8 @@
  * amoCRM API client GET service method
  */
 namespace Ufee\Amo\Base\Methods;
-use Ufee\Amo\Api;
+use Ufee\Amo\Api,
+	\Ufee\Amo\Base\Models\QueryModel;
 
 class Get extends Method
 {
@@ -34,7 +35,11 @@ class Get extends Method
      */
 	public function call($arg = [])
 	{
-		$query = new Api\Query($this->service->instance, get_class($this->service));
+		if ($this->service->instance instanceOf \Ufee\Amo\Oauthapi) {
+			$query = new Api\Oauth\Query($this->service->instance, get_class($this->service));
+		} else {
+			$query = new Api\Query($this->service->instance, get_class($this->service));
+		}
 		$query->setUrl($this->url);
 		$query->setArgs(
 			array_merge($this->service->api_args, $this->args, $arg)
@@ -62,7 +67,7 @@ class Get extends Method
 	 * @param Query $query
 	 * @return Collection
      */
-    protected function parseResponse(\Ufee\Amo\Api\Query &$query)
+    protected function parseResponse(QueryModel &$query)
     {
 		$collection_class = $this->service->entity_collection;
 		$collection = new $collection_class([], $this->service);

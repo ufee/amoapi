@@ -4,7 +4,6 @@
  */
 namespace Ufee\Amo\Base\Services;
 use Ufee\Amo\Base\Services\Traits;
-use Ufee\Amo\Base\Collections\Collection;
 
 class MainEntity extends LimitedList
 {

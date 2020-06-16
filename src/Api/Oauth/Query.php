@@ -1,9 +1,10 @@
 <?php
 /**
- * amoCRM API Query model
+ * amoCRM API oauth Query model
  */
-namespace Ufee\Amo\Api;
-use Ufee\Amo\Base\Models\QueryModel;
+namespace Ufee\Amo\Api\Oauth;
+use Ufee\Amo\Base\Models\Oauth\QueryModel,
+	Ufee\Amo\Api\Response;
 
 class Query extends QueryModel
 {
@@ -15,6 +16,19 @@ class Query extends QueryModel
     {
         $this->retries++;
         $instance = $this->instance();
+		
+		$oauth = $instance->getOauth();
+		if (empty($oauth['access_token'])) {
+			throw new \Exception('Empty oauth access_token');
+		}
+		$expire_time = ($oauth['created_at']+$oauth['expires_in'])-time();
+		if ($expire_time < 60) {
+			$this->instance()->refreshAccessToken();
+			$oauth = $instance->getOauth();
+		}
+		$this->setHeader(
+			'Authorization', $oauth['token_type'].' '.$oauth['access_token']
+		);
         $last_time = 1;
         if ($last_query = $instance->queries->last()) {
             $last_time = $last_query->start_time;
@@ -33,34 +47,12 @@ class Query extends QueryModel
         	$this->$method(), $this
         );
         curl_close($this->curl);
-        if (!in_array($this->response->getCode(), [200, 204]) && file_exists($instance->queries->getCookiePath())) {
-           @unlink($instance->queries->getCookiePath());
-        }
-        while ($this->response->getCode() == 401 && $this->url != $instance::AUTH_URL && $this->retries <= 3 && $instance->hasAutoAuth()) {
-            $instance->authorize();
-            $instance->queries->refreshSession();
-            $this->setCurl();
-            return $this->execute();
-        }
-		while ($this->response->getCode() == 429 && $this->retries <= 32) {
-			sleep(1);
-			$this->setCurl()->execute();
-		}
-		if (in_array($this->response->getCode(), [502,504])) {
-			sleep(1);
-            $this->setCurl();
-			$this->setRetry(false);
-            return $this->execute();
-		}
+
         $this->attributes['end_time'] = microtime(true);
         $this->attributes['execution_time'] = round($this->end_time - $this->start_time, 5);
         $this->attributes['memory_usage'] = memory_get_peak_usage(true)/1024/1024;
         $this->generateHash();
         $instance->queries->pushQuery($this, in_array($this->response->getCode(), [200]));
-
-		if (!$instance->hasSession() && in_array($this->response->getCode(), [200, 204])) {
-            $instance->queries->refreshSession();
-		}
         return $this;
     }
 
@@ -68,7 +60,7 @@ class Query extends QueryModel
      * GET query
      * @return Query
      */
-    private function get()
+    public function get()
     {
         curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
 		curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
@@ -80,7 +72,7 @@ class Query extends QueryModel
      * POST query
      * @return Query
      */
-    private function post()
+    public function post()
     {
         curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
 		curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
@@ -94,7 +86,7 @@ class Query extends QueryModel
      * PATCH query
      * @return Query
      */
-    private function patch()
+    public function patch()
     {
 		curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
 		curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());

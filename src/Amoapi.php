@@ -1,67 +1,17 @@
 <?php
 /**
- * amoCRM API client
+ * amoCRM API client by api-hash
  * @author Vlad Ionov <vlad@f5.com.ru>
  * @version 0.8
  */
 namespace Ufee\Amo;
 
-if (!defined('AMOAPI_ROOT')) {
-	define('AMOAPI_ROOT', dirname(__FILE__));
-}
-if (!defined('CURL_SSLVERSION_TLSv1_2')) {
-	define('CURL_SSLVERSION_TLSv1_2', 6);
-}
-/**
- * @property \Ufee\Amo\Collections\QueryCollection $queries
- * @property \Ufee\Amo\Models\Account $account
- * @property \Ufee\Amo\Collections\LeadCollection $leads
- * @property \Ufee\Amo\Collections\ContactCollection $contacts
- * @property \Ufee\Amo\Collections\CompanyCollection $companies
- * @property \Ufee\Amo\Collections\TaskCollection $tasks
- * @property \Ufee\Amo\Collections\NoteCollection $notes
- * @property \Ufee\Amo\Collections\CustomerCollection $customers
- * @property \Ufee\Amo\Collections\TransactionsCollection $transactions
- * @property \Ufee\Amo\Collections\CatalogCollection $catalogs
- * @property \Ufee\Amo\Collections\CatalogElementCollection $catalogElements
- * @property \Ufee\Amo\Collections\WebhookCollection $webhooks
- * @method \Ufee\Amo\Services\Account account()
- * @method \Ufee\Amo\Services\Leads leads()
- * @method \Ufee\Amo\Services\Contacts contacts()
- * @method \Ufee\Amo\Services\Companies companies()
- * @method \Ufee\Amo\Services\Tasks tasks()
- * @method \Ufee\Amo\Services\Notes notes()
- * @method \Ufee\Amo\Services\Customers customers()
- * @method \Ufee\Amo\Services\Transactions transactions()
- * @method \Ufee\Amo\Services\Catalogs catalogs()
- * @method \Ufee\Amo\Services\CatalogElements catalogElements()
- * @method \Ufee\Amo\Services\Webhooks webhooks()
- * @method \Ufee\Amo\Services\Ajax ajax()
- */
-class Amoapi
+class Amoapi extends ApiClient
 {
 	const VERSION = 8;
 	const SESS_LIFETIME = 900;
 	const AUTH_URL = '/private/api/auth.php';
 
-	private static $_instances = [];
-	private static $_queries = [];
-
-	private $services = [
-		'account',
-		'leads',
-		'contacts',
-		'companies',
-		'tasks',
-		'notes',
-		'customers',
-		'transactions',
-		'catalogs',
-		'catalogElements',
-		'webhooks',
-		'ajax'
-	];
-	private $_account;
 	private $auto_auth = false;
 	private $session = [
 		'id' => null,

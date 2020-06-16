@@ -3,7 +3,6 @@
  * amoCRM API client GET Cached service
  */
 namespace Ufee\Amo\Base\Services;
-use Ufee\Amo\Amoapi;
 
 class Cached extends Service
 {
