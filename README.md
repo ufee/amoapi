@@ -20,9 +20,9 @@ vendor/bin/phpunit vendor/ufee/amoapi
 ```php
 $amo = \Ufee\Amo\Oauthapi::setInstance([
     'domain' => 'testdomain',
-	'client_id' => 'b6cf0658-b19...', // id приложения
-	'client_secret' => 'D546t4yRlOprfZ...',
-	'redirect_uri' => 'https://site.ru/amocrm/oauth/redirect',
+    'client_id' => 'b6cf0658-b19...', // id приложения
+    'client_secret' => 'D546t4yRlOprfZ...',
+    'redirect_uri' => 'https://site.ru/amocrm/oauth/redirect',
     'zone' => 'ru', // or com
     'timezone' => 'Europe/Moscow',
     'lang' => 'ru' // or en
@@ -47,7 +47,7 @@ $oauth = $amo->fetchAccessToken($code);
 Данные также будут кешированы автоматически
 ```php
 $amo->setOauth([
-	token_type' => 'Bearer',
+	'token_type' => 'Bearer',
 	'expires_in' => 86400,
 	'access_token' => 'bKSuyc4u6oi...',
 	'refresh_token' => 'a89iHvS9uR4...'
