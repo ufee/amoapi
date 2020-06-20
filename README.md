@@ -39,7 +39,7 @@ $redirect_url = $amo->getOauthUrl($arg = ['mode' => 'popup', 'state' => 'amoapi'
 ```
 Получение oauth данных - access_token, refresh_token производится единоразово, по коду авторизации  
 Полученные данные oauth кешируются в файлах, применяются при API запросах автоматически  
-Пользовательское сохранеие данных не требуется
+Пользовательское сохранение данных не требуется
 ```php
 $oauth = $amo->fetchAccessToken($code);
 ```
@@ -104,7 +104,7 @@ $amo->queries->logs('path_to_log/queries'); // to custom path
 ```php
 $amo->queries->setDelay(0.5); // default: 1 sec
 ```
-Зарпос /api/v2/account кешируется в файлах, время указывается в секундах
+Запрос /api/v2/account кешируется в файлах, время указывается в секундах
 ```php
 \Ufee\Amo\Services\Account::setCacheTime(1800); // default: 600 sec
 ```
@@ -669,6 +669,7 @@ $contents = $amo->ajax()->getAttachment('AbCd_attach_name.zip');
 Выполнение произвольных запросов
 ```php
 $amo->ajax()->get($url = '/ajax/example', $args = []);
-$amo->ajax()->post($url = '/ajax/example', $data = [], $args = []);
+$amo->ajax()->post($url = '/ajax/example', $data = [], $args = [], $post_type = 'raw OR json');
+$amo->ajax()->postJson($url = '/ajax/example', $data = [], $args = []);
 $amo->ajax()->patch($url = '/ajax/example', $data = [], $args = []);
 ```
