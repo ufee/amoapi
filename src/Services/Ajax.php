@@ -127,9 +127,10 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 	 * @param string $url
 	 * @param array $data
 	 * @param array $args
+	 * @param string $post_type - raw|json
 	 * return mixed
      */
-	public function post($url, array $data = [], array $args = [])
+	public function post($url, array $data = [], array $args = [], $post_type = 'raw')
 	{
 		if ($this->instance instanceOf \Ufee\Amo\Oauthapi) {
 			$query = new Api\Oauth\Query($this->instance);
@@ -139,9 +140,13 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 		$query->setHeader('X-Requested-With', 'XMLHttpRequest')
 			  ->setUrl($url)
 			  ->setMethod('POST')
-			  ->setPostData($data)
-			  ->setArgs($args)
-			  ->execute();
+			  ->setArgs($args);
+		if ($post_type == 'json') {
+			$query->setJsonData($data);
+		} else {
+			$query->setPostData($data);
+		}
+		$query->execute();
 		if ($query->response->getCode() != 200) {
 			throw new \Exception('Invalid response code: '.$query->response->getCode(), $query->response->getCode());
 		}
@@ -149,6 +154,18 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 			return $data;
 		}
 		return $query->response->getData();
+	}
+	
+    /**
+     * Ajax POST json request
+	 * @param string $url
+	 * @param array $data
+	 * @param array $args
+	 * return mixed
+     */
+	public function postJson($url, array $data = [], array $args = [])
+	{
+		return $this->post($url, $data, $args, 'json');
 	}
 
     /**
