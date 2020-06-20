@@ -97,6 +97,17 @@ class QueryModel extends \Ufee\Amo\Base\Models\QueryModel
 	}
 
     /**
+     * Clear query cache
+     * @return QueryModel
+     */
+    public function clearCache()
+    {
+		if (file_exists($this->cache_path.'/'.$this->hash.'.Oauthapi.cache')) {
+			@unlink($this->cache_path.'/'.$this->hash.'.Oauthapi.cache');
+		}
+	}
+
+    /**
      * Get Oauthapi instance
 	 * @return Oauthapi
      */

@@ -11,6 +11,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 {
     protected 
         $instance,
+		$instanceName,
         $delay = 1,
         $cache_path = '/Cache',
         $cookie_file,
@@ -25,6 +26,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     public function boot(ApiClient &$instance)
     {
         $this->instance = $instance;
+		$this->instanceName = substr(strrchr(get_class($instance), "\\"), 1);
         $this->logger = Api\Logger::getInstance($instance->getAuth('domain').'.log');
         $this->cachePath(AMOAPI_ROOT.$this->cache_path);
 		if ($instance instanceof Amoapi) {
@@ -86,7 +88,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         if (!file_exists($this->cache_path)) {
             mkdir($this->cache_path, 0777, true);
         }
-        if ($caches = glob($this->cache_path.'/*.cache')) {
+        if ($caches = glob($this->cache_path.'/*.'.$this->instanceName.'.cache')) {
             foreach ($caches as $cache_file) {
                 if ($cacheQuery = unserialize(file_get_contents($cache_file))) {
                     $service = $cacheQuery->getService();
@@ -184,7 +186,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
      */
     public function flush()
     {
-        array_map('unlink', glob($this->cache_path.'/*.cache'));
+        array_map('unlink', glob($this->cache_path.'/*.'.$this->instanceName.'.cache'));
         $this->items = [];
         return $this;
     }
@@ -196,6 +198,6 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
      */
     public function cacheQuery(QueryModel $query)
     {
-        return file_put_contents($this->cache_path.'/'.$query->hash.'.cache', serialize($query));
+        return file_put_contents($this->cache_path.'/'.$query->hash.'.'.$this->instanceName.'.cache', serialize($query));
     }
 }

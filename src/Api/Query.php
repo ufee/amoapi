@@ -85,8 +85,12 @@ class Query extends QueryModel
         curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
 		curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
         curl_setopt($this->curl, CURLOPT_POST, true);
-        curl_setopt($this->curl, CURLOPT_POSTFIELDS, http_build_query($this->post_data));
-        
+		
+		if (!empty($this->attributes['json_data'])) {
+			curl_setopt($this->curl, CURLOPT_POSTFIELDS, json_encode($this->json_data));
+		} else {
+			curl_setopt($this->curl, CURLOPT_POSTFIELDS, http_build_query($this->post_data));
+        }
         return curl_exec($this->curl);
     }
 

@@ -315,8 +315,8 @@ class QueryModel
      */
     public function clearCache()
     {
-		if (file_exists($this->cache_path.'/'.$this->hash.'.cache')) {
-			@unlink($this->cache_path.'/'.$this->hash.'.cache');
+		if (file_exists($this->cache_path.'/'.$this->hash.'.Amoapi.cache')) {
+			@unlink($this->cache_path.'/'.$this->hash.'.Amoapi.cache');
 		}
 	}
 
