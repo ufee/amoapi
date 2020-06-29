@@ -35,7 +35,7 @@ $amo = \Ufee\Amo\Oauthapi::getInstance('b6cf0658-b19...');
 Получение URL авторизации в приложении amoCRM  
 Необходимо для извлечения кода авторизации
 ```php
-$redirect_url = $amo->getOauthUrl($arg = ['mode' => 'popup', 'state' => 'amoapi']);
+$first_auth_url = $amo->getOauthUrl($arg = ['mode' => 'popup', 'state' => 'amoapi']);
 ```
 Получение oauth данных - access_token, refresh_token производится единоразово, по коду авторизации  
 Полученные данные oauth кешируются в файлах, применяются при API запросах автоматически  
@@ -70,8 +70,20 @@ $oauth = $amo->refreshAccessToken($refresh_token = null); // при переда
 3) Истек срок действия refresh_token
 4) Получена ошибка авторизации
 
-Рекомендуется убедиться в отсутствии публичного доступа к папке с кешем - /vendor/ufee/amoapi/src/Cache/
+Рекомендуется убедиться в отсутствии публичного доступа к папке с кешем - /vendor/ufee/amoapi/src/Cache/  
 
+Обмен API ключа на код авторизации oAuth
+```php
+$resp_code = $amo->ajax()->exchangeApiKey(
+	$crm_login, 
+	$api_hash, 
+	$client_id, 
+	$client_secret
+);
+if ($resp_code === 202) {
+	// Запрос принят, код авторизации будет отправлен на redirect_uri
+}
+```
 ## Инициализация клиента по API-hash
 Получение объекта для работы с конкретным аккаунтом
 ```php

@@ -15,6 +15,37 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 	{
 		
 	}
+	
+    /**
+     * Exchange api key to oauth
+	 * @param integer $bot_id
+	 * @param integer $entity_id
+	 * @param integer $entity_type - 1 – контакт, 2- сделка, 3 – компания
+	 * @param bool $state
+	 * return integer
+     */
+	public function exchangeApiKey($login, $api_key, $client_id, $client_secret)
+	{
+		if ($this->instance instanceOf \Ufee\Amo\Oauthapi) {
+			$query = new Api\Oauth\Query($this->instance);
+		} else {
+			if (!$this->instance->hasSession() && !$this->instance->hasAutoAuth()) {
+				$this->instance->authorize();
+			}
+			$query = new Api\Query($this->instance);
+		}
+		$req = [
+			'login' => $login,
+			'api_key' => $api_key,
+			'client_uuid' => $client_id,
+			'client_secret' => $client_secret
+		];
+		$query->setUrl('/oauth2/exchange_api_key')
+			  ->setMethod('POST')
+			  ->setJsonData($req)
+			  ->execute();
+		return $query->response->getCode();
+	}
 
     /**
      * Set Note pinned
