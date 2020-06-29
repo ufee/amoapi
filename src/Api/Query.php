@@ -42,11 +42,11 @@ class Query extends QueryModel
             $this->setCurl();
             return $this->execute();
         }
-		while ($this->response->getCode() == 429 && $this->retries <= 32) {
+		while ($this->response->getCode() == 429 && $this->retries <= 24) {
 			sleep(1);
-			$this->setCurl()->execute();
+			return $this->setCurl()->execute();
 		}
-		if (in_array($this->response->getCode(), [502,504])) {
+		if (in_array($this->response->getCode(), [502,504]) && $this->retry) {
 			sleep(1);
             $this->setCurl();
 			$this->setRetry(false);

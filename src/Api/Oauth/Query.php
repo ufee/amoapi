@@ -48,6 +48,16 @@ class Query extends QueryModel
         );
         curl_close($this->curl);
 
+		while ($this->response->getCode() == 429 && $this->retries <= 24) {
+			sleep(1);
+			return $this->setCurl()->execute();
+		}
+		if (in_array($this->response->getCode(), [502,504]) && $this->retry) {
+			sleep(1);
+            $this->setCurl();
+			$this->setRetry(false);
+            return $this->execute();
+		}
         $this->attributes['end_time'] = microtime(true);
         $this->attributes['execution_time'] = round($this->end_time - $this->start_time, 5);
         $this->attributes['memory_usage'] = memory_get_peak_usage(true)/1024/1024;

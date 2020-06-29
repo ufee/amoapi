@@ -206,6 +206,15 @@ class QueryModel
         }
 		return $headers;
 	}
+	
+    /**
+     * Get retries
+     * @return integer
+     */
+    public function getRetries()
+    {
+		return $this->retries;
+	}
 
     /**
      * Get url link

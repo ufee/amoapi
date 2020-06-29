@@ -117,7 +117,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
                 $query->headers,
                 count($query->json_data) ? $query->json_data : $query->post_data,
                 'Start: '.$query->startDate('H:i:s').' ('.$query->start_time.')',
-                'End:   '.$query->endDate('H:i:s').' ('.$query->end_time.')',
+                'End:   '.$query->endDate('H:i:s').' ('.$query->end_time.'), retries: '.$query->getRetries(),
                 'Execution time: '.$query->execution_time.' (sleep: '.(float)$query->sleep_time.')',
                 'Memory used: '.$query->memory_usage.' mb',
                 'Response code: '.$query->response->getCode(),
