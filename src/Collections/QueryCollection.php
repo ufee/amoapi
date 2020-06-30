@@ -84,13 +84,18 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
      */
     public function cachePath($val)
     {
+		$instanceClass = get_class($this->instance);
         $this->cache_path = $val.'/'.$this->instance->getAuth('domain');
+		
         if (!file_exists($this->cache_path)) {
             mkdir($this->cache_path, 0777, true);
         }
         if ($caches = glob($this->cache_path.'/*.'.$this->instanceName.'.cache')) {
             foreach ($caches as $cache_file) {
                 if ($cacheQuery = unserialize(file_get_contents($cache_file))) {
+					if (!$instanceClass::hasInstance($cacheQuery->account_id)) {
+						continue;
+					}
                     $service = $cacheQuery->getService();
                     if ($service::canCache() && microtime(1)-$cacheQuery->end_time <= $service::cacheTime()) {
                         array_push($this->items, $cacheQuery);

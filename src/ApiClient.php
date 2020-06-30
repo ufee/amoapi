@@ -77,6 +77,16 @@ class ApiClient
 	}
 	
     /**
+     * Has account isset
+	 * @param string $client_id
+	 * @return bool
+     */
+    public static function hasInstance($client_id)
+    {
+		return isset(self::$_instances[$client_id]);
+	}
+	
+    /**
      * Get Service
 	 * @param string $target
      */
