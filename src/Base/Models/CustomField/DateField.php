@@ -3,7 +3,6 @@
  * amoCRM Entity custom field type - 6
  */
 namespace Ufee\Amo\Base\Models\CustomField;
-use Ufee\Amo\Amoapi;
 
 class DateField extends EntityField
 {
@@ -16,7 +15,7 @@ class DateField extends EntityField
 		if (!$date = $this->getValue()) {
 			return null;
 		}
-		$date = new \DateTime($date, new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		$date = new \DateTime($date, new \DateTimeZone($this->field->instance()->getAuth('timezone')));
 		return $date->format($format);
 	}
 		
@@ -29,7 +28,7 @@ class DateField extends EntityField
 		if (!$date = $this->getValue()) {
 			return null;
 		}
-		$date = new \DateTime($date, new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		$date = new \DateTime($date, new \DateTimeZone($this->field->instance()->getAuth('timezone')));
 		return $date->getTimestamp();
 	}
 		

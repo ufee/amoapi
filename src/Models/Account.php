@@ -30,6 +30,31 @@ class Account extends \Ufee\Amo\Base\Models\Model
 		];
 	
     /**
+     * Constructor
+	 * @param mixed $data
+	 * @param Service $service
+     */
+    public function __construct($data, \Ufee\Amo\Base\Services\Service &$service)
+    {
+        foreach ($this->system as $field_key) {
+			$this->attributes[$field_key] = null;
+		}
+        foreach ($this->hidden as $field_key) {
+			$this->attributes[$field_key] = null;
+		}
+        foreach ($this->writable as $field_key) {
+			$this->attributes[$field_key] = null;
+		}
+        foreach ($data as $field_key=>$val) {
+			if (array_key_exists($field_key, $this->attributes)) {
+				$this->attributes[$field_key] = $val;
+			}
+		}
+		$this->attributes['service'] = $service;
+		$this->_boot($data);
+	}
+	
+    /**
      * Model on load
 	 * @param array $data
 	 * @return void
@@ -79,7 +104,5 @@ class Account extends \Ufee\Amo\Base\Models\Model
 			$catalogCustomFields,
 			$this
 		);
-
-		
 	}
 }

@@ -11,7 +11,7 @@ class CompaniesCustomFieldCollection extends CustomFieldCollection
         'Phone' => 'Ufee\Amo\Base\Models\CustomField\PhoneField',
         'Email' =>'Ufee\Amo\Base\Models\CustomField\EmailField',
         'Мгн. сообщения' =>'Ufee\Amo\Base\Models\CustomField\ImField',
-        'IM' =>'Ufee\Amo\Base\Models\CustomField\ImField',
+        'IM' =>'Ufee\Amo\Base\Models\CustomField\ImField'
     ];
     
     /**

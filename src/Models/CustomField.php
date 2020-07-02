@@ -3,11 +3,14 @@
  * amoCRM Custom field
  */
 namespace Ufee\Amo\Models;
+use Ufee\Amo\Amoapi;
+use Ufee\Amo\Oauthapi;
 
 class CustomField extends \Ufee\Amo\Base\Models\Model
 {
 	protected 
 		$system = [
+			'client_id',
 			'id',
 			'name',
 			'field_type',
@@ -43,5 +46,15 @@ class CustomField extends \Ufee\Amo\Base\Models\Model
     public function isEditable()
     {
 		return (bool)$this->is_editable;
+	}
+	
+    /**
+     * Get Amoapi instance
+	 * @return ApiClient
+     */
+    public function instance()
+    {
+		$apiClass = is_numeric($this->client_id) ? Amoapi::class : Oauthapi::class;
+		return $apiClass::getInstance($this->client_id);
 	}
 }

@@ -35,7 +35,9 @@ class CustomFieldCollection extends CollectionWrapper
     public function __construct(Array $elements = [], \Ufee\Amo\Models\Account &$account)
     {
 		$this->collection = new \Ufee\Amo\Base\Collections\Collection($elements);
-		$this->collection->each(function(&$item) {
+		$client_id = $account->service->instance->getAuth('id');
+		$this->collection->each(function(&$item) use(&$client_id) {
+			$item->client_id = $client_id;
 			$item = new CustomField($item);
 		});
 		$this->attributes['account'] = $account;

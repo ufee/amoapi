@@ -61,7 +61,7 @@ class Task extends \Ufee\Amo\Base\Models\ApiModel
      */
     public function hasExpired()
     {
-		$date = new \DateTime('now', new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		$date = new \DateTime('now', new \DateTimeZone($this->service->instance->getAuth('timezone')));
 		return !$this->is_completed && $date->format('Y-m-d H:i') > $this->endDate('Y-m-d H:i');
 	}
 
@@ -76,7 +76,7 @@ class Task extends \Ufee\Amo\Base\Models\ApiModel
 		if (date('H:i', $this->complete_till_at) == '23:59') {
 			$date->setTime(0,0,0);
 		}
-		$date->setTimezone(new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		$date->setTimezone(new \DateTimeZone($this->service->instance->getAuth('timezone')));
 		return $date->format($format);
 	}
 
@@ -88,7 +88,7 @@ class Task extends \Ufee\Amo\Base\Models\ApiModel
     {
 		$date = new \DateTime();
 		$date->setTimestamp($this->complete_till_at+$this->duration);
-		$date->setTimezone(new \DateTimeZone(Amoapi::getInstance($this->account_id)->getAuth('timezone')));
+		$date->setTimezone(new \DateTimeZone($this->service->instance->getAuth('timezone')));
 		return $date->format($format);
 	}
 
