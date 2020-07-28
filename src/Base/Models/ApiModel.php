@@ -199,5 +199,9 @@ class ApiModel extends Model
 		if ($this->hasAttribute('tags')) {
 			$this->setChanged('tags');
 		}
+		if ($this->hasAttribute('loss_reason_id') && $this->hasAttribute('loss_reason_name')) {
+			$this->loss_reason_id = null;
+			$this->loss_reason_name = null;
+		}
 	}
 }
