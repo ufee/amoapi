@@ -64,7 +64,7 @@ class QueryModel extends \Ufee\Amo\Base\Models\QueryModel
 		$this->attributes['curl'] = \curl_init();
 		curl_setopt_array($this->curl, [
 			CURLOPT_AUTOREFERER => true,
-			CURLOPT_USERAGENT => 'Amoapi v.'.$instance::VERSION.' ('.$instance->getAuth('domain').'/'.$instance->getAuth('zone').')',
+			CURLOPT_USERAGENT => 'Amoapi v.'.$instance::VERSION.' ('.$instance->getAuth('lang').'/'.$instance->getAuth('zone').')',
 			CURLOPT_SSL_VERIFYHOST => 2,
 			CURLOPT_SSL_VERIFYPEER => 1,
 			CURLOPT_RETURNTRANSFER => true,

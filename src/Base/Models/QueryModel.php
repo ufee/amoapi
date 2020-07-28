@@ -77,7 +77,7 @@ class QueryModel
 		$this->attributes['curl'] = \curl_init();
 		curl_setopt_array($this->curl, [
 			CURLOPT_AUTOREFERER => true,
-			CURLOPT_USERAGENT => 'Amoapi v.'.$instance::VERSION.' ('.$instance->getAuth('domain').'/'.$instance->getAuth('zone').')',
+			CURLOPT_USERAGENT => 'Amoapi v.'.$instance::VERSION.' ('.$instance->getAuth('lang').'/'.$instance->getAuth('zone').')',
 			CURLOPT_SSL_VERIFYHOST => 0,
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_RETURNTRANSFER => true,
