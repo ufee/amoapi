@@ -53,7 +53,7 @@ $amo->setOauth([
 	'refresh_token' => 'a89iHvS9uR4...'
 ]);
 ```
-#### Настоятельно рекомендуется использовать cвой путь для кеширования oauth данных, в противном случае токены будут сохранены в директории общего кеша (/vendor/ufee/amoapi/src/Cache/) и будут УДАЛЕНЫ composer'ом при обновлении на новую версию.
+Свой путь для кеширования oauth данных
 ```php
 $amo->setOauthPath('path_to/oauth');
 ```
@@ -63,6 +63,12 @@ $amo->setOauthPath('path_to/oauth');
 ```php
 $oauth = $amo->refreshAccessToken($refresh_token = null); // при передаче null используются кешированные oauth данные
 ```
+Вызов callback функции при автоматическом обновлении токена доступа
+```php
+$amo->onAccessTokenRefresh(function($oauth) {
+	print_r($oauth); // ['token_type' => 'Bearer','expires_in' => 86400, ...]
+});
+```
 После первичного выполнения метода fetchAccessToken(), можно пользоваться клиентом в обычном режиме  
 Повторное выполнение метода fetchAccessToken() или setOauth() необходимо только в случаях, если:
 1) Изменились ключи доступа в приложении
@@ -71,7 +77,6 @@ $oauth = $amo->refreshAccessToken($refresh_token = null); // при переда
 4) Получена ошибка авторизации
 
 Рекомендуется убедиться в отсутствии публичного доступа к папке с кешем - /vendor/ufee/amoapi/src/Cache/  
-(если используется директория по умолчанию)
 
 Обмен API ключа на код авторизации oAuth
 ```php
