@@ -12,6 +12,7 @@ class Oauthapi extends ApiClient
 	
 	private $oauth_path = '/Cache';
 	private $_oauth = null;
+	private $_token_refresh_callback;
 
     /**
      * Constructor
@@ -156,8 +157,22 @@ class Oauthapi extends ApiClient
 			throw new \Exception('Refresh access token error: '.$data->hint, $response->getCode());
 		}
 		$oauth = (array)$data;
+        if (is_callable($this->_token_refresh_callback)) {
+            call_user_func($this->_token_refresh_callback, $oauth);
+        }
 		$this->setOauth($oauth);
 		return $oauth;
+	}
+	
+    /**
+     * On access token refresh callback
+	 * @param callable $callback
+	 * @return Oauthapi
+     */
+    public function onAccessTokenRefresh(callable $callback)
+    {
+		$this->_token_refresh_callback = $callback;
+		return $this;
 	}
 
     /**
