@@ -19,7 +19,7 @@ vendor/bin/phpunit vendor/ufee/amoapi
 Хранение oauth токена возможно в нескольких вариантах
 #### Файловое хранилище
 Используется по умолчанию (/vendor/ufee/amoapi/src/Cache/), можно задать свой путь  
-Создается поддиректория: <path>/<domain>/<client_id>.json  
+Создается поддиректория: {path}/{domain}/{client_id}.json  
 Настоятельно рекомендуется использовать cвой путь для кеширования, в противном случае данные будут УДАЛЕНЫ composer'ом при обновлении на новую версию.
 ```php
 \Ufee\Amo\Oauthapi::setOauthStorage(
@@ -28,7 +28,7 @@ vendor/bin/phpunit vendor/ufee/amoapi
 ```
 #### Redis
 Поддерживается библиотека [phpredis](https://github.com/phpredis/phpredis)   
-Формат ключа: <domain>_<client_id>
+Формат ключа: {domain}_{client_id}
 ```php
 $redis = new \Redis();
 $redis->connect('/var/run/redis/redis.sock');
