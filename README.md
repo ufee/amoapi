@@ -16,7 +16,86 @@ composer require --dev phpunit/phpunit ^5
 vendor/bin/phpunit vendor/ufee/amoapi
 ```
 ## Инициализация клиента по oAuth
-Получение объекта для работы с конкретным аккаунтом
+Хранение oauth токена возможно в нескольких вариантах
+#### Файловое хранилище
+Используется по умолчанию (/vendor/ufee/amoapi/src/Cache/), можно задать свой путь  
+Создается поддиректория: <path>/<domain>/<client_id>.json  
+Настоятельно рекомендуется использовать cвой путь для кеширования, в противном случае данные будут УДАЛЕНЫ composer'ом при обновлении на новую версию.
+```php
+\Ufee\Amo\Oauthapi::setOauthStorage(
+	new \Ufee\Amo\Base\Storage\Oauth\FileStorage(['path' => '/full/oauth/path'])
+);
+```
+#### Redis
+Поддерживается библиотека [phpredis](https://github.com/phpredis/phpredis)   
+Формат ключа: <domain>_<client_id>
+```php
+$redis = new \Redis();
+$redis->connect('/var/run/redis/redis.sock');
+$redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+$redis->select(5); // switch to specific db
+
+\Ufee\Amo\Oauthapi::setOauthStorage(
+	new \Ufee\Amo\Base\Storage\Oauth\RedisStorage(['connection' => $redis])
+);
+```
+#### MongoDB
+Поддерживается библиотека [mongodb](https://github.com/mongodb/mongo-php-library)   
+```php
+$mongo = new \MongoDB\Client('mongodb://host');
+$collection = $mongo->selectCollection('database', 'some_collection');
+
+\Ufee\Amo\Oauthapi::setOauthStorage(
+	new \Ufee\Amo\Base\Storage\Oauth\MongoDbStorage(['collection' => $collection])
+);
+```
+#### Наследование хранилища
+Реализуется класс, наследующий \Ufee\Amo\Base\Storage\Oauth\AbstractStorage
+```php
+class CustomOauthStorage extends \Ufee\Amo\Base\Storage\Oauth\AbstractStorage
+{
+	protected function initClient(Oauthapi $client) {
+		parent::initClient($client);
+		$key = $client->getAuth('domain').'_'.$client->getAuth('client_id');
+		if ($data = getClientOauthData($key)) {
+			static::$_oauth[$key] = $data;
+		}
+	}
+	public function setOauthData(Oauthapi $client, array $oauth) {
+		parent::setOauthData($client, $oauth);
+		$key = $client->getAuth('domain').'_'.$client->getAuth('client_id');
+		return setClientOauthData($key, $oauth);
+	}
+}
+\Ufee\Amo\Oauthapi::setOauthStorage(
+	new CustomOauthStorage()
+);
+```
+#### Стороннее хранение
+Кеширование oauth данных библиотекой не производится
+```php
+\Ufee\Amo\Oauthapi::setOauthStorage(
+	new \Ufee\Amo\Base\Storage\Oauth\AbstractStorage()
+);
+$amo = \Ufee\Amo\Oauthapi::setInstance([...]);
+$first_token = $amo->fetchAccessToken($code);
+saveToCustomStorage($first_token);
+$last_saved_token = getFromCustomStorage();
+$amo->setOauth($last_saved_token);
+$amo->onAccessTokenRefresh(function($oauth) {
+	saveToCustomStorage($oauth);
+});
+```
+#### Deprecated
+Задать свой путь для кеширования oauth данных (устаревший метод)
+```php
+$amo->setOauthPath('path_to/oauth');
+// equal to new method
+\Ufee\Amo\Oauthapi::setOauthStorage(
+    new \Ufee\Amo\Base\Storage\Oauth\FileStorage(['path' => 'path_to/oauth'])
+);
+```
+#### Получение объекта для работы с конкретным аккаунтом
 ```php
 $amo = \Ufee\Amo\Oauthapi::setInstance([
     'domain' => 'testdomain',
@@ -38,27 +117,24 @@ $amo = \Ufee\Amo\Oauthapi::getInstance('b6cf0658-b19...');
 $first_auth_url = $amo->getOauthUrl($arg = ['mode' => 'popup', 'state' => 'amoapi']);
 ```
 Получение oauth данных - access_token, refresh_token производится единоразово, по коду авторизации  
-Полученные данные oauth кешируются в файлах, применяются при API запросах автоматически  
-Пользовательское сохранение данных не требуется
+Полученные данные oauth кешируются в соответствии с выбранным хранилищем  
+Применяются при API запросах автоматически  
 ```php
 $oauth = $amo->fetchAccessToken($code);
 ```
-При небходимости можно задать oauth данные принудительно, вручную  
-Данные также будут кешированы автоматически
+При необходимости можно задать oauth данные принудительно, вручную  
+Данные также будут кешированы автоматически в соответствии с выбранным хранилищем 
 ```php
 $amo->setOauth([
 	'token_type' => 'Bearer',
 	'expires_in' => 86400,
 	'access_token' => 'bKSuyc4u6oi...',
-	'refresh_token' => 'a89iHvS9uR4...'
+	'refresh_token' => 'a89iHvS9uR4...',
+	'created_at' => 1597678161
 ]);
 ```
-#### Настоятельно рекомендуется использовать cвой путь для кеширования oauth данных, в противном случае токены будут сохранены в директории общего кеша (/vendor/ufee/amoapi/src/Cache/) и будут УДАЛЕНЫ composer'ом при обновлении на новую версию.
-```php
-$amo->setOauthPath('path_to/oauth');
-```
 Токен доступа обновляется автоматически, если срок действия refresh_token не истек  
-При небходимости можно обновить oauth данные по refresh_token принудительно, вручную  
+При необходимости можно обновить oauth данные по refresh_token принудительно, вручную  
 Новые oauth данные также будут кешированы автоматически
 ```php
 $oauth = $amo->refreshAccessToken($refresh_token = null); // при передаче null используются кешированные oauth данные

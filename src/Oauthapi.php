@@ -5,14 +5,14 @@
  * @version 0.9
  */
 namespace Ufee\Amo;
+use Ufee\Amo\Base\Storage\Oauth;
 
 class Oauthapi extends ApiClient
 {
 	const VERSION = 9;
 	
-	private $oauth_path = '/Cache';
-	private $_oauth = null;
 	private $_token_refresh_callback;
+	private static $_oauthStorage;
 
     /**
      * Constructor
@@ -21,7 +21,12 @@ class Oauthapi extends ApiClient
     private function __construct(Array $account)
     {
 		$this->_account = $account;
-		$this->setOauthPath(AMOAPI_ROOT.$this->oauth_path);
+		
+		if (!static::$_oauthStorage) {
+			static::setOauthStorage(
+				new Oauth\FileStorage(['path' => AMOAPI_ROOT.'/Cache'])
+			);
+		}
     }
 
     /**
@@ -47,13 +52,7 @@ class Oauthapi extends ApiClient
      */
     public function getOauth($key = null)
     {
-		if (is_null($this->_oauth)) {
-			$this->initOauth();
-		}
-		if (!is_null($key) && array_key_exists($key, $this->_oauth)) {
-			return $this->_oauth[$key];
-		}
-		return $this->_oauth;
+		return $this->getOauthStorage()->getOauthData($this, $key);
 	}
 	
     /**
@@ -63,42 +62,9 @@ class Oauthapi extends ApiClient
      */
     public function setOauth(array $oauth)
     {
-		$oauth['created_at'] = time();
-		$this->_oauth = $oauth;
-        return file_put_contents($this->oauth_path.'/'.$this->getAuth('client_id').'.json', json_encode($oauth));
+		return $this->getOauthStorage()->setOauthData($this, $oauth);
     }
-	
-    /**
-     * Init oauth data
-     */
-    private function initOauth()
-    {
-		$this->_oauth = [
-			'token_type' => '',
-			'expires_in' => 0,
-			'created_at' => 0,
-			'access_token' => '',
-			'refresh_token' => ''
-		];
-		if (file_exists($this->oauth_path.'/'.$this->getAuth('client_id').'.json')) {
-			$this->_oauth = json_decode(file_get_contents($this->oauth_path.'/'.$this->getAuth('client_id').'.json'), true);
-		}
-	}
-	
-    /**
-     * Set oauth cache path
-	 * @param string $val
-     * @return Oauthapi
-     */
-    public function setOauthPath($val)
-    {
-		$this->oauth_path = $val.'/'.$this->getAuth('domain');
-        if (!file_exists($this->oauth_path)) {
-            mkdir($this->oauth_path, 0777, true);
-        }
-        return $this;
-	}
-	
+
     /**
      * Get access token by code
 	 * @param string $code
@@ -123,6 +89,7 @@ class Oauthapi extends ApiClient
 			throw new \Exception('Fetch access token error: '.$data->hint, $response->getCode());
 		}
 		$oauth = (array)$data;
+		$oauth['created_at'] = time();
 		$this->setOauth($oauth);
 		return $oauth;
 	}
@@ -157,6 +124,8 @@ class Oauthapi extends ApiClient
 			throw new \Exception('Refresh access token error: '.$data->hint, $response->getCode());
 		}
 		$oauth = (array)$data;
+		$oauth['created_at'] = time();
+		
         if (is_callable($this->_token_refresh_callback)) {
             call_user_func($this->_token_refresh_callback, $oauth);
         }
@@ -190,6 +159,38 @@ class Oauthapi extends ApiClient
 			$arg[$key] = isset($data[$key]) ? $data[$key] : $val;
 		}
 		return 'https://amocrm.'.$this->getAuth('zone').'/oauth?client_id='.$this->getAuth('client_id').'&mode='.$arg['mode'].'&state='.$arg['state'];
+	}
+	
+    /**
+     * Set oauth cache path - deprecated
+	 * @param string $path
+     * @return Oauthapi
+     */
+    public function setOauthPath($path)
+    {
+		static::setOauthStorage(
+			new Oauth\FileStorage(['path' => $path])
+		);
+		return $this;
+	}
+	
+	/**
+     * Get oauth storage handler
+	 * @return AbstractStorage
+     */
+    public static function getOauthStorage()
+    {
+		return static::$_oauthStorage;
+	}
+	
+	/**
+     * Set oauth storage handler
+	 * @param AbstractStorage $storage
+	 * @return void
+     */
+    public static function setOauthStorage(Oauth\AbstractStorage $storage)
+    {
+		static::$_oauthStorage = $storage;
 	}
 
 	/**

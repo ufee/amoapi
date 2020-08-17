@@ -29,6 +29,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 		$this->instanceName = substr(strrchr(get_class($instance), "\\"), 1);
         $this->logger = Api\Logger::getInstance($instance->getAuth('domain').'.log');
         $this->cachePath(AMOAPI_ROOT.$this->cache_path);
+		
 		if ($instance instanceof Amoapi) {
 			$this->cookie_file = AMOAPI_ROOT.DIRECTORY_SEPARATOR.'Cookies'.DIRECTORY_SEPARATOR.$instance->getAuth('domain').'.cookie';
 			$this->refreshSession();
