@@ -24,7 +24,8 @@ class CustomFieldCollection extends CollectionWrapper
         15 => 'Ufee\Amo\Base\Models\CustomField\JurField',
         17 => 'Ufee\Amo\Base\Models\CustomField\OrgField',
         18 => 'Ufee\Amo\Base\Models\CustomField\CategoryField',
-        19 => 'Ufee\Amo\Base\Models\CustomField\CalendarField'
+        19 => 'Ufee\Amo\Base\Models\CustomField\CalendarField',
+		20 => 'Ufee\Amo\Base\Models\CustomField\NumericField'
 	];
 	
     /**
