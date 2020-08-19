@@ -59,11 +59,11 @@ class ApiClient
 	];
 	protected $_account;
 	
-    /**
-     * Call Service Methods
+	/**
+	 * Call Service Methods
 	 * @param string $service_name
 	 * @param array $args
-     */
+	 */
 	public function __call($service_name, $args)
 	{
 		if (!in_array($service_name, $this->services)) {
@@ -76,20 +76,33 @@ class ApiClient
 		return $service;
 	}
 	
-    /**
-     * Has account isset
+	/**
+	 * Has account isset
 	 * @param string $client_id
 	 * @return bool
-     */
-    public static function hasInstance($client_id)
-    {
+	 */
+	public static function hasInstance($client_id)
+	{
 		return isset(self::$_instances[$client_id]);
 	}
 	
-    /**
-     * Get Service
+	/**
+	 * Has account isset
+	 * @param string $client_id
+	 * @return ApiClient
+	 */
+	public static function removeInstance($client_id)
+	{
+		if (isset(self::$_instances[$client_id])) {
+			self::$_instances[$client_id] = null;
+		}
+		unset(self::$_instances[$client_id]);
+	}
+	
+	/**
+	 * Get Service
 	 * @param string $target
-     */
+	 */
 	public function __get($target)
 	{
 		if ($target === 'queries') {

@@ -14,12 +14,12 @@ class Oauthapi extends ApiClient
 	private $_token_refresh_callback;
 	private static $_oauthStorage;
 
-    /**
-     * Constructor
+	/**
+	 * Constructor
 	 * @param array $account
-     */
-    private function __construct(Array $account)
-    {
+	 */
+	private function __construct(Array $account)
+	{
 		$this->_account = $account;
 		
 		if (!static::$_oauthStorage) {
@@ -27,15 +27,15 @@ class Oauthapi extends ApiClient
 				new Oauth\FileStorage(['path' => AMOAPI_ROOT.'/Cache'])
 			);
 		}
-    }
+	}
 
-    /**
-     * Get account data
+	/**
+	 * Get account data
 	 * @param string|null $key
 	 * @return string|array
-     */
-    public function getAuth($key = null)
-    {
+	 */
+	public function getAuth($key = null)
+	{
 		if ($key == 'id') {
 			return $this->_account['client_id'];
 		}
@@ -45,33 +45,33 @@ class Oauthapi extends ApiClient
 		return $this->_account;
 	}
 
-    /**
-     * Get oauth access data
+	/**
+	 * Get oauth access data
 	 * @param string|null $key
 	 * @return string|array
-     */
-    public function getOauth($key = null)
-    {
+	 */
+	public function getOauth($key = null)
+	{
 		return $this->getOauthStorage()->getOauthData($this, $key);
 	}
 	
-    /**
-     * Set oauth data
+	/**
+	 * Set oauth data
 	 * @param array $oauth
 	 * @return bool
-     */
-    public function setOauth(array $oauth)
-    {
+	 */
+	public function setOauth(array $oauth)
+	{
 		return $this->getOauthStorage()->setOauthData($this, $oauth);
-    }
+	}
 
-    /**
-     * Get access token by code
+	/**
+	 * Get access token by code
 	 * @param string $code
 	 * @return array
-     */
-    public function fetchAccessToken($code)
-    {
+	 */
+	public function fetchAccessToken($code)
+	{
 		$query = new \Ufee\Amo\Api\Oauth\Query($this);
 		$query->setUrl('/oauth2/access_token')
 			  ->setPostData([
@@ -94,13 +94,13 @@ class Oauthapi extends ApiClient
 		return $oauth;
 	}
 	
-    /**
-     * Get access token by refresh token
+	/**
+	 * Get access token by refresh token
 	 * @param string|null $refresh_token
 	 * @return array
-     */
-    public function refreshAccessToken($refresh_token = null)
-    {
+	 */
+	public function refreshAccessToken($refresh_token = null)
+	{
 		if (is_null($refresh_token)) {
 			$refresh_token = $this->getOauth('refresh_token');
 		}
@@ -126,31 +126,31 @@ class Oauthapi extends ApiClient
 		$oauth = (array)$data;
 		$oauth['created_at'] = time();
 		
-        if (is_callable($this->_token_refresh_callback)) {
-            call_user_func($this->_token_refresh_callback, $oauth);
-        }
+		if (is_callable($this->_token_refresh_callback)) {
+			call_user_func($this->_token_refresh_callback, $oauth);
+		}
 		$this->setOauth($oauth);
 		return $oauth;
 	}
 	
-    /**
-     * On access token refresh callback
+	/**
+	 * On access token refresh callback
 	 * @param callable $callback
 	 * @return Oauthapi
-     */
-    public function onAccessTokenRefresh(callable $callback)
-    {
+	 */
+	public function onAccessTokenRefresh(callable $callback)
+	{
 		$this->_token_refresh_callback = $callback;
 		return $this;
 	}
 
-    /**
-     * Get authorize url
+	/**
+	 * Get authorize url
 	 * @param array $data
 	 * @return string
-     */
-    public function getOauthUrl(array $data = [])
-    {
+	 */
+	public function getOauthUrl(array $data = [])
+	{
 		$arg = [
 			'mode' => 'popup',
 			'state' => 'amoapi'
@@ -161,13 +161,13 @@ class Oauthapi extends ApiClient
 		return 'https://amocrm.'.$this->getAuth('zone').'/oauth?client_id='.$this->getAuth('client_id').'&mode='.$arg['mode'].'&state='.$arg['state'];
 	}
 	
-    /**
-     * Set oauth cache path - deprecated
+	/**
+	 * Set oauth cache path - deprecated
 	 * @param string $path
-     * @return Oauthapi
-     */
-    public function setOauthPath($path)
-    {
+	 * @return Oauthapi
+	 */
+	public function setOauthPath($path)
+	{
 		static::setOauthStorage(
 			new Oauth\FileStorage(['path' => $path])
 		);
@@ -175,33 +175,33 @@ class Oauthapi extends ApiClient
 	}
 	
 	/**
-     * Get oauth storage handler
+	 * Get oauth storage handler
 	 * @return AbstractStorage
-     */
-    public static function getOauthStorage()
-    {
+	 */
+	public static function getOauthStorage()
+	{
 		return static::$_oauthStorage;
 	}
 	
 	/**
-     * Set oauth storage handler
+	 * Set oauth storage handler
 	 * @param AbstractStorage $storage
 	 * @return void
-     */
-    public static function setOauthStorage(Oauth\AbstractStorage $storage)
-    {
+	 */
+	public static function setOauthStorage(Oauth\AbstractStorage $storage)
+	{
 		static::$_oauthStorage = $storage;
 	}
 
 	/**
-     * Set account instance
+	 * Set account instance
 	 * @param array $data
 	 * @return Oauthapi
-     */
-    public static function setInstance(Array $data)
-    {
-        if (empty($data) || empty($data['client_id'])) {
-            throw new \Exception('Incorrect amoCRM oauth data');
+	 */
+	public static function setInstance(Array $data)
+	{
+		if (empty($data) || empty($data['client_id'])) {
+			throw new \Exception('Incorrect amoCRM oauth data');
 		}
 		$account = [
 			'domain' => '',
@@ -215,22 +215,20 @@ class Oauthapi extends ApiClient
 		foreach ($account as $key=>$val) {
 			$account[$key] = isset($data[$key]) ? $data[$key] : $val;
 		}
-        if (!isset(self::$_instances[$account['client_id']])) {
-			self::$_instances[$account['client_id']] = new static($account);
-		}
+		self::$_instances[$account['client_id']] = new static($account);
 		$instance = self::getInstance($account['client_id']);
 		self::$_queries[$account['client_id']] = new Collections\QueryCollection();
 		self::$_queries[$account['client_id']]->boot($instance);
-        return $instance;
+		return $instance;
 	}
 
-    /**
-     * Get account instance
+	/**
+	 * Get account instance
 	 * @param string $client_id
 	 * @return Oauthapi
-     */
-    public static function getInstance($client_id)
-    {
+	 */
+	public static function getInstance($client_id)
+	{
 		if (!isset(self::$_instances[$client_id])) {
 			throw new \Exception('Account not found: '.$client_id);
 		}

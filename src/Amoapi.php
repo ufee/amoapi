@@ -18,34 +18,34 @@ class Amoapi extends ApiClient
 		'modified_at' => 0
 	];
 	
-    /**
-     * Constructor
+	/**
+	 * Constructor
 	 * @param array $account
-     */
-    private function __construct(Array $account)
-    {
+	 */
+	private function __construct(Array $account)
+	{
 		$this->_account = $account;
-    }
+	}
 	
-    /**
-     * Get account auth data
+	/**
+	 * Get account auth data
 	 * @param string|null $key
 	 * @return array
-     */
-    public function getAuth($key = null)
-    {
+	 */
+	public function getAuth($key = null)
+	{
 		if (!is_null($key) && isset($this->_account[$key])) {
 			return $this->_account[$key];
 		}
 		return $this->_account;
 	}
 
-    /**
-     * Create auth session
+	/**
+	 * Create auth session
 	 * @return Amoapi
-     */
-    public function authorize()
-    {
+	 */
+	public function authorize()
+	{
 		$this->session['id'] = null;
 		$this->session['modified_at'] = 0;
 		$query = new Api\Query($this);
@@ -76,57 +76,57 @@ class Amoapi extends ApiClient
 		return $this;
 	}
 
-    /**
-     * Set auto authorize
+	/**
+	 * Set auto authorize
 	 * @param bool $value
 	 * @return bool
-     */
-    public function autoAuth($value = true)
-    {
-        return $this->auto_auth = (bool)$value;
+	 */
+	public function autoAuth($value = true)
+	{
+		return $this->auto_auth = (bool)$value;
 	}
 
-    /**
-     * Has auto authorize
+	/**
+	 * Has auto authorize
 	 * @return bool
-     */
-    public function hasAutoAuth()
-    {
-        return $this->auto_auth;
+	 */
+	public function hasAutoAuth()
+	{
+		return $this->auto_auth;
 	}
 
-    /**
-     * Set session
+	/**
+	 * Set session
 	 * @param string $id
 	 * @param integer $modified
 	 * @return Amoapi
-     */
-    public function setSession($id, $modified)
-    {
+	 */
+	public function setSession($id, $modified)
+	{
 		$this->session['id'] = $id;
 		$this->session['modified_at'] = $modified;
 		return $this;
 	}
 
-    /**
-     * Has session exists
+	/**
+	 * Has session exists
 	 * @return bool
-     */
-    public function hasSession()
-    {
+	 */
+	public function hasSession()
+	{
 		$seconds = time()-$this->session['modified_at'];
-        return !is_null($this->session['id']) && $seconds < self::SESS_LIFETIME;
+		return !is_null($this->session['id']) && $seconds < self::SESS_LIFETIME;
 	}
 
 	/**
-     * Set account instance
+	 * Set account instance
 	 * @param array $data
 	 * @return Amoapi
-     */
-    public static function setInstance(Array $data)
-    {
-        if (empty($data)) {
-            throw new \Exception('Incorrect amoCRM account data');
+	 */
+	public static function setInstance(Array $data)
+	{
+		if (empty($data)) {
+			throw new \Exception('Incorrect amoCRM account data');
 		}
 		if (empty($data['zone'])) {
 			$data['zone'] = 'ru';
@@ -146,22 +146,22 @@ class Amoapi extends ApiClient
 			}
 			$account[$key] = $data[$key];
 		}
-        if (!isset(self::$_instances[$account['id']])) {
+		if (!isset(self::$_instances[$account['id']])) {
 			self::$_instances[$account['id']] = new static($account);
 		}
 		$instance = self::getInstance($account['id']);
 		self::$_queries[$account['id']] = new Collections\QueryCollection();
 		self::$_queries[$account['id']]->boot($instance);
-        return $instance;
+		return $instance;
 	}
 
-    /**
-     * Get account instance
+	/**
+	 * Get account instance
 	 * @param integer $account_id
 	 * @return Amoapi
-     */
-    public static function getInstance($account_id)
-    {
+	 */
+	public static function getInstance($account_id)
+	{
 		if (!is_numeric($account_id)) {
 			throw new \Exception('Account id must be numeric: '.$account_id);
 		}
@@ -171,11 +171,11 @@ class Amoapi extends ApiClient
 		return self::$_instances[$account_id];
 	}
 	
-    /**
-     * Call Service Methods
+	/**
+	 * Call Service Methods
 	 * @param string $service_name
 	 * @param array $args
-     */
+	 */
 	public function __call($service_name, $args)
 	{
 		if (!in_array($service_name, $this->services)) {
@@ -188,10 +188,10 @@ class Amoapi extends ApiClient
 		return $service;
 	}
 	
-    /**
-     * Get Service
+	/**
+	 * Get Service
 	 * @param string $target
-     */
+	 */
 	public function __get($target)
 	{
 		if ($target === 'queries') {
