@@ -15,7 +15,7 @@ class NumericField extends EntityField
 		if (!isset($this->values[0])) {
 			return null;
 		}
-		return floatval($this->values[0]->value);
+		return $this->values[0]->value;
 	}
 
     /**
@@ -26,7 +26,7 @@ class NumericField extends EntityField
     {
         $values = [];
 		foreach ($this->values as $setted) {
-            $values[]= floatval($setted->value);
+            $values[]= $setted->value;
         }
         return $values;
     }
