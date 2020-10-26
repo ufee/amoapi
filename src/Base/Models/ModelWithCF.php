@@ -33,7 +33,7 @@ class ModelWithCF extends ApiModel
 			foreach($data->custom_fields as $cf) {
 				$cfs[$cf->id] = $cf;
 			}
-			$this->attributes['custom_fields'] = gzencode(serialize($cfs), 7);
+			$this->attributes['custom_fields'] = gzencode(serialize($cfs), 5);
 		}
 		$data = null;
 	}
