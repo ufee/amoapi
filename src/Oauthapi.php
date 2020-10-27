@@ -88,6 +88,9 @@ class Oauthapi extends ApiClient
 		if ($response->getCode() != 200 && !empty($data->hint)) {
 			throw new \Exception('Fetch access token error: '.$data->hint, $response->getCode());
 		}
+		if (!empty($data->status) && !empty($data->title) && !empty($data->detail)) {
+			throw new \Exception('Fetch access token error: '.$data->detail.' - '.$data->title, intval($data->status));
+		}
 		$oauth = (array)$data;
 		$oauth['created_at'] = time();
 		$this->setOauth($oauth);
@@ -122,6 +125,9 @@ class Oauthapi extends ApiClient
 		}
 		if ($response->getCode() != 200 && !empty($data->hint)) {
 			throw new \Exception('Refresh access token error: '.$data->hint, $response->getCode());
+		}
+		if (!empty($data->status) && !empty($data->title) && !empty($data->detail)) {
+			throw new \Exception('Refresh access token error: '.$data->detail.' - '.$data->title, intval($data->status));
 		}
 		$oauth = (array)$data;
 		$oauth['created_at'] = time();
