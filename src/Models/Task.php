@@ -13,6 +13,12 @@ class Task extends \Ufee\Amo\Base\Models\ApiModel
 	protected static 
 		$_type = 'task';
 	protected
+		$system = [
+		    'id',
+		    'account_id',
+		    'request_id',
+		    'updated_by'
+		],
 		$hidden = [
 			'query_hash',
 			'service',
