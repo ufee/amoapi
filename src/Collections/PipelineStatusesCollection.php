@@ -15,10 +15,10 @@ class PipelineStatusesCollection extends CollectionWrapper
      */
     public function __construct(Array $elements = [], Pipeline &$pipeline)
     {
-      $this->collection = new \Ufee\Amo\Base\Collections\Collection($elements);
-      $this->collection->each(function(&$item) use ($pipeline) {
-        $item = new PipelineStatus($item, $pipeline);
-      });
+    	$this->collection = new \Ufee\Amo\Base\Collections\Collection($elements);
+    	$this->collection->each(function(&$item) use ($pipeline) {
+     		$item = new PipelineStatus($item, $pipeline);
+    	});
 	}
 	
 	/**

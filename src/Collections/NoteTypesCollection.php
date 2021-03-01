@@ -13,7 +13,7 @@ class NoteTypesCollection extends \Ufee\Amo\Base\Collections\Collection
      */
     public function __construct(Array $elements = [], \Ufee\Amo\Models\Account &$account)
     {
-      $this->collection = new \Ufee\Amo\Base\Collections\Collection($elements);
-      $this->attributes['account'] = $account;
+    	$this->collection = new \Ufee\Amo\Base\Collections\Collection($elements);
+    	$this->attributes['account'] = $account;
     }
 }
