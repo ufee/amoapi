@@ -24,7 +24,7 @@ class PhoneField extends EntityField
 	 * @param string $value
      * @param string|integer $enum_key
      */
-    public function setValue($value, $enum_key = 'Other')
+    public function setValue($value, $enum_key = 'Work')
     {
         $value = trim($value);
 		if (is_numeric($enum_key) && isset($this->field->enums->{$enum_key})) {
