@@ -205,15 +205,20 @@ $amo->queries->setDelay(0.5); // default: 1 sec
 ```
 Свой путь для кеширования запросов
 ```php
-$amo->queries->cachePath('path_to/cache');
+\Ufee\Amo\Collections\QueryCollection::setCachePath('path_to/cache');
 ```
 Пользовательская отладка запросов (обновлено с вводом oAuth)
 ```php
 $amo->queries->listen(function(\Ufee\Amo\Base\Models\QueryModel $query) {
+    $code = $query->response->getCode();
     echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
     print_r($query->headers);
-    print_r(count($query->json_data) ? $query->json_data : $query->post_data);
-    echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
+    if ($code === 0) {
+        echo $query->response->getError()."\n\n";
+    } else {
+        print_r(count($query->json_data) ? $query->json_data : $query->post_data);
+        echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
+    }
 });
 ```
 ## Поиск сущностей
