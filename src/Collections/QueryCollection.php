@@ -7,13 +7,17 @@ use Ufee\Amo\ApiClient,
     Ufee\Amo\Api,
 	Ufee\Amo\Base\Models\QueryModel;
 
+if (!defined('AMOAPI_ROOT')) {
+	define('AMOAPI_ROOT', substr(dirname(__FILE__), 0, -12));
+}
 class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 {
+	protected static $_cache_path = AMOAPI_ROOT.'/Cache';
     protected 
         $instance,
 		$instanceName,
+		$cache_path,
         $delay = 1,
-        $cache_path = '/Cache',
         $cookie_file,
         $_listener,
         $logger = null,
@@ -28,7 +32,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         $this->instance = $instance;
 		$this->instanceName = substr(strrchr(get_class($instance), "\\"), 1);
         $this->logger = Api\Logger::getInstance($instance->getAuth('domain').'.log');
-        $this->cachePath(AMOAPI_ROOT.$this->cache_path);
+        $this->cachePath(self::$_cache_path);
 		
 		if ($instance instanceof Amoapi) {
 			$this->cookie_file = AMOAPI_ROOT.DIRECTORY_SEPARATOR.'Cookies'.DIRECTORY_SEPARATOR.$instance->getAuth('domain').'.cookie';
@@ -206,4 +210,14 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     {
         return file_put_contents($this->cache_path.'/'.$query->hash.'.'.$this->instanceName.'.cache', serialize($query));
     }
+	
+    /**
+     * Set cache path
+	 * @param string $val
+     * @return QueryCollection
+     */
+    public static function setCachePath($val)
+    {
+		self::$_cache_path = $val;
+	}
 }
