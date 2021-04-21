@@ -144,8 +144,12 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 			  ->setUrl($url)
 			  ->setArgs($args)
 			  ->execute();
-		if ($query->response->getCode() != 200) {
-			throw new \Exception('Invalid response code: '.$query->response->getCode(), $query->response->getCode());
+		$code = $query->response->getCode();
+		if (!in_array($code, [200, 204])) {
+			throw new \Exception('Invalid response code: '.$code, $code);
+		}
+		if ($code == 204) {
+			return true;
 		}
 		if ($data = $query->response->parseJson()) {
 			return $data;
@@ -178,8 +182,12 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 			$query->setPostData($data);
 		}
 		$query->execute();
-		if ($query->response->getCode() != 200) {
-			throw new \Exception('Invalid response code: '.$query->response->getCode(), $query->response->getCode());
+		$code = $query->response->getCode();
+		if (!in_array($code, [200, 202])) {
+			throw new \Exception('Invalid response code: '.$code, $code);
+		}
+		if ($code == 202) {
+			return true;
 		}
 		if ($data = $query->response->parseJson()) {
 			return $data;
@@ -218,8 +226,12 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 			  ->setJsonData($data)
 			  ->setArgs($args)
 			  ->execute();
-		if ($query->response->getCode() != 200) {
-			throw new \Exception('Invalid response code: '.$query->response->getCode(), $query->response->getCode());
+		$code = $query->response->getCode();
+		if (!in_array($code, [200, 202])) {
+			throw new \Exception('Invalid response code: '.$code, $code);
+		}
+		if ($code == 202) {
+			return true;
 		}
 		if ($data = $query->response->parseJson()) {
 			return $data;
