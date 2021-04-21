@@ -39,7 +39,6 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 			$this->cookie_file = AMOAPI_ROOT.DIRECTORY_SEPARATOR.'Cookies'.DIRECTORY_SEPARATOR.$instance->getAuth('domain').'.cookie';
 			$this->refreshSession();
 		}
-		print_r($this);
     }
 
     /**
