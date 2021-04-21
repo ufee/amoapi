@@ -106,9 +106,6 @@ class Service
 		if ($target === 'account') {
 			return $apiClass::getInstance($this->client_id)->account;
 		}
-		if ($target === 'queries') {
-			return $apiClass::getInstance($this->client_id)->queries->find('service', static::class);
-		}
 		if (!in_array($target, $this->methods)) {
 			throw new \Exception('Invalid method called: '.$target);
 		}

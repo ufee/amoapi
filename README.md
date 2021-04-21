@@ -197,7 +197,7 @@ $amo->queries->logs('path_to_log/queries'); // to custom path
 ```
 Не более 1 запроса за заданное время, в секундах
 ```php
-$amo->queries->setDelay(0.5); // default: 1 sec
+$amo->queries->setDelay(0.5); // default: 0.15 sec
 ```
 Запрос /api/v2/account кешируется в файлах, время указывается в секундах
 ```php

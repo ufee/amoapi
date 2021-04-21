@@ -17,11 +17,12 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         $instance,
 		$instanceName,
 		$cache_path,
-        $delay = 1,
+        $delay = 0.15,
         $cookie_file,
         $_listener,
         $logger = null,
-        $_logs = false;
+        $_logs = false,
+		$_cache_initialized = false;
     
     /**
      * Boot instance
@@ -38,6 +39,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 			$this->cookie_file = AMOAPI_ROOT.DIRECTORY_SEPARATOR.'Cookies'.DIRECTORY_SEPARATOR.$instance->getAuth('domain').'.cookie';
 			$this->refreshSession();
 		}
+		print_r($this);
     }
 
     /**
@@ -91,25 +93,6 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     {
 		$instanceClass = get_class($this->instance);
         $this->cache_path = $val.'/'.$this->instance->getAuth('domain');
-		
-        if (!file_exists($this->cache_path)) {
-            mkdir($this->cache_path, 0777, true);
-        }
-        if ($caches = glob($this->cache_path.'/*.'.$this->instanceName.'.cache')) {
-            foreach ($caches as $cache_file) {
-                if ($cacheQuery = unserialize(file_get_contents($cache_file))) {
-					if (!$instanceClass::hasInstance($cacheQuery->account_id)) {
-						continue;
-					}
-                    $service = $cacheQuery->getService();
-                    if ($service::canCache() && microtime(1)-$cacheQuery->end_time <= $service::cacheTime()) {
-                        array_push($this->items, $cacheQuery);
-                    } elseif(is_file($cache_file)) {
-                        @unlink($cache_file);
-                    }
-                }
-            }
-        }
         return $this;
 	}
     
@@ -146,6 +129,41 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         }
         return $this;
 	}
+	
+    /**
+     * Initialize cache queries
+	 * @return QueryCollection
+     */
+    public function initializeCache()
+    {
+        if (!file_exists($this->cache_path)) {
+            mkdir($this->cache_path, 0777, true);
+        }
+        if ($caches = glob($this->cache_path.'/*.'.$this->instanceName.'.cache')) {
+			$instanceClass = get_class($this->instance);
+            foreach ($caches as $cache_file) {
+				if (preg_match('#-expr([0-9]+).#', $cache_file, $m)) {
+					if (time() >= $m[1]) {
+						@unlink($cache_file);
+						continue;
+					}
+				}
+                if ($cacheQuery = unserialize(file_get_contents($cache_file))) {
+					if (!$instanceClass::hasInstance($cacheQuery->account_id)) {
+						continue;
+					}
+                    $service = $cacheQuery->getService();
+                    if ($service::canCache() && microtime(1)-$cacheQuery->end_time <= $service::cacheTime()) {
+                        array_push($this->items, $cacheQuery);
+                    } else if(is_file($cache_file)) {
+						@unlink($cache_file);
+                    }
+                }
+            }
+        }
+		$this->_cache_initialized = true;
+		return $this;
+	}
 
     /**
      * Get cached query
@@ -153,7 +171,10 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 	 * @return QueryModel|null
      */
 	public function getCached($hash)
-	{    
+	{
+		if (!$this->_cache_initialized && $this->cache_path) {
+			$this->initializeCache();
+		}
         $queries = $this->find('hash', $hash)->filter(function(QueryModel $query) {
             return $query->getService()->canCache() && microtime(1)-$query->end_time <= $query->getService()->cacheTime();
         });
@@ -208,7 +229,8 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
      */
     public function cacheQuery(QueryModel $query)
     {
-        return file_put_contents($this->cache_path.'/'.$query->hash.'.'.$this->instanceName.'.cache', serialize($query));
+		$expire_time = intval($query->end_time + $query->getService()->cacheTime());
+        return file_put_contents($this->cache_path.'/'.$query->hash.'-expr'.$expire_time.'.'.$this->instanceName.'.cache', serialize($query));
     }
 	
     /**

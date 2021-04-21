@@ -243,6 +243,7 @@ class QueryModel
 			$this->instance()->getAuth('hash').
 			$this->instance()->getAuth('zone').
 			$this->method.
+			$this->url.
 			json_encode($args).
 			json_encode($this->post_data).
 			json_encode($this->json_data)

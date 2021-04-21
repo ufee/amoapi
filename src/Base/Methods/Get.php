@@ -52,7 +52,7 @@ class Get extends Method
 			);
 		}
 		if ($this->service->canCache()) {
-			if ($cached = $this->service->queries->getCached($query->generateHash())) {
+			if ($cached = $this->service->instance->queries->getCached($query->generateHash())) {
 				return $this->parseResponse($cached);
 			}
 		}
