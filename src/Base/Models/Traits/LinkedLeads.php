@@ -78,8 +78,8 @@ trait LinkedLeads
      */
     protected function leads_access($leads)
     {
+		$service = $this->service->instance->leads();
 		if (is_null($this->attributes['leads'])) {
-			$service = $this->service->instance->leads();
 			$this->attributes['leads'] = new \Ufee\Amo\Collections\LeadCollection([], $service);
 		}
 		if ($this->hasLeads()) {
