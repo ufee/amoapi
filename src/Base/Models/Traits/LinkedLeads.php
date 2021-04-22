@@ -90,7 +90,14 @@ trait LinkedLeads
 				}
 			}
 			if (!empty($can_load_leads)) {
-				$this->attributes['leads'] = $this->leads()->call();
+				$chunks = array_chunk($this->leads_id, 400);
+				$leads = new \Ufee\Amo\Collections\LeadCollection([], $service);
+
+				foreach ($chunks as $chunk) {
+					$part = $this->service->instance->leads()->where('id', $chunk)->call();
+					$leads->merge($part);
+				}
+				$this->attributes['leads'] = $leads;
 			}
 		}
 		return $this->attributes['leads'];
