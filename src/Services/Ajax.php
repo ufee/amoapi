@@ -183,7 +183,7 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 		}
 		$query->execute();
 		$code = $query->response->getCode();
-		if (!in_array($code, [200, 202])) {
+		if (!in_array($code, [200, 201, 202])) {
 			throw new \Exception('Invalid response code: '.$code, $code);
 		}
 		if ($code == 202) {
