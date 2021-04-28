@@ -63,9 +63,9 @@ class Note extends \Ufee\Amo\Base\Models\ApiModel
      * Get attachment contents
 	 * return string
      */
-	public function getAattachment()
+	public function getAttachment()
 	{
-		return $this->service->instance->ajax()->getAattachment($this->attachment);
+		return $this->service->instance->ajax()->getAttachment($this->attachment);
 	}
 	
     /**
