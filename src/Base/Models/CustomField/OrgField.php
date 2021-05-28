@@ -13,6 +13,7 @@ class OrgField extends EntityField
         'tax_registration_reason_code' => '',
         'address' => '',
         'kpp' => '',
+		'bank_code' => '',
         'external_uid' => '',
         'line1' => '',
         'line2' => '',
