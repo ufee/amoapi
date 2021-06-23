@@ -9,9 +9,10 @@ trait SearchByEmail
     /**
      * Get entitys by email
 	 * @param string $email
+	 * @param integer $limit
 	 * @return Collection
      */
-	public function searchByEmail($email)
+	public function searchByEmail($email, $max_rows = 100)
 	{
 		if (strlen($email) < 6 || !strpos($email, '@')) {
 			throw new \Exception('Invalid search email value: '.$email);
@@ -21,9 +22,11 @@ trait SearchByEmail
 		};
 		$field_name = 'Email';
 		$query = $clearEmail($email);
-		$results = $this->list->where('query', $query)->recursiveCall();	
-		
-		return $results->filter(function($model) use($query, $field_name, $clearEmail) {
+		$prev_max_rows = $this->max_rows;
+		$set_max_rows = $max_rows >= $this->limit_rows ? $max_rows+$this->limit_rows : $max_rows;
+
+		$results = $this->maxRows($set_max_rows)->list->where('query', $query)->recursiveCall();	
+		$results = $results->filter(function($model) use($query, $field_name, $clearEmail) {
 			foreach ($model->cf($field_name)->getValues() as $value) {
 				if ($query === $clearEmail($value)) {
 					return true;
@@ -31,5 +34,10 @@ trait SearchByEmail
 			}
 			return false;
 		});
+		if ($max_rows > 0) {
+			$results->slice(0, $max_rows);
+		}
+		$this->maxRows($prev_max_rows);
+		return $results;
 	}
 }
