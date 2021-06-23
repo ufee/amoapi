@@ -224,10 +224,10 @@ $amo->queries->listen(function(\Ufee\Amo\Base\Models\QueryModel $query) {
 ## Поиск сущностей
 Поиск по дополнительному полю
 ```php
-$leads = $amo->leads()->searchByCustomField('Москва', 'Город'); // by CF name
+$leads = $amo->leads()->searchByCustomField('Москва', 'Город', 300); // by CF name, max 300
 $leads = $amo->leads()->searchByCustomField('Москва', 623425); // by CF id
-$companies = $amo->companies()->searchByName('ООО Шарики за Ролики');
-$contacts = $amo->contacts()->searchByEmail('Test@Mail.Ru');
+$companies = $amo->companies()->searchByName('ООО Шарики за Ролики', 100); // by name, max 100
+$contacts = $amo->contacts()->searchByEmail('Test@Mail.Ru', 0); // by email, no max limit
 $contacts = $amo->contacts()->searchByPhone('89271002030');
 ```
 ## Работа с дополнительными полями
