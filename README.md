@@ -144,6 +144,9 @@ $oauth = $amo->refreshAccessToken($refresh_token = null); // при переда
 $amo->onAccessTokenRefresh(function($oauth) {
 	print_r($oauth); // ['token_type' => 'Bearer','expires_in' => 86400, ...]
 });
+$amo->onAccessTokenRefreshError(function($exception) {
+	echo 'Refresh token failed: '.$exception->getMessage().', code: '.$exception->getCode();
+});
 ```
 После первичного выполнения метода fetchAccessToken(), можно пользоваться клиентом в обычном режиме  
 Повторное выполнение метода fetchAccessToken() или setOauth() необходимо только в случаях, если:
