@@ -12,6 +12,7 @@ class Oauthapi extends ApiClient
 	const VERSION = 9;
 	
 	private $_token_refresh_callback;
+	private $_token_refresh_error_callback;
 	private static $_oauthStorage;
 
 	/**
@@ -104,11 +105,18 @@ class Oauthapi extends ApiClient
 	 */
 	public function refreshAccessToken($refresh_token = null)
 	{
+		$oauth = null;
+		$e = null;
 		if (is_null($refresh_token)) {
 			$refresh_token = $this->getOauth('refresh_token');
 		}
 		if (!$refresh_token) {
-			throw new \Exception('Empty oauth refresh_token');
+			$e = new \Exception('Empty oauth refresh_token');
+			if (is_callable($this->_token_refresh_error_callback)) {
+				call_user_func($this->_token_refresh_error_callback, $e);
+			} else {
+				throw $e;
+			}
 		}
 		$query = new \Ufee\Amo\Api\Oauth\Query($this);
 		$query->setUrl('/oauth2/access_token')
@@ -121,21 +129,29 @@ class Oauthapi extends ApiClient
 			  ]);
 		$response = new \Ufee\Amo\Api\Response($query->post(), $query);
 		if (!$data = $response->parseJson()) {
-			throw new \Exception('Refresh access token failed (non JSON), code: '.$response->getCode(), $response->getCode());
+			$e = new \Exception('Refresh access token failed (non JSON), code: '.$response->getCode(), $response->getCode());
 		}
-		if ($response->getCode() != 200 && !empty($data->hint)) {
-			throw new \Exception('Refresh access token error: '.$data->hint, $response->getCode());
+		else if ($response->getCode() != 200 && !empty($data->hint)) {
+			$e = new \Exception('Refresh access token error: '.$data->hint, $response->getCode());
 		}
-		if (!empty($data->status) && !empty($data->title) && !empty($data->detail)) {
-			throw new \Exception('Refresh access token error: '.$data->detail.' - '.$data->title, intval($data->status));
+		else if (!empty($data->status) && !empty($data->title) && !empty($data->detail)) {
+			$e = new \Exception('Refresh access token error: '.$data->detail.' - '.$data->title, intval($data->status));
 		}
-		$oauth = (array)$data;
-		$oauth['created_at'] = time();
-		
-		if (is_callable($this->_token_refresh_callback)) {
-			call_user_func($this->_token_refresh_callback, $oauth);
+		if ($e) {
+			if (is_callable($this->_token_refresh_error_callback)) {
+				call_user_func($this->_token_refresh_error_callback, $e);
+			} else {
+				throw $e;
+			}
+		} else {
+			$oauth = (array)$data;
+			$oauth['created_at'] = time();
+			
+			if (is_callable($this->_token_refresh_callback)) {
+				call_user_func($this->_token_refresh_callback, $oauth);
+			}
+			$this->setOauth($oauth);
 		}
-		$this->setOauth($oauth);
 		return $oauth;
 	}
 	
@@ -147,6 +163,17 @@ class Oauthapi extends ApiClient
 	public function onAccessTokenRefresh(callable $callback)
 	{
 		$this->_token_refresh_callback = $callback;
+		return $this;
+	}
+
+	/**
+	 * On access token refresh error callback
+	 * @param callable $callback
+	 * @return Oauthapi
+	 */
+	public function onAccessTokenRefreshError(callable $callback)
+	{
+		$this->_token_refresh_error_callback = $callback;
 		return $this;
 	}
 
