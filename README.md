@@ -669,6 +669,10 @@ $amo->elements()->delete($elements); // array|integer
 $catalog->elements->delete(); // удаление всех товаров каталога
 $element->delete();
 ```
+Прикрепление товаров к сделке
+```php
+$lead->attachElement($catalog->id, $element->id, $count = 1);
+```
 
 ## Работа с покупателями
 Получение всех покупателей
