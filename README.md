@@ -141,11 +141,18 @@ $oauth = $amo->refreshAccessToken($refresh_token = null); // при переда
 ```
 Вызов callback функции при автоматическом обновлении токена доступа
 ```php
-$amo->onAccessTokenRefresh(function($oauth) {
-	print_r($oauth); // ['token_type' => 'Bearer','expires_in' => 86400, ...]
+$amo->onAccessTokenRefresh(function($oauth, $query, $response) {
+	echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
+	print_r($query->post_data);
+	echo $query->endDate().' - ['.$response->getCode().'] '. $response->getData(). "\n\n";
+	echo "\nRefreshed oauth: \n";
+	print_r($oauth);
 });
-$amo->onAccessTokenRefreshError(function($exception) {
-	echo 'Refresh token failed: '.$exception->getMessage().', code: '.$exception->getCode();
+$amo->onAccessTokenRefreshError(function($exc, $query, $response) {
+	echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
+	print_r($query->post_data);
+	echo $query->endDate().' - ['.$response->getCode().'] '. $response->getData(). "\n\n";
+	exit('Error refresh token: '.$exc->getMessage().', code: '.$exc->getCode());
 });
 ```
 После первичного выполнения метода fetchAccessToken(), можно пользоваться клиентом в обычном режиме  
