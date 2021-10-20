@@ -249,6 +249,24 @@ class QueryModel
 			json_encode($this->json_data)
 		);
 	}
+	
+    /**
+     * Set start time
+	 * @return string
+     */
+    public function setStartTime($time)
+    {
+		$this->attributes['start_time'] = $time;
+	}
+
+    /**
+     * Set end time
+	 * @return string
+     */
+    public function setEndTime($time)
+    {
+		$this->attributes['end_time'] = $time;
+	}
 
     /**
      * Get start date

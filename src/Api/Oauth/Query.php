@@ -22,7 +22,7 @@ class Query extends QueryModel
 			throw new \Exception('Empty oauth access_token');
 		}
 		$expire_time = ($oauth['created_at']+$oauth['expires_in'])-time();
-		if ($expire_time < 60) {
+		if ($expire_time < $instance->queries->getRefreshTime()) {
 			$this->instance()->refreshAccessToken();
 			$oauth = $instance->getOauth();
 		}
