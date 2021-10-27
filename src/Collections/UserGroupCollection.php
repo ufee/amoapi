@@ -17,7 +17,8 @@ class UserGroupCollection extends \Ufee\Amo\Base\Collections\Collection
         if (!$group = $this->find('id', $id)->first()) {
             $group = new UserGroup([
                 'id' => '',
-                'name' => ''
+                'name' => '',
+				'client_id' => ''
             ]);
         }
         return $group;

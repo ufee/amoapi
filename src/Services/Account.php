@@ -7,17 +7,20 @@ namespace Ufee\Amo\Services;
 class Account extends \Ufee\Amo\Base\Services\Cached
 {
 	protected static $_cache_time = 600;
+	protected static $_current_data = [];
+	
+	protected $id = null;
 	protected $methods = [
 		'current'
 	];
-	protected $_current_data;
-	
+
     /**
      * Service on load
 	 * @return void
      */
 	protected function _boot()
 	{
+		$this->id = $this->instance->getAuth('id');
 		$this->api_args = [
 			'with' => 'users,groups,pipelines,custom_fields,note_types,task_types',
 			'lang' => $this->instance->getAuth('lang')
@@ -45,9 +48,9 @@ class Account extends \Ufee\Amo\Base\Services\Cached
      */
 	public function account()
 	{
-		if (is_null($this->_current_data)) {
-			$this->_current_data = $this->current->call();
+		if (!array_key_exists($this->id, static::$_current_data)) {
+			static::$_current_data[$this->id] = $this->current->call();
 		}
-		return $this->_current_data;
+		return static::$_current_data[$this->id];
 	}
 }

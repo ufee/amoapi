@@ -61,11 +61,13 @@ class Account extends \Ufee\Amo\Base\Models\Model
      */
     protected function _boot($data = [])
     {
+		$client_id = $this->service->instance->getAuth('id');
 		// группы пользователей
 		$groups = [
-			new \Ufee\Amo\Models\UserGroup(['id' => 0, 'name' => 'Отдел продаж'])
+			new \Ufee\Amo\Models\UserGroup(['id' => 0, 'name' => 'Отдел продаж', 'client_id' => $client_id])
 		];
 		foreach ($data->_embedded->groups as $id=>$group) {
+			$group->client_id = $client_id;
 			$groups[$id]= new \Ufee\Amo\Models\UserGroup($group);
 		}
 		$this->attributes['userGroups'] = new Collections\UserGroupCollection($groups);

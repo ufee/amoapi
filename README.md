@@ -593,7 +593,7 @@ $note->setPinned(true); // true/false
 ```
 Получение содержимого файла (note type 5)
 ```php
-$contents = $note->getAattachment();
+$contents = $note->getAttachment();
 ```
 Получение родительского контакта, сделки или компании
 ```php
