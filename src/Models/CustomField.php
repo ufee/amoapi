@@ -13,6 +13,7 @@ class CustomField extends \Ufee\Amo\Base\Models\Model
 			'client_id',
 			'id',
 			'name',
+			'code',
 			'field_type',
 			'sort',
 			'is_multiple',

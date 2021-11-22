@@ -76,6 +76,7 @@ class CatalogElement extends \Ufee\Amo\Base\Models\ModelWithCF
 					'id' => $cfield->id,
 					'account_id' => $this->service->account->id,
 					'name' => $cfield->name,
+					'code' => $cfield->code,
 					'values' => isset($curr_custom_fields[$cfield->id]) ? $curr_custom_fields[$cfield->id]->values : [],
 					'field' => $cfield
 				];

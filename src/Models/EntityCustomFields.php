@@ -38,6 +38,16 @@ class EntityCustomFields
     {
 		return $this->fields->find('id', $cf_id)->first();
     }
+	
+    /**
+     * Get cf by code
+     * @param string $cf_code
+	 * @return mixed
+     */
+    public function byCode($cf_code)
+    {
+		return $this->fields->find('code', $cf_code)->first();
+    }
     
     /**
      * CF each
