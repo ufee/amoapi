@@ -18,7 +18,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         $instanceName,
         $cache_path,
         $delay = 0.15,
-        $refresh_time = 60,
+        $refresh_time = 900,
         $cookie_file,
         $_listener,
         $logger = null,
@@ -35,7 +35,6 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 		$this->instanceName = substr(strrchr(get_class($instance), "\\"), 1);
         $this->logger = Api\Logger::getInstance($instance->getAuth('domain').'.log');
         $this->cachePath(self::$_cache_path);
-		$this->refresh_time = mt_rand(300,900);
 		
 		if ($instance instanceof Amoapi) {
 			$this->cookie_file = AMOAPI_ROOT.DIRECTORY_SEPARATOR.'Cookies'.DIRECTORY_SEPARATOR.$instance->getAuth('domain').'.cookie';

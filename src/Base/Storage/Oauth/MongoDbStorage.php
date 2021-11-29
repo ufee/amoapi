@@ -25,7 +25,7 @@ class MongoDbStorage extends AbstractStorage
 	 * @param Oauthapi $client
 	 * @return void
      */
-	protected function initClient(Oauthapi $client)
+	public function initClient(Oauthapi $client)
 	{
 		parent::initClient($client);
 		

@@ -53,6 +53,10 @@ class Oauthapi extends ApiClient
 	 */
 	public function getOauth($key = null)
 	{
+		if (is_bool($key) && $key === true) {
+			$this->getOauthStorage()->initClient($this);
+			$key = null;
+		}
 		return $this->getOauthStorage()->getOauthData($this, $key);
 	}
 	

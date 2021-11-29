@@ -24,7 +24,7 @@ class AbstractStorage
 	 * @param Oauthapi $client
 	 * @return void
      */
-	protected function initClient(Oauthapi $client)
+	public function initClient(Oauthapi $client)
 	{
 		$key = $client->getAuth('domain').'_'.$client->getAuth('client_id');
 		static::$_oauth[$key] = [

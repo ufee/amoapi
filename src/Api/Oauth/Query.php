@@ -36,6 +36,7 @@ class Query extends QueryModel
         $current_time = microtime(true);
         $time_offset = $current_time-$last_time;
         $delay = $instance->queries->getDelay();
+		
         if ($delay > $time_offset) {
             $sleep_time = ($delay-$time_offset)*1000000;
             usleep($sleep_time);
@@ -49,10 +50,23 @@ class Query extends QueryModel
         curl_close($this->curl);
 
 		while ($this->response->getCode() == 429 && $this->retries <= 24) {
+			// for limit requests
 			sleep(1);
 			return $this->setCurl()->execute();
 		}
+		if ($this->response->getCode() == 401 && $this->retry) {
+			// multiserver refresh token fix
+			sleep(1);
+			$oauth = $instance->getOauth(true);
+			$this->setHeader(
+				'Authorization', $oauth['token_type'].' '.$oauth['access_token']
+			);
+            $this->setCurl();
+			$this->setRetry(false);
+            return $this->execute();
+		}
 		if (in_array($this->response->getCode(), [502,504]) && $this->retry) {
+			// for random api errors
 			sleep(1);
             $this->setCurl();
 			$this->setRetry(false);
