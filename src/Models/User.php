@@ -32,7 +32,7 @@ class User extends \Ufee\Amo\Base\Models\Model
 	 * @param UserGroup $group
 	 * @return void
      */
-    public function __construct($data = [], UserGroup $group)
+    public function __construct($data, UserGroup $group)
     {
 		parent::__construct($data);
 		

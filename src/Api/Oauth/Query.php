@@ -48,6 +48,7 @@ class Query extends QueryModel
         	$this->$method(), $this
         );
         curl_close($this->curl);
+		$this->attributes['curl'] = null;
 
 		while ($this->response->getCode() == 429 && $this->retries <= 24) {
 			// for limit requests
@@ -88,7 +89,6 @@ class Query extends QueryModel
     {
         curl_setopt($this->curl, CURLOPT_URL, $this->getUrl());
 		curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
-        
         return curl_exec($this->curl);
     }
 

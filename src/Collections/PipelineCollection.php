@@ -12,7 +12,7 @@ class PipelineCollection extends CollectionWrapper
 	 * @param array $elements
 	 * @param Account $account
 	 */
-	public function __construct(Array $elements = [], \Ufee\Amo\Models\Account &$account)
+	public function __construct(Array $elements, \Ufee\Amo\Models\Account &$account)
 	{
 		$this->collection = new \Ufee\Amo\Base\Collections\Collection($elements);
 		$this->collection->each(function(&$item) use($account) {

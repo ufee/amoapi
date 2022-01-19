@@ -69,7 +69,7 @@ class Service
 	 * @param $name Service name
 	 * @return Service
      */
-    public static function getInstance($name = null, \Ufee\Amo\ApiClient &$instance)
+    public static function getInstance($name, \Ufee\Amo\ApiClient &$instance)
     {
 		if (is_null($name)) {
 			$name = lcfirst(static::getBasename());

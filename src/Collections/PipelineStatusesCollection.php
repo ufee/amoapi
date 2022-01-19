@@ -13,7 +13,7 @@ class PipelineStatusesCollection extends CollectionWrapper
      * @param array $elements
      * @param Pipeline $pipeline
      */
-    public function __construct(Array $elements = [], Pipeline &$pipeline)
+    public function __construct(Array $elements, Pipeline &$pipeline)
     {
     	$this->collection = new \Ufee\Amo\Base\Collections\Collection($elements);
     	$this->collection->each(function(&$item) use ($pipeline) {

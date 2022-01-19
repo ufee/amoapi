@@ -20,7 +20,7 @@ class AccountCustomFields
 	 * @param array $cf_catalogs
 	 * @param Account $account
      */
-    public function __construct(Array $cf_company_elems = [], Array $cf_contacts_elems = [], Array $cf_leads_elems = [], Array $cf_customers_elems = [], Array $cf_catalogs = [], \Ufee\Amo\Models\Account &$account)
+    public function __construct(Array $cf_company_elems, Array $cf_contacts_elems, Array $cf_leads_elems, Array $cf_customers_elems, Array $cf_catalogs, \Ufee\Amo\Models\Account &$account)
     {
 		$this->attributes['companies'] = new Collections\CompaniesCustomFieldCollection($cf_company_elems, $account);
 		$this->attributes['contacts'] = new Collections\ContactsCustomFieldCollection($cf_contacts_elems, $account);

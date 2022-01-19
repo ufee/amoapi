@@ -11,7 +11,7 @@ class ServiceCollection extends CollectionWrapper
 	 * @param array $elements
 	 * @param Service $service
      */
-    public function __construct(Array $elements = [], \Ufee\Amo\Base\Services\Service &$service)
+    public function __construct(Array $elements, \Ufee\Amo\Base\Services\Service &$service)
     {
         $this->collection = new \Ufee\Amo\Base\Collections\Collection($elements);
 		$this->attributes['service'] = $service;

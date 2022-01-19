@@ -33,6 +33,8 @@ class Query extends QueryModel
         	$this->$method(), $this
         );
         curl_close($this->curl);
+		$this->attributes['curl'] = null;
+		
         if (!in_array($this->response->getCode(), [200, 204]) && file_exists($instance->queries->getCookiePath())) {
            @unlink($instance->queries->getCookiePath());
         }
