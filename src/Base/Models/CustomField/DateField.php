@@ -7,29 +7,46 @@ namespace Ufee\Amo\Base\Models\CustomField;
 class DateField extends EntityField
 {
 	/**
+	 * Get DateTime from cf value
+	 * @param string|null $timezone - Europe/Moscow
+	 * @return \DateTime
+	 */
+	public function getDateTime($timezone = null)
+	{
+		if (!$date = $this->getValue()) {
+			return null;
+		}
+		if (is_null($timezone)) {
+			$timezone = $this->field->instance()->getAuth('timezone');
+		}
+		return new \DateTime($date, new \DateTimeZone($timezone));
+	}
+	
+	/**
 	 * Get formatted date
+	 * @param string $format - Y-m-d
+	 * @param string|null $timezone - Europe/Moscow
 	 * @return string
 	 */
-	public function format($format)
+	public function format($format, $timezone = null)
 	{
 		if (!$date = $this->getValue()) {
-			return null;
+			return null; 
 		}
-		$date = new \DateTime($date, new \DateTimeZone($this->field->instance()->getAuth('timezone')));
-		return $date->format($format);
+		return $this->getDateTime($timezone)->format($format);
 	}
-		
+	
 	/**
 	 * Get date timestamp
+	 * @param string|null $timezone - Europe/Moscow ...
 	 * @return integer
 	 */
-	public function getTimestamp()
+	public function getTimestamp($timezone = null)
 	{
 		if (!$date = $this->getValue()) {
-			return null;
+			return null; 
 		}
-		$date = new \DateTime($date, new \DateTimeZone($this->field->instance()->getAuth('timezone')));
-		return $date->getTimestamp();
+		return $this->getDateTime($timezone)->getTimestamp();
 	}
 		
 	/**
