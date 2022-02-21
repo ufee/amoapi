@@ -70,6 +70,7 @@ class ModelWithCF extends ApiModel
 					'account_id' => $this->service->account->id,
 					'name' => $cfield->name,
 					'code' => $cfield->code,
+					'field_type' => $cfield->field_type,
 					'values' => isset($curr_custom_fields[$cfield->id]) ? $curr_custom_fields[$cfield->id]->values : [],
 					'field' => $cfield
 				];

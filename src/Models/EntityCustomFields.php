@@ -48,6 +48,16 @@ class EntityCustomFields
     {
 		return $this->fields->find('code', $cf_code)->first();
     }
+	
+    /**
+     * Get cf by type id
+     * @param string $cf_id
+	 * @return Collection
+     */
+    public function byTypeId($cf_id)
+    {
+		return $this->fields->find('field_type', $cf_id);
+    }
     
     /**
      * CF each

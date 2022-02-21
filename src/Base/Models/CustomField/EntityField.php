@@ -11,7 +11,8 @@ class EntityField extends \Ufee\Amo\Base\Models\Model
 			'id',
 			'account_id',
 			'name',
-			'code'
+			'code',
+			'field_type'
 		],
 		$hidden = [
 			'field'

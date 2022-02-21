@@ -19,7 +19,8 @@ class CustomField extends \Ufee\Amo\Base\Models\Model
 			'is_multiple',
 			'is_system',
 			'is_editable',
-			'enums'
+			'enums',
+			'values_tree'
 		];
 	
     /**
