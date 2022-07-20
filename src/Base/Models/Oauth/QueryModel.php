@@ -78,6 +78,18 @@ class QueryModel extends \Ufee\Amo\Base\Models\QueryModel
 	}
 
     /**
+     * DEBUG curl query
+	 * @param resource $fp - fopen file
+     * @return Query
+     */
+    public function verbose($fp)
+    {
+		curl_setopt($this->curl, CURLOPT_VERBOSE, 1);
+		curl_setopt($this->curl, CURLOPT_STDERR, $fp);
+		return $this;
+	}
+
+    /**
      * Generate query hash
 	 * @return string
      */

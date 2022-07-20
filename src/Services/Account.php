@@ -10,6 +10,7 @@ class Account extends \Ufee\Amo\Base\Services\Cached
 	protected static $_current_data = [];
 	
 	protected $id = null;
+	protected $domain = null;
 	protected $methods = [
 		'current'
 	];
@@ -21,6 +22,7 @@ class Account extends \Ufee\Amo\Base\Services\Cached
 	protected function _boot()
 	{
 		$this->id = $this->instance->getAuth('id');
+		$this->domain = $this->instance->getAuth('domain');
 		$this->api_args = [
 			'with' => 'users,groups,pipelines,custom_fields,note_types,task_types',
 			'lang' => $this->instance->getAuth('lang')
@@ -48,9 +50,10 @@ class Account extends \Ufee\Amo\Base\Services\Cached
      */
 	public function account()
 	{
-		if (!array_key_exists($this->id, static::$_current_data)) {
-			static::$_current_data[$this->id] = $this->current->call();
+		$key = $this->domain.$this->id;
+		if (!array_key_exists($key, static::$_current_data)) {
+			static::$_current_data[$key] = $this->current->call();
 		}
-		return static::$_current_data[$this->id];
+		return static::$_current_data[$key];
 	}
 }
