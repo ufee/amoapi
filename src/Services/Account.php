@@ -25,7 +25,7 @@ class Account extends \Ufee\Amo\Base\Services\Cached
 		$this->domain = $this->instance->getAuth('domain');
 		$this->api_args = [
 			'with' => 'users,groups,pipelines,custom_fields,note_types,task_types',
-			'lang' => $this->instance->getAuth('lang')
+			//'lang' => $this->instance->getAuth('lang')
 		];
 	}
 	

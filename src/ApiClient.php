@@ -106,7 +106,7 @@ class ApiClient
 	public function __get($target)
 	{
 		if ($target === 'queries') {
-			return self::$_queries[$this->getAuth('id')];
+			return self::$_queries[$this->getAuth('domain').$this->getAuth('id')];
 		}
 		if ($target === 'session') {
 			return $this->session;

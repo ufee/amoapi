@@ -22,7 +22,7 @@ class Webhooks extends \Ufee\Amo\Base\Services\Cached
 	protected function _boot()
 	{
 		$this->api_args = [
-			'lang' => $this->instance->getAuth('lang')
+			//'lang' => $this->instance->getAuth('lang')
 		];
 	}
 

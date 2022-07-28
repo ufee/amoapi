@@ -150,8 +150,8 @@ class Amoapi extends ApiClient
 			self::$_instances[$account['id']] = new static($account);
 		}
 		$instance = self::getInstance($account['id']);
-		self::$_queries[$account['id']] = new Collections\QueryCollection();
-		self::$_queries[$account['id']]->boot($instance);
+		self::$_queries[$account['domain'].$account['id']] = new Collections\QueryCollection();
+		self::$_queries[$account['domain'].$account['id']]->boot($instance);
 		return $instance;
 	}
 
@@ -195,7 +195,7 @@ class Amoapi extends ApiClient
 	public function __get($target)
 	{
 		if ($target === 'queries') {
-			return self::$_queries[$this->_account['id']];
+			return self::$_queries[$this->_account['domain'].$this->_account['id']];
 		}
 		if ($target === 'session') {
 			return $this->session;

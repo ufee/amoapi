@@ -255,10 +255,10 @@ class Oauthapi extends ApiClient
 		foreach ($account as $key=>$val) {
 			$account[$key] = isset($data[$key]) ? $data[$key] : $val;
 		}
-		self::$_instances[$account['client_id']] = new static($account);
-		$instance = self::getInstance($account['client_id']);
-		self::$_queries[$account['client_id']] = new Collections\QueryCollection();
-		self::$_queries[$account['client_id']]->boot($instance);
+		$instance = new static($account);
+		self::$_instances[$account['client_id']] = $instance;
+		self::$_queries[$account['domain'].$account['client_id']] = new Collections\QueryCollection();
+		self::$_queries[$account['domain'].$account['client_id']]->boot($instance);
 		return $instance;
 	}
 

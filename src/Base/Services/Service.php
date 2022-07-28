@@ -21,6 +21,7 @@ class Service
 		'add' => [],
 		'update' => ['id', 'updated_at']
 	];
+	protected $client;
 	protected $client_id;
 	protected $entity_key = 'entitys';
 	protected $entity_model = '\Ufee\Amo\Base\Model';
@@ -29,11 +30,12 @@ class Service
 		
     /**
      * Constructor
-	 * @param integer $client_id
+	 * @param ApiClient $client
      */
-    private function __construct($client_id)
+    private function __construct(ApiClient $client)
     {
-        $this->client_id = $client_id;
+		$this->client = $client;
+        $this->client_id = $client->getAuth('id');
 		$this->_boot();
 	}
 	
@@ -57,9 +59,9 @@ class Service
 		if (is_null($name)) {
 			$name = lcfirst(static::getBasename());
 		}
-		$key = $name.'-'.$instance->getAuth('id');
+		$key = $name.'-'.$instance->getAuth('domain').$instance->getAuth('id');
 		if (!isset(static::$_service_instances[$key])) {
-			static::$_service_instances[$key] = new static($instance->getAuth('id'));
+			static::$_service_instances[$key] = new static($instance);
 		}
 		return static::getInstance($name, $instance);
 	}
@@ -74,7 +76,7 @@ class Service
 		if (is_null($name)) {
 			$name = lcfirst(static::getBasename());
 		}
-		$key = $name.'-'.$instance->getAuth('id');
+		$key = $name.'-'.$instance->getAuth('domain').$instance->getAuth('id');
 		if (!isset(static::$_service_instances[$key])) {
 			return null;
 		}
@@ -101,10 +103,10 @@ class Service
 		}
 		$apiClass = is_numeric($this->client_id) ? Amoapi::class : Oauthapi::class;
 		if ($target === 'instance') {
-			return $apiClass::getInstance($this->client_id);
+			return $this->client;
 		}
 		if ($target === 'account') {
-			return $apiClass::getInstance($this->client_id)->account;
+			return $this->client->account;
 		}
 		if (!in_array($target, $this->methods)) {
 			throw new \Exception('Invalid method called: '.$target);
