@@ -3,9 +3,15 @@
  * amoCRM Company model
  */
 namespace Ufee\Amo\Models;
+use Ufee\Amo\Base\Models\Interfaces\LinkedContacts;
+use Ufee\Amo\Base\Models\Interfaces\LinkedCustomers;
+use Ufee\Amo\Base\Models\Interfaces\LinkedLeads;
+use Ufee\Amo\Base\Models\Interfaces\LinkedNotes;
+use Ufee\Amo\Base\Models\Interfaces\LinkedTags;
+use Ufee\Amo\Base\Models\Interfaces\LinkedTasks;
 use Ufee\Amo\Base\Models\Traits;
 
-class Company extends \Ufee\Amo\Base\Models\ModelWithCF
+class Company extends \Ufee\Amo\Base\Models\ModelWithCF implements LinkedLeads,LinkedContacts,LinkedCustomers,LinkedTasks,LinkedNotes,LinkedTags
 {
 	use Traits\LinkedLeads, Traits\LinkedContacts, Traits\LinkedCustomers, Traits\LinkedTasks, Traits\LinkedNotes, Traits\EntityDetector, Traits\LinkedTags;
 

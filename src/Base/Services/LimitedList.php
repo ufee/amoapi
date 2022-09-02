@@ -3,10 +3,11 @@
  * amoCRM API client Base service
  */
 namespace Ufee\Amo\Base\Services;
+use Ufee\Amo\Base\Models\Interfaces\EntityDetector;
 use Ufee\Amo\Base\Models\Traits;
 use Ufee\Amo\Base\Collections\Collection;
 
-class LimitedList extends Cached
+class LimitedList extends Cached implements EntityDetector
 {
 	use Traits\EntityDetector;
 	

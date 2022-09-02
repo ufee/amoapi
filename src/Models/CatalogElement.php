@@ -5,8 +5,10 @@
 namespace Ufee\Amo\Models;
 use Ufee\Amo\Base\Collections\Collection,
 	Ufee\Amo\Base\Models\Traits;
+use Ufee\Amo\Base\Models\Interfaces\EntityDetector;
+use Ufee\Amo\Base\Models\Interfaces\LinkedLeads;
 
-class CatalogElement extends \Ufee\Amo\Base\Models\ModelWithCF
+class CatalogElement extends \Ufee\Amo\Base\Models\ModelWithCF implements EntityDetector, LinkedLeads
 {
 	use Traits\LinkedLeads, Traits\EntityDetector;
 

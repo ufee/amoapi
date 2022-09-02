@@ -3,9 +3,10 @@
  * amoCRM Transaction model
  */
 namespace Ufee\Amo\Models;
+use Ufee\Amo\Base\Models\Interfaces\EntityDetector;
 use Ufee\Amo\Base\Models\Traits;
 
-class Transaction extends \Ufee\Amo\Base\Models\ApiModel
+class Transaction extends \Ufee\Amo\Base\Models\ApiModel implements EntityDetector
 {
 	use Traits\EntityDetector;
 
