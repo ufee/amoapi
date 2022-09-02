@@ -3,9 +3,10 @@
  * amoCRM Catalog model
  */
 namespace Ufee\Amo\Models;
+use Ufee\Amo\Base\Models\Interfaces\CatalogElements;
 use Ufee\Amo\Base\Models\Traits;
 
-class Catalog extends \Ufee\Amo\Base\Models\ApiModel
+class Catalog extends \Ufee\Amo\Base\Models\ApiModel implements CatalogElements
 {
 	use Traits\CatalogElements;
 

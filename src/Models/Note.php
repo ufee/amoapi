@@ -3,9 +3,11 @@
  * amoCRM Note model
  */
 namespace Ufee\Amo\Models;
+use Ufee\Amo\Base\Models\Interfaces\EntityDetector;
+use Ufee\Amo\Base\Models\Interfaces\LinkedParents;
 use Ufee\Amo\Base\Models\Traits;
 
-class Note extends \Ufee\Amo\Base\Models\ApiModel
+class Note extends \Ufee\Amo\Base\Models\ApiModel implements LinkedParents, EntityDetector
 {
 	use Traits\LinkedParents, Traits\EntityDetector;
 

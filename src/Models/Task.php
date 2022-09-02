@@ -3,10 +3,12 @@
  * amoCRM Task model
  */
 namespace Ufee\Amo\Models;
+use Ufee\Amo\Base\Models\Interfaces\EntityDetector;
+use Ufee\Amo\Base\Models\Interfaces\LinkedParents;
 use Ufee\Amo\Base\Models\Traits;
 use Ufee\Amo\Amoapi;
 
-class Task extends \Ufee\Amo\Base\Models\ApiModel
+class Task extends \Ufee\Amo\Base\Models\ApiModel implements LinkedParents, EntityDetector
 {
 	use Traits\LinkedParents, Traits\EntityDetector;
 
