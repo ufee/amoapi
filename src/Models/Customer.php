@@ -12,7 +12,7 @@ use Ufee\Amo\Base\Models\Interfaces\LinkedTasks;
 use Ufee\Amo\Base\Models\Interfaces\MainContact;
 use Ufee\Amo\Base\Models\Traits;
 
-class Customer extends \Ufee\Amo\Base\Models\ModelWithCF implements LinkedContacts,MainContact,LinkedCompany,LinkedTasks,LinkedNotes,EntityDetector,LinkedTags
+class Customer extends \Ufee\Amo\Base\Models\ModelWithCF implements LinkedContacts, MainContact, LinkedCompany, LinkedTasks, LinkedNotes, EntityDetector, LinkedTags
 {
 	use Traits\LinkedContacts, Traits\MainContact, Traits\LinkedCompany, Traits\LinkedTasks, Traits\LinkedNotes, Traits\EntityDetector, Traits\LinkedTags;
 
