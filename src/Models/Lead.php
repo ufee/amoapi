@@ -13,7 +13,7 @@ use Ufee\Amo\Base\Models\Interfaces\LinkedTasks;
 use Ufee\Amo\Base\Models\Interfaces\MainContact;
 use Ufee\Amo\Base\Models\Traits;
 
-class Lead extends \Ufee\Amo\Base\Models\ModelWithCF implements LinkedContacts,MainContact,LinkedCompany,LinkedTasks,LinkedNotes,EntityDetector,LinkedTags,LinkedCatalogElements
+class Lead extends \Ufee\Amo\Base\Models\ModelWithCF implements LinkedContacts, MainContact, LinkedCompany, LinkedTasks, LinkedNotes, EntityDetector, LinkedTags, LinkedCatalogElements
 {
 	use Traits\LinkedContacts, Traits\MainContact, Traits\LinkedCompany, Traits\LinkedTasks, Traits\LinkedNotes, Traits\LinkedPipeline, Traits\EntityDetector, Traits\LinkedTags, Traits\LinkedCatalogElements;
 
