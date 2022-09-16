@@ -14,7 +14,7 @@ class Query extends QueryModel
      */
     public function execute()
     {
-        $this->retries++;
+        $this->attributes['retries']++;
         $instance = $this->instance();
 		
 		$oauth = $instance->getOauth();
@@ -49,13 +49,15 @@ class Query extends QueryModel
         );
         curl_close($this->curl);
 		$this->attributes['curl'] = null;
+		$code = $this->response->getCode();
+		$instance->queries->pushByCode($code, $this);
 
-		while ($this->response->getCode() == 429 && $this->retries <= 24) {
+		if ($code == 429 && $this->retries <= 7) {
 			// for limit requests
 			sleep(1);
 			return $this->setCurl()->execute();
 		}
-		if ($this->response->getCode() == 401 && $this->retry) {
+		if ($code == 401 && $this->retry) {
 			// multiserver refresh token fix
 			sleep(1);
 			$oauth = $instance->getOauth(true);
@@ -66,7 +68,7 @@ class Query extends QueryModel
 			$this->setRetry(false);
             return $this->execute();
 		}
-		if (in_array($this->response->getCode(), [502,504]) && $this->retry) {
+		if (in_array($code, [502,504]) && $this->retry) {
 			// for random api errors
 			sleep(1);
             $this->setCurl();

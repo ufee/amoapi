@@ -21,6 +21,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         $refresh_time = 900,
         $cookie_file,
         $_listener,
+		$_listener_by_code = [],
         $logger = null,
         $_logs = false,
         $_cache_initialized = false;
@@ -140,6 +141,20 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
 	}
 	
     /**
+     * Push queries by code
+     * @param integer $code - 200,403,429,500,502,504,..
+	 * @param QueryModel $query
+	 * @return QueryCollection
+     */
+    public function pushByCode($code, QueryModel $query)
+    {
+		if (array_key_exists($code, $this->_listener_by_code) && is_callable($this->_listener_by_code[$code])) {
+			call_user_func($this->_listener_by_code[$code], $query);
+		}
+		return $this;
+	}
+	
+    /**
      * Initialize cache queries
 	 * @return QueryCollection
      */
@@ -217,6 +232,18 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     public function listen(callable $callback)
     {
         $this->_listener = $callback;
+        return $this;
+    }
+	
+    /**
+     * Debug queries by code
+	 * @param integer $code - 200,403,429,500,502,504,..
+	 * @param callable $callback
+	 * @return QueryCollection
+     */
+    public function onResponseCode($code, callable $callback)
+    {
+        $this->_listener_by_code[intval($code)] = $callback;
         return $this;
     }
 

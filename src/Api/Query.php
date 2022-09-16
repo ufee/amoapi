@@ -13,7 +13,7 @@ class Query extends QueryModel
      */
     public function execute()
     {
-        $this->retries++;
+        $this->attributes['retries']++;
         $instance = $this->instance();
         $last_time = 1;
         if ($last_query = $instance->queries->last()) {
@@ -34,21 +34,23 @@ class Query extends QueryModel
         );
         curl_close($this->curl);
 		$this->attributes['curl'] = null;
+		$code = $this->response->getCode();
+		$instance->queries->pushByCode($code, $this);
 		
-        if (!in_array($this->response->getCode(), [200, 204]) && file_exists($instance->queries->getCookiePath())) {
+        if (!in_array($code, [200, 204]) && file_exists($instance->queries->getCookiePath())) {
            @unlink($instance->queries->getCookiePath());
         }
-        while ($this->response->getCode() == 401 && $this->url != $instance::AUTH_URL && $this->retries <= 3 && $instance->hasAutoAuth()) {
+        if ($code == 401 && $this->url != $instance::AUTH_URL && $this->retries <= 3 && $instance->hasAutoAuth()) {
             $instance->authorize();
             $instance->queries->refreshSession();
             $this->setCurl();
             return $this->execute();
         }
-		while ($this->response->getCode() == 429 && $this->retries <= 24) {
+		if ($code == 429 && $this->retries <= 24) {
 			sleep(1);
 			return $this->setCurl()->execute();
 		}
-		if (in_array($this->response->getCode(), [502,504]) && $this->retry) {
+		if (in_array($code, [502,504]) && $this->retry) {
 			sleep(1);
             $this->setCurl();
 			$this->setRetry(false);
@@ -58,9 +60,9 @@ class Query extends QueryModel
         $this->attributes['execution_time'] = round($this->end_time - $this->start_time, 5);
         $this->attributes['memory_usage'] = memory_get_peak_usage(true)/1024/1024;
         $this->generateHash();
-        $instance->queries->pushQuery($this, in_array($this->response->getCode(), [200]));
+        $instance->queries->pushQuery($this, in_array($code, [200]));
 
-		if (!$instance->hasSession() && in_array($this->response->getCode(), [200, 204])) {
+		if (!$instance->hasSession() && in_array($code, [200, 204])) {
             $instance->queries->refreshSession();
 		}
         return $this;

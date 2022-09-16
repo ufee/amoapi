@@ -22,7 +22,8 @@ class QueryModel extends \Ufee\Amo\Base\Models\QueryModel
 			'sleep_time',
 			'hash',
 			'memory_usage',
-			'headers'
+			'headers',
+			'retries'
 		],
 		$hidden = [
 			'account_id',
@@ -32,7 +33,6 @@ class QueryModel extends \Ufee\Amo\Base\Models\QueryModel
 			'response'
 		],
 		$attributes = [],
-		$retries = 0,
 		$cookie = [];
 		
     /**
@@ -51,6 +51,7 @@ class QueryModel extends \Ufee\Amo\Base\Models\QueryModel
 		$this->attributes['account_id'] = $instance->getAuth('id');
 		$this->attributes['service'] = $service_class;
 		$this->attributes['retry'] = true;
+		$this->attributes['retries'] = 0;
 		$this->_boot();
 	}
 

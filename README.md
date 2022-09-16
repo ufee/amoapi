@@ -219,6 +219,9 @@ $amo->queries->setDelay(0.5); // default: 0.15 sec
 ```
 Пользовательская отладка запросов (обновлено с вводом oAuth)
 ```php
+$amo->queries->onResponseCode(429, function(\Ufee\Amo\Base\Models\QueryModel $query) {
+	echo 'Resp code 429, retry '.$query->retries."\n";
+});
 $amo->queries->listen(function(\Ufee\Amo\Base\Models\QueryModel $query) {
     $code = $query->response->getCode();
     echo $query->startDate().' - ['.$query->method.'] '.$query->getUrl()."\n";
