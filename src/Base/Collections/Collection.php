@@ -22,7 +22,7 @@ class Collection implements \IteratorAggregate
      * Collection iterator
 	 * @return \ArrayIterator
      */
-	public function getIterator()
+	public function getIterator(): \Traversable
 	{
 		return new \ArrayIterator($this->items);
 	}
