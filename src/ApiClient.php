@@ -58,6 +58,17 @@ class ApiClient
 		'ajax'
 	];
 	protected $_account;
+	protected $full_domain;
+	
+	
+	/**
+	 * Get account full domain
+	 * @return string
+	 */
+	public function getFullDomain()
+	{
+		return $this->full_domain;
+	}
 	
 	/**
 	 * Call Service Methods

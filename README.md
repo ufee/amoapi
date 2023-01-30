@@ -213,10 +213,6 @@ $amo->queries->setDelay(0.5); // default: 0.15 sec
 ```php
 \Ufee\Amo\Services\Account::setCacheTime(1800); // default: 600 sec
 ```
-Свой путь для кеширования запросов
-```php
-\Ufee\Amo\Collections\QueryCollection::setCachePath('path_to/cache');
-```
 Пользовательская отладка запросов (обновлено с вводом oAuth)
 ```php
 $amo->queries->onResponseCode(429, function(\Ufee\Amo\Base\Models\QueryModel $query) {
@@ -233,6 +229,30 @@ $amo->queries->listen(function(\Ufee\Amo\Base\Models\QueryModel $query) {
         echo $query->endDate().' - ['.$query->response->getCode().'] '.$query->response->getData()."\n\n";
     }
 });
+```
+## Кеширование запросов
+Хранение кеша возможно в нескольких вариантах
+#### Файловое хранилище
+Используется по умолчанию (/vendor/ufee/amoapi/src/Cache/), можно задать свой путь  
+Создаются кеш-файлы: {path}/{domain}_{hash}.cache  
+Настоятельно рекомендуется использовать cвой путь для кеширования, в противном случае данные будут УДАЛЕНЫ composer'ом при обновлении на новую версию.
+```php
+$apiClient->queries->setCacheStorage(
+	new \Ufee\Amo\Base\Storage\Query\FileStorage($apiClient, ['path' => 'pull_path_to/cache'])
+);
+```
+#### Redis
+Поддерживается библиотека [phpredis](https://github.com/phpredis/phpredis)   
+Формат ключа: {domain}-cache:{hash}
+```php
+$redis = new \Redis();
+$redis->connect('/var/run/redis/redis.sock');
+$redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP); // \Redis::SERIALIZER_IGBINARY recommended
+$redis->select(5); // switch to specific db
+
+$apiClient->queries->setCacheStorage(
+	new \Ufee\Amo\Base\Storage\Query\RedisStorage($apiClient, ['connection' => $redis])
+);
 ```
 ## Поиск сущностей
 Поиск по дополнительному полю

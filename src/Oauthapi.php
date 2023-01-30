@@ -22,6 +22,7 @@ class Oauthapi extends ApiClient
 	private function __construct(Array $account)
 	{
 		$this->_account = $account;
+		$this->full_domain = $account['zone'] == 'com' ? $account['domain'].'.kommo.com' : $account['domain'].'.amocrm.ru';
 		
 		if (!static::$_oauthStorage) {
 			static::setOauthStorage(
@@ -198,7 +199,8 @@ class Oauthapi extends ApiClient
 		foreach ($arg as $key=>$val) {
 			$arg[$key] = isset($data[$key]) ? $data[$key] : $val;
 		}
-		return 'https://amocrm.'.$this->getAuth('zone').'/oauth?client_id='.$this->getAuth('client_id').'&mode='.$arg['mode'].'&state='.$arg['state'];
+		$domain = $this->getAuth('zone') == 'com' ? 'kommo.com' : 'amocrm.ru';
+		return 'https://'.$domain.'/oauth?client_id='.$this->getAuth('client_id').'&mode='.$arg['mode'].'&state='.$arg['state'];
 	}
 	
 	/**

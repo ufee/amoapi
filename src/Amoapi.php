@@ -25,6 +25,7 @@ class Amoapi extends ApiClient
 	private function __construct(Array $account)
 	{
 		$this->_account = $account;
+		$this->full_domain = $account['zone'] == 'com' ? $account['domain'].'.kommo.com' : $account['domain'].'.amocrm.ru';
 	}
 	
 	/**
