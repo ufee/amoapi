@@ -20,7 +20,7 @@ class Collection implements \IteratorAggregate
 	
     /**
      * Collection iterator
-	 * @return \ArrayIterator
+     * @return \ArrayIterator
      */
 	public function getIterator(): \Traversable
 	{

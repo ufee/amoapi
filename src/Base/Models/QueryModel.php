@@ -227,7 +227,7 @@ class QueryModel
         if ($this->args) {
             $url .= '?' . http_build_query($this->args);
         }
-        return 'https://'.$this->instance()->getAuth('domain').'.amocrm.'.$this->instance()->getAuth('zone').$url;
+        return 'https://'.$this->instance()->getFullDomain().$url;
 	}
 
     /**
@@ -344,9 +344,7 @@ class QueryModel
      */
     public function clearCache()
     {
-		if (file_exists($this->cache_path.'/'.$this->hash.'.Amoapi.cache')) {
-			@unlink($this->cache_path.'/'.$this->hash.'.Amoapi.cache');
-		}
+		return $this->instance()->queries->clearQueryCache($this);
 	}
 
     /**
