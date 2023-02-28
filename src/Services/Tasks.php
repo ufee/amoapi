@@ -8,7 +8,7 @@ class Tasks extends \Ufee\Amo\Base\Services\LimitedList
 {
 	protected static 
 		$_require = [
-			'add' => ['element_id','element_type','text'],
+			'add' => ['text'],
 			'update' => ['id', 'updated_at']
 		];
 	protected

@@ -41,7 +41,9 @@ class EntityField extends \Ufee\Amo\Base\Models\Model
     {
         $values = [];
 		foreach ($this->values as $setted) {
-            $values[]= $setted->value;
+			if (property_exists($setted, 'value')) {
+				$values[]= $setted->value;
+			}
         }
         return $values;
     }
