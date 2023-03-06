@@ -16,4 +16,9 @@ class ServiceCollection extends CollectionWrapper
         $this->collection = new \Ufee\Amo\Base\Collections\Collection($elements);
 		$this->attributes['service'] = $service;
 	}
+	
+    public function service()
+    {
+		return $this->attributes['service'];
+	}
 }

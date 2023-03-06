@@ -24,20 +24,30 @@ trait SearchByEmail
 		$query = $clearEmail($email);
 		$prev_max_rows = $this->max_rows;
 		$set_max_rows = $max_rows >= $this->limit_rows ? $max_rows+$this->limit_rows : $max_rows;
+		$results = $this->maxRows($set_max_rows)->list->where('query', $query)->recursiveCall();
 
-		$results = $this->maxRows($set_max_rows)->list->where('query', $query)->recursiveCall();	
-		$results = $results->filter(function($model) use($query, $field_name, $clearEmail) {
+		$collClass = get_class($results);
+		$service = $results->service();
+		$searched = new $collClass([], $service);
+		$results = $results->all();
+		
+		foreach ($results as &$model) {
 			foreach ($model->cf($field_name)->getValues() as $value) {
 				if ($query === $clearEmail($value)) {
-					return true;
+					$searched->push($model);
 				}
 			}
-			return false;
-		});
+			$model = null;
+			unset($model);
+			usleep(50);
+		}
+		$results = null;
+		unset($results);
+		
 		if ($max_rows > 0) {
-			$results->slice(0, $max_rows);
+			$searched->slice(0, $max_rows);
 		}
 		$this->maxRows($prev_max_rows);
-		return $results;
+		return $searched;
 	}
 }

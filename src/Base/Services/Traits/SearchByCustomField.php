@@ -19,9 +19,14 @@ trait SearchByCustomField
 		$field_type = gettype($field);
 		$prev_max_rows = $this->max_rows;
 		$set_max_rows = $max_rows >= $this->limit_rows ? $max_rows+$this->limit_rows : $max_rows;
-
 		$results = $this->maxRows($set_max_rows)->list->where('query', $query)->recursiveCall();
-		$results = $results->filter(function($model) use($query, $field, $field_type) {
+		
+		$collClass = get_class($results);
+		$service = $results->service();
+		$searched = new $collClass([], $service);
+		$results = $results->all();
+		
+		foreach ($results as &$model) {
 			$cf = null;
 			if ($field_type == 'integer') {
 				$cf = $model->cf()->byId($field);
@@ -31,12 +36,21 @@ trait SearchByCustomField
 			if (!$cf) {
 				throw new \Exception('Custom Field not found by '.($field_type == 'integer' ? 'id' : 'name').': '.$field);
 			}
-			return $query === trim($cf->getValue());
-		});	
+			$value = trim($cf->getValue());
+			if ($query === $value) {
+				$searched->push($model);
+			}
+			$model = null;
+			unset($model);
+			usleep(50);
+		}
+		$results = null;
+		unset($results);
+		
 		if ($max_rows > 0) {
-			$results->slice(0, $max_rows);
+			$searched->slice(0, $max_rows);
 		}
 		$this->maxRows($prev_max_rows);
-		return $results;
+		return $searched;
 	}
 }

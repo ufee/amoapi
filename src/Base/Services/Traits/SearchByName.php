@@ -20,15 +20,28 @@ trait SearchByName
 		$query = $clearName($name);
 		$prev_max_rows = $this->max_rows;
 		$set_max_rows = $max_rows >= $this->limit_rows ? $max_rows+$this->limit_rows : $max_rows;
+		$results = $this->maxRows($set_max_rows)->list->where('query', $query)->recursiveCall();
 
-		$results = $this->maxRows($set_max_rows)->list->where('query', $query)->recursiveCall();	
-		$results = $results->filter(function($model) use($query, $clearName) {
-			return $query === $clearName($model->name);
-		});
+		$collClass = get_class($results);
+		$service = $results->service();
+		$searched = new $collClass([], $service);
+		$results = $results->all();
+		
+		foreach ($results as &$model) {
+			if ($query === $clearName($model->name)) {
+				$searched->push($model);
+			}
+			$model = null;
+			unset($model);
+			usleep(50);
+		}
+		$results = null;
+		unset($results);
+		
 		if ($max_rows > 0) {
-			$results->slice(0, $max_rows);
+			$searched->slice(0, $max_rows);
 		}
 		$this->maxRows($prev_max_rows);
-		return $results;
+		return $searched;
 	}
 }
