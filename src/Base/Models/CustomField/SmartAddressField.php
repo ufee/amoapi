@@ -14,7 +14,9 @@ class SmartAddressField extends EntityField
     {
         $values = [];
 		foreach ($this->values as $setted) {
-            $values[$setted->subtype]= $setted->value;
+			if (property_exists($setted, 'subtype')) {
+				$values[$setted->subtype]= $setted->value;
+			}
         }
         return $values;
     }

@@ -15,7 +15,7 @@ class Companies extends \Ufee\Amo\Base\Services\MainEntity
 			'update' => ['id', 'updated_at']
 		];
 	protected
-		$entity_key = 'сompanies',
+		$entity_key = 'companies',
 		$entity_model = '\Ufee\Amo\Models\Company',
 		$entity_collection = '\Ufee\Amo\Collections\CompanyCollection',
 		$cache_time = false;
