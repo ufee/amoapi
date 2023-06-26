@@ -25,6 +25,7 @@ if (!defined('CURL_SSLVERSION_TLSv1_2')) {
  * @property \Ufee\Amo\Collections\CatalogCollection $catalogs
  * @property \Ufee\Amo\Collections\CatalogElementCollection $catalogElements
  * @property \Ufee\Amo\Collections\WebhookCollection $webhooks
+ * @property \Ufee\Amo\Base\Collections\Collection $salesbots
  * @method \Ufee\Amo\Services\Account account()
  * @method \Ufee\Amo\Services\Leads leads()
  * @method \Ufee\Amo\Services\Contacts contacts()
@@ -36,6 +37,7 @@ if (!defined('CURL_SSLVERSION_TLSv1_2')) {
  * @method \Ufee\Amo\Services\Catalogs catalogs()
  * @method \Ufee\Amo\Services\CatalogElements catalogElements()
  * @method \Ufee\Amo\Services\Webhooks webhooks()
+ * @method \Ufee\Amo\Services\Salesbots salesbots()
  * @method \Ufee\Amo\Services\Ajax ajax()
  */
 class ApiClient
@@ -55,6 +57,7 @@ class ApiClient
 		'catalogs',
 		'catalogElements',
 		'webhooks',
+		'salesbots',
 		'ajax'
 	];
 	protected $_account;

@@ -810,3 +810,12 @@ $amo->ajax()->post($url = '/ajax/example', $data = [], $args = [], $post_type = 
 $amo->ajax()->postJson($url = '/ajax/example', $data = [], $args = []);
 $amo->ajax()->patch($url = '/ajax/example', $data = [], $args = []);
 ```
+
+## Работа с Salesbot
+```php
+$bots = $amo->salesbots()->get($page = 1, $limit = 250);
+$bots = $amo->salesbots;
+
+$start = $amo->salesbots()->start($bot_id, $entity_id, $entity_type = 2);
+$stop = $amo->salesbots()->stop($bot_id, $entity_id, $entity_type = 2);
+```

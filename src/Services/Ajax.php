@@ -20,7 +20,7 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
      * Exchange api key to oauth
 	 * @param integer $bot_id
 	 * @param integer $entity_id
-	 * @param integer $entity_type - 1 – контакт, 2- сделка, 3 – компания
+	 * @param integer $entity_type - 1 – контакт, 2 - сделка, 3 – компания
 	 * @param bool $state
 	 * return integer
      */
@@ -48,11 +48,10 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 	}
 
     /**
-     * Set Note pinned
+     * Run Salesbot
 	 * @param integer $bot_id
 	 * @param integer $entity_id
-	 * @param integer $entity_type - 1 – контакт, 2- сделка, 3 – компания
-	 * @param bool $state
+	 * @param integer $entity_type - 1 – контакт, 2 - сделка, 3 – компания
 	 * return bool
      */
 	public function runSalesbot($bot_id, $entity_id, $entity_type)
