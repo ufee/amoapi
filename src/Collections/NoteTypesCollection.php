@@ -4,7 +4,7 @@
  */
 namespace Ufee\Amo\Collections;
 
-class NoteTypesCollection extends \Ufee\Amo\Base\Collections\Collection
+class NoteTypesCollection extends CollectionWrapper
 {
     /**
      * Constructor
