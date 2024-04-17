@@ -18,7 +18,7 @@ trait SearchByEmail
 			throw new \Exception('Invalid search email value: '.$email);
 		}
 		$clearEmail = function($email) {
-			return mb_strtoupper(trim($email));
+			return mb_strtoupper(trim((string)$email));
 		};
 		$field_name = 'Email';
 		$query = $clearEmail($email);

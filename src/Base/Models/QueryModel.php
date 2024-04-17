@@ -275,7 +275,7 @@ class QueryModel
      */
     public function startDate($format = 'Y-m-d H:i:s')
     {
-        return date($format, $this->start_time);
+        return date($format, (int)$this->start_time);
 	}
 
     /**
@@ -284,7 +284,7 @@ class QueryModel
      */
     public function endDate($format = 'Y-m-d H:i:s')
     {
-        return date($format, $this->end_time);
+        return date($format, (int)$this->end_time);
 	}
 
     /**

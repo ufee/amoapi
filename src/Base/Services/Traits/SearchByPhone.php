@@ -33,7 +33,7 @@ trait SearchByPhone
 	protected function searchBy_ru_mob($phone, $max_rows)
 	{
 		$clearPhone = function($phone) {
-			return substr(preg_replace('#[^0-9]+#Uis', '', $phone), -10);
+			return substr(preg_replace('#[^0-9]+#Uis', '', (string)$phone), -10);
 		};
 		$field_name = $this->instance->getAuth('lang') == 'ru' ? 'Телефон' : 'Phone';
 		$query = $clearPhone($phone);

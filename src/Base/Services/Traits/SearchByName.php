@@ -15,7 +15,7 @@ trait SearchByName
 	public function searchByName($name, $max_rows = 100)
 	{
 		$clearName = function($name) {
-			return mb_strtoupper(trim($name));
+			return mb_strtoupper(trim((string)$name));
 		};
 		$query = $clearName($name);
 		$prev_max_rows = $this->max_rows;

@@ -36,7 +36,7 @@ trait SearchByCustomField
 			if (!$cf) {
 				throw new \Exception('Custom Field not found by '.($field_type == 'integer' ? 'id' : 'name').': '.$field);
 			}
-			$value = trim($cf->getValue());
+			$value = trim((string)$cf->getValue());
 			if ($query === $value) {
 				$searched->push($model);
 			}
