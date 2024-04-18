@@ -23,7 +23,7 @@ class Query extends QueryModel
         $time_offset = $current_time-$last_time;
         $delay = $instance->queries->getDelay();
         if ($delay > $time_offset) {
-            $sleep_time = ($delay-$time_offset)*1000000;
+            $sleep_time = (int)($delay-$time_offset)*1000000;
             usleep($sleep_time);
             $this->attributes['sleep_time'] = $sleep_time/1000000;
         }

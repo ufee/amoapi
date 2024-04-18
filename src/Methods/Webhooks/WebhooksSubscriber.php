@@ -6,6 +6,8 @@ namespace Ufee\Amo\Methods\Webhooks;
 
 class WebhooksSubscriber extends \Ufee\Amo\Base\Methods\Post
 {
+	protected $url;
+	
     /**
      * Subscribe hooks in CRM
 	 * @param array $raws
