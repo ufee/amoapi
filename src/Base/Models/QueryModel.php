@@ -96,6 +96,9 @@ class QueryModel
 				'USER_HASH' => $instance->getAuth('hash')
 			]);
 		}
+		if ($interface = $instance->queries->getInterface()) {
+			curl_setopt($this->curl, CURLOPT_INTERFACE, $interface);
+		}
 		return $this;
 	}
 

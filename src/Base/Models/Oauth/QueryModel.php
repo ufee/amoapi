@@ -75,6 +75,9 @@ class QueryModel extends \Ufee\Amo\Base\Models\QueryModel
 			CURLOPT_HEADER => false,
 			CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1_2
 		]);
+		if ($interface = $instance->queries->getInterface()) {
+			curl_setopt($this->curl, CURLOPT_INTERFACE, $interface);
+		}
 		return $this;
 	}
 

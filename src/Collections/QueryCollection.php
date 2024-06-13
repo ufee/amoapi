@@ -18,6 +18,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         $instance,
         $delay = 0.15,
         $refresh_time = 900,
+		$curl_interfaces = [],
         $cookie_file,
         $_listener,
 		$_listener_by_code = [],
@@ -59,6 +60,27 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
     {
         $this->delay = $value;
     }
+	
+	/**
+	 * Set curl interfaces
+	 * @param array $interfaces
+	 */
+	public function viaInterfaces(array $interfaces)
+	{
+		$this->curl_interfaces = $interfaces;
+	}
+	
+	/**
+	 * Get curl interface
+	 * @return string|null
+	 */
+	public function getInterface()
+	{
+		if ($this->curl_interfaces === []) {
+			return null;
+		}
+		return $this->curl_interfaces[array_rand($this->curl_interfaces)];
+	}
 	
     /**
      * Get token refresh time
