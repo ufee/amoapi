@@ -106,7 +106,7 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
      */
     public function refreshSession()
     {
-		if (file_exists($this->cookie_file) && $cookies = file_get_contents($this->cookie_file)) {
+		if ($this->cookie_file && file_exists($this->cookie_file) && ($cookies = file_get_contents($this->cookie_file))) {
 			if (preg_match('#session_id\s(.+)\s#Uis', $cookies, $match) && !empty($match[1])) {
                 clearstatcache(true, $this->cookie_file);
                 $this->instance->setSession($match[1], filemtime($this->cookie_file));
