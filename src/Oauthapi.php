@@ -252,10 +252,14 @@ class Oauthapi extends ApiClient
 			'redirect_uri' => '',
 			'lang' => 'ru',
 			'zone' => 'ru',
-			'timezone' => 'Europe/Moscow'
+			'timezone' => 'Europe/Moscow',
+			'user_agent' => ''
 		];
 		foreach ($account as $key=>$val) {
 			$account[$key] = isset($data[$key]) ? $data[$key] : $val;
+		}
+		if (empty($account['user_agent'])) {
+			$account['user_agent'] = 'Amoapi v.'.static::VERSION.' ('.$account['client_id'].')';
 		}
 		$instance = new static($account);
 		self::$_instances[$account['client_id']] = $instance;

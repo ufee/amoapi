@@ -74,6 +74,20 @@ class ApiClient
 	}
 	
 	/**
+	 * Set account data
+	 * @param string $key
+	 * @param string $value
+	 * @return ApiClient
+	 */
+	public function setAuth($key, $value)
+	{
+		if (array_key_exists($key, $this->_account)) {
+			return $this->_account[$key] = $value;
+		}
+		return $this;
+	}
+	
+	/**
 	 * Call Service Methods
 	 * @param string $service_name
 	 * @param array $args

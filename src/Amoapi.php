@@ -139,13 +139,16 @@ class Amoapi extends ApiClient
 			$data['timezone'] = 'Europe/Moscow';
 		}
 		$account = [
-			'id' => '', 'domain' => '', 'login' => '', 'hash' => '', 'zone' => '', 'lang' => '', 'timezone' => ''
+			'id' => '', 'domain' => '', 'login' => '', 'hash' => '', 'zone' => '', 'lang' => '', 'timezone' => '', 'user_agent' => ''
 		];
 		foreach ($account as $key=>$val) {
 			if (!isset($data[$key])) {
 				throw new \Exception('Incorrect account field: '.$key);
 			}
 			$account[$key] = $data[$key];
+		}
+		if (empty($account['user_agent'])) {
+			$account['user_agent'] = 'Amoapi v.'.static::VERSION.' ('.$account['id'].'/'.$account['login'].')';
 		}
 		if (!isset(self::$_instances[$account['id']])) {
 			self::$_instances[$account['id']] = new static($account);

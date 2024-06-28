@@ -104,8 +104,10 @@ $amo = \Ufee\Amo\Oauthapi::setInstance([
     'redirect_uri' => 'https://site.ru/amocrm/oauth/redirect',
     'zone' => 'ru', // or com
     'timezone' => 'Europe/Moscow',
-    'lang' => 'ru' // or en
+    'lang' => 'ru', // or en
+	'user_agent' => '' // ifempty = Amoapi v.<version> (<client_id>)
 ]);
+$this->amo->setAuth('user_agent', 'MyCustomUserAgent');
 ```
 Получение ранее инициализированного объекта по id приложения
 ```php
