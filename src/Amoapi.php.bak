@@ -143,7 +143,7 @@ class Amoapi extends ApiClient
 		];
 		foreach ($account as $key=>$val) {
 			if (!isset($data[$key])) {
-				$data[$key] = '';
+				throw new \Exception('Incorrect account field: '.$key);
 			}
 			$account[$key] = $data[$key];
 		}

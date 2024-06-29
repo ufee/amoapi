@@ -105,9 +105,9 @@ $amo = \Ufee\Amo\Oauthapi::setInstance([
     'zone' => 'ru', // or com
     'timezone' => 'Europe/Moscow',
     'lang' => 'ru', // or en
-    'user_agent' => '' // ifempty = Amoapi v.<version> (<client_id>)
+	'user_agent' => '' // ifempty = Amoapi v.<version> (<client_id>)
 ]);
-$amo->setAuth('user_agent', 'MyCustomUserAgent');
+$this->amo->setAuth('user_agent', 'MyCustomUserAgent');
 ```
 Получение ранее инициализированного объекта по id приложения
 ```php
