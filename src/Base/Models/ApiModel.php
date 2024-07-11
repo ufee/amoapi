@@ -103,8 +103,13 @@ class ApiModel extends Model
     public function getChangedRawApiData()
 	{
 		if ($this->hasAttribute('updated_at') && !$this->hasChanged('updated_at')) {
+
 			$date = new \DateTime('now', new \DateTimeZone($this->service->instance->getAuth('timezone')));
-			$this->updated_at = $date->getTimestamp();					
+			$stamp = $date->getTimestamp();
+			
+			if ($this->updated_at < $stamp) {
+				$this->updated_at = $stamp;
+			}				
 		}
 		$data = $this->getChangedData();
 		if ($this->hasAttribute('tags') && $this->hasChanged('tags') && empty($this->attributes['tags'])) {

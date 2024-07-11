@@ -18,10 +18,10 @@ class QueryCollection extends \Ufee\Amo\Base\Collections\Collection
         $instance,
         $delay = 0.15,
         $refresh_time = 900,
-		$curl_interfaces = [],
-        $cookie_file,
+        $curl_interfaces = [],
+        $cookie_file = '',
         $_listener,
-		$_listener_by_code = [],
+        $_listener_by_code = [],
         $logger = null,
         $_logs = false;
     
