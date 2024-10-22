@@ -6,27 +6,26 @@ namespace Ufee\Amo\Base\Models\CustomField;
 
 class PhoneField extends EntityField
 {
-    /**
-     * Get cf values
+	/**
+	 * Get cf values
 	 * @return array
-     */
-    public function getValues()
-    {
-        $values = [];
+	 */
+	public function getValues()
+	{
+		$values = [];
 		foreach ($this->values as $setted) {
-            $values[]= $setted->value;
-        }
-        return $values;
-    }
+			$values[]= $setted->value;
+		}
+		return $values;
+	}
 
-    /**
-     * Set cf value
+	/**
+	 * Set cf value
 	 * @param string $value
-     * @param string|integer $enum_key
-     */
-    public function setValue($value, $enum_key = 'Work')
-    {
-        $value = trim($value);
+	 * @param string|integer $enum_key
+	 */
+	public function setValue($value, $enum_key = 'Work')
+	{
 		if (is_numeric($enum_key) && isset($this->field->enums->{$enum_key})) {
 			$enum = $enum_key;
 			$enum_key = $this->field->enums->{$enum_key};
@@ -36,23 +35,24 @@ class PhoneField extends EntityField
 		}
 		if ($enum === false) {
 			throw new \Exception('Invalid enum: "'.$enum_key.'" for cfield "'.$this->name.'" (enum not found)');
-        }
-        if (is_numeric($enum)) {
-            $enum = intval($enum);
-        }
-        $new_values = [];
-        foreach ($this->values as $setted) {
-            if ($value == $setted->value) {
-                continue;
-            }
-            $new_values[]= (object)[
-                'value' => $setted->value, 'enum' => $setted->enum
-            ];
-        }
-        $new_values[]= (object)[
-            'value' => $value, 'enum' => $enum
-        ];
-       $this->values = $new_values;
-       return $this;
-    }
+		}
+		if (is_numeric($enum)) {
+			$enum = intval($enum);
+		}
+		$value = trim((string)$value);
+		$new_values = [];
+		foreach ($this->values as $setted) {
+			if ($value == $setted->value) {
+				continue;
+			}
+			$new_values[]= (object)[
+				'value' => $setted->value, 'enum' => $setted->enum
+			];
+		}
+		$new_values[]= (object)[
+			'value' => $value, 'enum' => $enum
+		];
+	   $this->values = $new_values;
+	   return $this;
+	}
 }
