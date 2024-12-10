@@ -24,6 +24,7 @@ class SelectField extends EntityField
      */
     public function setValue($value)
     {
+        $value = htmlspecialchars($value, ENT_COMPAT);
         $enum = array_search($value, get_object_vars($this->field->enums));
         if ($enum === false) {
             throw new \Exception('Invalid value: "'.$value.'" for cfield "'.$this->name.'" (enum not found)');
