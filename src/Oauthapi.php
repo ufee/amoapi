@@ -280,4 +280,19 @@ class Oauthapi extends ApiClient
 		}
 		return self::$_instances[$client_id];
 	}
+
+	/**
+	 * Set long token storage
+	 * 
+	 * @param string $long_token
+	 * @param int $expires_in
+	 * @return void
+	 */
+	public static function setLongToken(string $long_token, int $expires_in)
+	{
+		static::setOauthStorage(
+			new Oauth\LongTokenStorage(['long_token' => $long_token, 'expires_in' => $expires_in])
+		);
+	}
+	
 }
