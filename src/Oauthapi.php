@@ -285,7 +285,7 @@ class Oauthapi extends ApiClient
 	 * Set long token storage
 	 * 
 	 * @param string $long_token
-	 * @param string $expires_in
+	 * @param int $expires_in
 	 * @return void
 	 */
 	public static function setLongToken(string $long_token, int $expires_in)
