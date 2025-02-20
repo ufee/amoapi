@@ -41,11 +41,12 @@ class SelectField extends EntityField
      */
     public function setEnum($enum)
     {
-        if (!array_key_exists($enum, get_object_vars($this->field->enums))) {
+        $enums = get_object_vars($this->field->enums);
+        if (!array_key_exists($enum, $enums)) {
             throw new \Exception('Invalid enum: "'.$enum.'" for cfield "'.$this->name.'" (not found)');
         }
 		$this->values = [
-			(object)['value' => '', 'enum' => $enum]
+			(object)['value' => $enums[$enum], 'enum' => $enum]
         ];
         return $this;
     }
