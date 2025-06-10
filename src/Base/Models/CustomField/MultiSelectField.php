@@ -14,7 +14,7 @@ class MultiSelectField extends EntityField
     {
         $values = [];
 		foreach ($this->values as $setted) {
-            $values[]= $setted->value;
+            $values[]= htmlspecialchars_decode($setted->value, ENT_COMPAT);
         }
         return $values;
     }

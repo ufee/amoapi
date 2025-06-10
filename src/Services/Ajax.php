@@ -126,6 +126,88 @@ class Ajax extends \Ufee\Amo\Base\Services\Service
 		return $query->response->getData();
 	}
 
+	/**
+     * Ajax unlink entity request
+	 * @param string $entity - Тип главной сущности: leads|contacts|companies|customers
+	 * @param array $data - Массив данных
+	 * @param int $data[]['entity_id'] ID главной сущности
+	 * @param int $data[]['to_entity_id'] ID связанной сущности
+	 * @param string $data[]['to_entity_type'] Тип связанной сущности: leads, contacts, companies, customers, catalog_elements
+	 * @param int $data[]['metadata']['catalog_id'] ID каталога
+	 * @param int $data[]['metadata']['updated_by'] ID пользователя, от имени которого осуществляется открепление
+	 * 
+	 * 
+	 * return mixed
+     */
+	public function unlinkEntity($entity, array $data)
+	{
+		if ($this->instance instanceOf \Ufee\Amo\Oauthapi) {
+			$query = new Api\Oauth\Query($this->instance);
+		} else {
+			$query = new Api\Query($this->instance);
+		}
+		$query->setHeader('X-Requested-With', 'XMLHttpRequest')
+			  ->setUrl("/api/v4/".$entity."/unlink")
+			  ->setMethod('POST');
+
+		$query->setJsonData($data);
+		
+		$query->execute();
+
+		$code = $query->response->getCode();
+		if (!in_array($code, [204])) {
+			throw new \Exception('Invalid response code: '.$code.', body: '.print_r($query->response->getData(),1), $code);
+		}
+		if ($code == 204) {
+			return true;
+		}
+		if ($data = $query->response->parseJson()) {
+			return $data;
+		}
+		return $query->response->getData();
+	}
+
+	/**
+     * Ajax link entity request
+	 * @param string $entity - Тип главной сущности: leads|contacts|companies|customers
+	 * @param array $data - Массив данных
+	 * @param int $data[]['entity_id'] ID главной сущности
+	 * @param int $data[]['to_entity_id'] ID связанной сущности
+	 * @param string $data[]['to_entity_type'] Тип связанной сущности: leads, contacts, companies, customers, catalog_elements
+	 * @param int $data[]['metadata']['catalog_id'] ID каталога
+	 * @param int|float $data[]['metadata']['quantity'] Количество прикрепленных элементов каталогов
+	 * @param bool $data[]['metadata']['is_main'] Является ли контакт главным
+	 * @param int $data[]['metadata']['updated_by'] ID пользователя, от имени которого осуществляется открепление
+	 * @param int|null $data[]['metadata']['price_id'] ID поля типа Цена, которое будет установлено для привязанного элемента в контексте сущности
+	 * 
+	 * 
+	 * return mixed
+     */
+	public function linkEntity($entity, array $data)
+	{
+		if ($this->instance instanceOf \Ufee\Amo\Oauthapi) {
+			$query = new Api\Oauth\Query($this->instance);
+		} else {
+			$query = new Api\Query($this->instance);
+		}
+		$query->setHeader('X-Requested-With', 'XMLHttpRequest')
+			  ->setUrl("/api/v4/".$entity."/link")
+			  ->setMethod('POST');
+
+		$query->setJsonData($data);
+		
+		$query->execute();
+
+		$code = $query->response->getCode();
+		if (!in_array($code, [200])) {
+			throw new \Exception('Invalid response code: '.$code.', body: '.print_r($query->response->getData(),1), $code);
+		}
+		if ($data = $query->response->parseJson()) {
+			return $data;
+		}
+		return $query->response->getData();
+	}
+	
     /**
      * Ajax GET request
 	 * @param string $url
