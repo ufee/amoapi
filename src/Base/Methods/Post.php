@@ -10,7 +10,8 @@ use Ufee\Amo\Base\Collections\Collection;
 class Post extends Method
 {
 	protected
-		$method = 'post';
+		$method = 'post',
+		$content_type = 'post';
 	
     /**
      * Call api method
@@ -26,8 +27,11 @@ class Post extends Method
 		}
 		$query->setUrl($this->url);
 		$query->setMethod('POST');
-		//$query->setPostData($post_data);
-		$query->setJsonData($post_data);
+		if ($this->content_type === 'json') {
+			$query->setJsonData($post_data);
+		} else {
+			$query->setPostData($post_data);
+		}
 		$query->setArgs(
 			array_merge($this->service->api_args, $this->args, $arg)
 		);

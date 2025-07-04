@@ -7,7 +7,8 @@ namespace Ufee\Amo\Methods\Leads;
 class LeadsUpdate extends \Ufee\Amo\Base\Methods\Post
 {
 	protected 
-		$url = '/api/v2/leads';
+		$url = '/api/v2/leads',
+		$content_type = 'json';
 	
     /**
      * Update entitys in CRM

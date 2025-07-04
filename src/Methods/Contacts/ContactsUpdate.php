@@ -7,7 +7,8 @@ namespace Ufee\Amo\Methods\Contacts;
 class ContactsUpdate extends \Ufee\Amo\Base\Methods\Post
 {
 	protected 
-		$url = '/api/v2/contacts';
+		$url = '/api/v2/contacts',
+		$content_type = 'json';
 	
     /**
      * Update entitys in CRM

@@ -7,7 +7,8 @@ namespace Ufee\Amo\Methods\Companies;
 class CompaniesUpdate extends \Ufee\Amo\Base\Methods\Post
 {
 	protected 
-		$url = '/api/v2/companies';
+		$url = '/api/v2/companies',
+		$content_type = 'json';
 	
     /**
      * Update entitys in CRM
