@@ -15,6 +15,9 @@ class CalendarField extends EntityField
 		if (!$date = $this->getValue()) {
 			return null;
 		}
+		if (is_numeric($date)) {
+			$date = date('Y-m-d H:i:s', $date);
+		}
 		$date = new \DateTime($date, new \DateTimeZone($this->field->instance()->getAuth('timezone')));
 		return $date->format($format);
 	}

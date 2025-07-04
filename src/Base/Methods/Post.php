@@ -26,7 +26,8 @@ class Post extends Method
 		}
 		$query->setUrl($this->url);
 		$query->setMethod('POST');
-		$query->setPostData($post_data);
+		//$query->setPostData($post_data);
+		$query->setJsonData($post_data);
 		$query->setArgs(
 			array_merge($this->service->api_args, $this->args, $arg)
 		);
