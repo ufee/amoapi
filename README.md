@@ -1,6 +1,6 @@
 ## AmoCRM API Client
-Api клиент для работы с amoCRM  
-Поддержка oAuth авторизации начиная с версии 0.9.0.0
+Клиент для работы с amoCRM Api v2  
+Поддержка Api v4 в клиенте: [amoapi-v4](https://github.com/ufee/amoapi-v4)  
 
 ## Установка
 
