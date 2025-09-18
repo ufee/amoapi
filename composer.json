@@ -1,7 +1,7 @@
 {
     "name": "ufee/amoapi",
     "homepage": "https://github.com/ufee",
-    "description": "amoCRM API Client (https://www.amocrm.ru/developers/content/platform/abilities/)",
+    "description": "amoCRM API V2 Client, V4: (https://packagist.org/packages/ufee/amoapi-v4)",
     "type": "library",
     "license": "MIT",
     "authors": [
