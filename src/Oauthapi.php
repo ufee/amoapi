@@ -13,6 +13,10 @@ class Oauthapi extends ApiClient
 	
 	private $_token_refresh_callback;
 	private $_token_refresh_error_callback;
+	private $_token_refresh_lock_callback;
+	private $_token_refresh_unlock_callback;
+	private $_oauth_lock_usleep = 500000;
+	private $_oauth_lock_retries = 60;
 	private static $_oauthStorage;
 
 	/**
@@ -123,10 +127,29 @@ class Oauthapi extends ApiClient
 				throw $e;
 			}
 		}
+		$domain = $this->getAuth('domain');
+		$client_id = $this->getAuth('client_id');
+
+		if (is_callable($this->_token_refresh_lock_callback)) {
+			$i = 0;
+			while (!call_user_func($this->_token_refresh_lock_callback, $domain, $client_id)) {
+				$i++;
+				if ($this->_oauth_lock_usleep > 0) {
+					usleep($this->_oauth_lock_usleep); // default 0.5 sec
+				}
+				$oauth = $this->getOauth(true);
+				if (!empty($oauth['created_at']) && $oauth['created_at']+$oauth['expires_in'] > time()+60) {
+					return $oauth;
+				}
+				if ($i === $this->_oauth_lock_retries) {
+					throw new \Exception('OAuth refresh lock timeout, parallel process is hanging');
+				}
+			}
+		}
 		$query = new \Ufee\Amo\Api\Oauth\Query($this);
 		$query->setUrl('/oauth2/access_token')
 			  ->setPostData([
-				'client_id' => $this->getAuth('client_id'),
+				'client_id' => $client_id,
 				'client_secret' => $this->getAuth('client_secret'),
 				'redirect_uri' => $this->getAuth('redirect_uri'),
 				'grant_type' => 'refresh_token',
@@ -146,6 +169,8 @@ class Oauthapi extends ApiClient
 			$e = new \Exception('Refresh access token error: '.$data->detail.' - '.$data->title, intval($data->status));
 		}
 		if ($e) {
+			$this->unlockAccessTokenRefresh($domain, $client_id);
+
 			if (is_callable($this->_token_refresh_error_callback)) {
 				call_user_func($this->_token_refresh_error_callback, $e, $query, $response);
 			} else {
@@ -154,13 +179,28 @@ class Oauthapi extends ApiClient
 		} else {
 			$oauth = (array)$data;
 			$oauth['created_at'] = time();
-			
+
 			if (is_callable($this->_token_refresh_callback)) {
 				call_user_func($this->_token_refresh_callback, $oauth, $query, $response);
 			}
 			$this->setOauth($oauth);
+
+			$this->unlockAccessTokenRefresh($domain, $client_id);
 		}
 		return $oauth;
+	}
+
+	/**
+	 * Release access token refresh lock
+	 * @param string $domain
+	 * @param string $client_id
+	 * @return void
+	 */
+	private function unlockAccessTokenRefresh($domain, $client_id)
+	{
+		if (is_callable($this->_token_refresh_unlock_callback)) {
+			call_user_func($this->_token_refresh_unlock_callback, $domain, $client_id);
+		}
 	}
 	
 	/**
@@ -182,6 +222,50 @@ class Oauthapi extends ApiClient
 	public function onAccessTokenRefreshError(callable $callback)
 	{
 		$this->_token_refresh_error_callback = $callback;
+		return $this;
+	}
+
+	/**
+	 * On access token refresh lock callback
+	 * @param callable $callback - function($domain, $client_id): bool
+	 * @return Oauthapi
+	 */
+	public function onAccessTokenRefreshLock(callable $callback)
+	{
+		$this->_token_refresh_lock_callback = $callback;
+		return $this;
+	}
+
+	/**
+	 * On access token refresh unlock callback
+	 * @param callable $callback - function($domain, $client_id)
+	 * @return Oauthapi
+	 */
+	public function onAccessTokenRefreshUnlock(callable $callback)
+	{
+		$this->_token_refresh_unlock_callback = $callback;
+		return $this;
+	}
+
+	/**
+	 * Set lock waiting delay
+	 * @param int $value - microseconds
+	 * @return Oauthapi
+	 */
+	public function setOauthLockUsleep($value)
+	{
+		$this->_oauth_lock_usleep = (int)$value;
+		return $this;
+	}
+
+	/**
+	 * Set lock waiting retries
+	 * @param int $value
+	 * @return Oauthapi
+	 */
+	public function setOauthLockRetries($value)
+	{
+		$this->_oauth_lock_retries = (int)$value;
 		return $this;
 	}
 
