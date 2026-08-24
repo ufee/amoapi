@@ -157,6 +157,30 @@ $amo->onAccessTokenRefreshError(function($exc, $query, $response) {
 	exit('Error refresh token: '.$exc->getMessage().', code: '.$exc->getCode());
 });
 ```
+Решение гонки запросов на обновление токена.  
+Если callback блокировки не установлен, поведение клиента не меняется.
+```php
+// refresh token race condition solution
+$redis = new \Redis();
+$redis->connect('127.0.0.1');
+$redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_NONE);
+
+$amo->onAccessTokenRefreshLock(function($domain, $client_id) use ($redis) {
+	// необходимо вернуть true в случае успешной блокировки, иначе false
+	return $redis->set('lock:'.$domain.':'.$client_id, 1, ['nx', 'ex' => 30]);
+});
+
+$amo->onAccessTokenRefreshUnlock(function($domain, $client_id) use ($redis) {
+	// снять блокировку
+	$redis->del('lock:'.$domain.':'.$client_id);
+});
+
+$amo->setOauthLockUsleep(500000); // задержка между попытками ожидания, микросекунды
+$amo->setOauthLockRetries(60);    // после последней попытки бросается исключение
+```
+Пока блокировку держит другой процесс, клиент ждет и перечитывает oauth данные из хранилища  
+Как только в хранилище появился свежий токен, ожидающий процесс возвращает его без своего запроса
+
 После первичного выполнения метода fetchAccessToken(), можно пользоваться клиентом в обычном режиме  
 Повторное выполнение метода fetchAccessToken() или setOauth() необходимо только в случаях, если:
 1) Изменились ключи доступа в приложении
